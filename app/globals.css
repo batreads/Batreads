@@ -1,0 +1,38 @@
+:root {
+  color-scheme: dark;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #160f1b;
+  color: #f7edf3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  display: grid;
+  min-height: 100vh;
+  align-content: center;
+  gap: 1rem;
+  max-width: 56rem;
+  margin: auto;
+  padding: 3rem 1.5rem;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(3rem, 10vw, 6rem);
+}
+
+p {
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
