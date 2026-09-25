@@ -10,6 +10,7 @@ export default function Home() {
         <Link href="/historias">Historias</Link>
         <Link href="/autoras">Autoras</Link>
         <Link href="/sagas">Sagas</Link>
+        <Link href="/listas">Listas</Link>
       </nav>
     </main>
   );

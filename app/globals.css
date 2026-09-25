@@ -50,6 +50,7 @@ nav {
 .catalog-page,
 .story-page {
   display: block;
+  align-content: normal;
   max-width: 72rem;
   padding-block: 3rem 5rem;
 }
@@ -250,6 +251,60 @@ nav {
 
 .book-facts dd {
   margin: 0;
+}
+
+.entity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 1.25rem;
+}
+
+.entity-card {
+  display: block;
+  padding: 1.5rem;
+  border: 1px solid #513b51;
+  border-radius: 1rem;
+  background: #211728;
+  color: inherit;
+  text-decoration: none;
+}
+
+.entity-card:hover,
+.entity-card:focus-visible {
+  border-color: #eeb6da;
+}
+
+.entity-card h2 {
+  margin: 0 0 .75rem;
+  font-size: 1.5rem;
+}
+
+.entity-card p {
+  margin-bottom: 1rem;
+  color: #dccbd5;
+  font-size: 1rem;
+}
+
+.entity-card span {
+  color: #eeb6da;
+}
+
+.link-list {
+  display: grid;
+  gap: .6rem;
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.entity-note {
+  margin-top: 2rem;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid #d09cbe;
+  background: #211728;
+}
+
+.external-link {
+  margin-top: 2rem;
 }
 
 @media (max-width: 640px) {

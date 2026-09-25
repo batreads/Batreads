@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getStories, getStoryBySlug, type Story } from "@/lib/notion";
+import { StoryGrid } from "../../_components/story-grid";
+import { getAuthors, getSagas, getSeoPages, getStories, getStoryBySlug, storiesForSeoPage, type Story } from "@/lib/notion";
 
 type PageProps = { params: Promise<{ slug: string }> };
-
-export const dynamicParams = false;
 
 export async function generateStaticParams() {
   return (await getStories()).map((story) => ({ slug: story.slug }));
@@ -57,6 +56,11 @@ export default async function HistoriaPage({
   const { slug } = await params;
   const story = await getStoryBySlug(slug);
   if (!story) notFound();
+  const [stories, authors, sagas, seoPages] = await Promise.all([getStories(), getAuthors(), getSagas(), getSeoPages()]);
+  const author = authors.find((item) => item.id === story.authorId);
+  const saga = sagas.find((item) => item.id === story.sagaId);
+  const relatedStories = stories.filter((item) => item.id !== story.id && story.relatedStoryIds.includes(item.id));
+  const relatedPages = seoPages.filter((page) => storiesForSeoPage(page, stories, authors, sagas).some((item) => item.id === story.id));
 
   return (
     <main className="story-page">
@@ -66,7 +70,9 @@ export default async function HistoriaPage({
         <div>
           <p className="eyebrow">Ficha editorial</p>
           <h1>{story.title}</h1>
-          {story.authorName ? <p className="story-author">de {story.authorName}</p> : null}
+          {author ? <p className="story-author">de <Link href={`/autoras/${author.slug}`}>{author.name}</Link></p>
+            : story.authorName ? <p className="story-author">de {story.authorName}</p> : null}
+          {saga ? <p className="story-author">Saga: <Link href={`/sagas/${saga.slug}`}>{saga.name}</Link></p> : null}
           {story.hook ? <p className="story-hook">{story.hook}</p> : null}
           {story.rating !== null ? <p className="story-rating">Nota Batreads: {score(story.rating)}</p> : null}
         </div>
@@ -99,6 +105,9 @@ export default async function HistoriaPage({
           <p>Los avisos pueden no ser exhaustivos.</p>
         </section>
       ) : null}
+
+      {relatedStories.length > 0 ? <section className="story-section"><h2>Historias relacionadas</h2><StoryGrid stories={relatedStories} /></section> : null}
+      {relatedPages.length > 0 ? <section className="story-section"><h2>Listas y guías relacionadas</h2><ul className="link-list">{relatedPages.map((page) => <li key={page.id}><Link href={page.path}>{page.heading} →</Link></li>)}</ul></section> : null}
 
       <section className="story-section">
         <h2>Datos del libro</h2>

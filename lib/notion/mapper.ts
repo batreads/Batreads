@@ -1,4 +1,5 @@
-import type { NotionPage, NotionProperty, NotionRichText, Story } from "./types";
+import { checkbox, number, relationIds, select, tags, text, url, validSlug } from "./properties";
+import type { NotionPage, Story } from "./types";
 
 const webSlugByNotionSlug: Record<string, string> = {
   "credence-penelope-douglas": "credence",
@@ -9,47 +10,6 @@ export function notionSlugForWebSlug(slug: string): string {
   return match?.[0] ?? slug;
 }
 
-function property(page: NotionPage, name: string): NotionProperty | undefined {
-  return page.properties[name];
-}
-
-function joinText(parts: NotionRichText[] | undefined): string {
-  return (parts ?? []).map((part) => part.plain_text ?? part.text?.content ?? "").join("").trim();
-}
-
-function text(page: NotionPage, name: string): string {
-  const value = property(page, name);
-  return value?.type === "title"
-    ? joinText(value.title)
-    : value?.type === "rich_text"
-      ? joinText(value.rich_text)
-      : "";
-}
-
-function select(page: NotionPage, name: string): string | null {
-  const value = property(page, name);
-  return value?.type === "select" ? value.select?.name ?? null : null;
-}
-
-function tags(page: NotionPage, name: string): string[] {
-  const value = property(page, name);
-  return value?.type === "multi_select"
-    ? (value.multi_select ?? []).map((option) => option.name)
-    : [];
-}
-
-function number(page: NotionPage, name: string): number | null {
-  const value = property(page, name);
-  return value?.type === "number" && typeof value.number === "number"
-    ? value.number
-    : null;
-}
-
-function url(page: NotionPage, name: string): string | null {
-  const value = property(page, name);
-  return value?.type === "url" ? value.url ?? null : null;
-}
-
 function coverUrl(page: NotionPage): string | null {
   const raw = url(page, "Portada URL");
   if (!raw) return null;
@@ -57,6 +17,30 @@ function coverUrl(page: NotionPage): string | null {
   if (raw.startsWith("/images/")) return raw;
   if (/^https:\/\//.test(raw)) return raw;
   return null;
+}
+
+function filterValues(page: NotionPage): Record<string, string[]> {
+  const fields = [
+    "Subgénero", "Tropes", "KU España", "Relación", "Arquetipo LI",
+    "Dinámicas de relación", "Popularidad", "Plataforma", "Autora", "Saga",
+    "Sello editorial", "Darkness", "Spice", "Toxicity", "Violence",
+    "Publicación Batreads",
+  ];
+
+  return Object.fromEntries(fields.map((name) => {
+    const value = page.properties[name];
+    if (!value) return [name, []];
+    switch (value.type) {
+      case "select": return [name, value.select ? [value.select.name] : []];
+      case "multi_select": return [name, (value.multi_select ?? []).map((item) => item.name)];
+      case "checkbox": return [name, [value.checkbox ? "Sí" : "No"]];
+      case "number": return [name, typeof value.number === "number" ? [String(value.number)] : []];
+      case "rich_text": return [name, [text(page, name)].filter(Boolean)];
+      case "title": return [name, [text(page, name)].filter(Boolean)];
+      case "relation": return [name, (value.relation ?? []).map((item) => item.id)];
+      default: return [name, []];
+    }
+  }));
 }
 
 export function isPublishedStoryPage(page: NotionPage): boolean {
@@ -72,7 +56,7 @@ export function mapNotionPageToStory(page: NotionPage): Story {
   const title = text(page, "Título");
   const notionSlug = text(page, "Slug");
 
-  if (!title || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(notionSlug)) {
+  if (!title || !validSlug(notionSlug)) {
     throw new Error(`La historia ${page.id} no tiene título o slug válido.`);
   }
 
@@ -81,8 +65,15 @@ export function mapNotionPageToStory(page: NotionPage): Story {
     slug: webSlugByNotionSlug[notionSlug] ?? notionSlug,
     notionSlug,
     title,
-    authorId: property(page, "Autora")?.relation?.[0]?.id ?? null,
+    authorId: relationIds(page, "Autora")[0] ?? null,
     authorName: null,
+    sagaId: relationIds(page, "Saga")[0] ?? null,
+    relatedStoryIds: [
+      ...relationIds(page, "Parecidos a"),
+      ...relationIds(page, "Siguiente libro"),
+      ...relationIds(page, "Leer antes"),
+    ],
+    filterValues: filterValues(page),
     coverUrl: coverUrl(page),
     hook: text(page, "Hook"),
     synopsis: text(page, "Sinopsis corta"),
@@ -93,6 +84,8 @@ export function mapNotionPageToStory(page: NotionPage): Story {
     warnings: tags(page, "Warnings"),
     subgenres: tags(page, "Subgénero"),
     tropes: tags(page, "Tropes"),
+    relationshipTypes: tags(page, "Relación"),
+    kuSpain: checkbox(page, "KU España"),
     relationshipDynamics: tags(page, "Dinámicas de relación"),
     loveInterestTraits: tags(page, "Rasgos LI"),
     rating: number(page, "Nota global"),
@@ -113,9 +106,4 @@ export function mapNotionPageToStory(page: NotionPage): Story {
     amazonUrl: url(page, "Amazon URL"),
     officialUrl: url(page, "URL principal"),
   };
-}
-
-export function getNotionPageTitle(page: NotionPage): string | null {
-  const titleProperty = Object.values(page.properties).find((value) => value.type === "title");
-  return titleProperty ? joinText(titleProperty.title) || null : null;
 }
