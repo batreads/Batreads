@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://batreads.vercel.app"),
   title: "Batreads",
   description: "Guía editorial para descubrir historias de dark romance.",
+  robots: {
+    index: false,
+    follow: true,
+    googleBot: { index: false, follow: true },
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
