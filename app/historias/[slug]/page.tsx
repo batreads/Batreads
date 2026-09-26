@@ -61,20 +61,52 @@ export default async function HistoriaPage({
   const saga = sagas.find((item) => item.id === story.sagaId);
   const relatedStories = stories.filter((item) => item.id !== story.id && story.relatedStoryIds.includes(item.id));
   const relatedPages = seoPages.filter((page) => storiesForSeoPage(page, stories, authors, sagas).some((item) => item.id === story.id));
+  const heroOfficialUrl = story.officialUrl && story.officialUrl !== story.amazonUrl ? story.officialUrl : null;
+  const isWattpad = heroOfficialUrl ? /^https?:\/\/(?:www\.)?wattpad\.com(?:\/|$)/i.test(heroOfficialUrl) : false;
 
   return (
     <main className="story-page">
-      <Link className="back-link" href="/historias">← Todas las historias</Link>
-      <header className="story-hero">
-        {story.coverUrl ? <img className="story-cover" src={story.coverUrl} alt={`Portada de ${story.title}`} /> : null}
-        <div>
-          <p className="eyebrow">Ficha editorial</p>
+      <Link className="back-link" href="/historias">← Todos los libros</Link>
+      <header className={`story-hero${story.coverUrl ? "" : " story-hero-no-cover"}`}>
+        {story.coverUrl ? (
+          <div className="story-hero-cover">
+            <img src={story.coverUrl} alt={`Portada de ${story.title}`} />
+          </div>
+        ) : null}
+        <div className="story-hero-info">
+          {story.rating !== null ? (
+            <span className="story-hero-chip story-hero-chip-score">
+              <img src="/icons/star.svg" alt="" width="14" height="14" />
+              Puntuación: {score(story.rating)}/5
+            </span>
+          ) : null}
+          {story.kuSpain ? (
+            <span className="story-hero-chip story-hero-chip-ku">
+              <img src="/icons/hero-ku.svg" alt="" width="14" height="14" />
+              Disponible en Kindle Unlimited
+            </span>
+          ) : null}
           <h1>{story.title}</h1>
-          {author ? <p className="story-author">de <Link href={`/autoras/${author.slug}`}>{author.name}</Link></p>
-            : story.authorName ? <p className="story-author">de {story.authorName}</p> : null}
-          {saga ? <p className="story-author">Saga: <Link href={`/sagas/${saga.slug}`}>{saga.name}</Link></p> : null}
-          {story.hook ? <p className="story-hook">{story.hook}</p> : null}
-          {story.rating !== null ? <p className="story-rating">Nota Batreads: {score(story.rating)}</p> : null}
+          {author ? <p className="story-hero-author">de <Link href={`/autoras/${author.slug}`}>{author.name}</Link></p>
+            : story.authorName ? <p className="story-hero-author">de {story.authorName}</p> : null}
+          {saga ? <p className="story-hero-saga">Saga: <Link href={`/sagas/${saga.slug}`}>{saga.name}</Link></p> : null}
+          {(story.hook || story.synopsis) ? <p className="story-hero-hook">{story.hook || story.synopsis}</p> : null}
+          {(story.amazonUrl || heroOfficialUrl) ? (
+            <div className="story-hero-actions">
+              {story.amazonUrl ? (
+                <a className="story-hero-action story-hero-action-secondary" href={story.amazonUrl} rel="sponsored noopener noreferrer" target="_blank">
+                  Comprar en Amazon
+                  <img src="/icons/hero-arrow-secondary.svg" alt="" width="20" height="20" />
+                </a>
+              ) : null}
+              {heroOfficialUrl ? (
+                <a className="story-hero-action story-hero-action-primary" href={heroOfficialUrl} rel="noopener noreferrer" target="_blank">
+                  {isWattpad ? "Leer en Wattpad" : "Web oficial"}
+                  <img src="/icons/hero-arrow-primary.svg" alt="" width="20" height="20" />
+                </a>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </header>
 
@@ -117,7 +149,7 @@ export default async function HistoriaPage({
           {story.publisher ? <div><dt>Editorial</dt><dd>{story.publisher}</dd></div> : null}
           {story.format.length ? <div><dt>Formatos</dt><dd>{story.format.join(", ")}</dd></div> : null}
         </dl>
-        {story.officialUrl ? <p><a href={story.officialUrl} rel="noopener noreferrer" target="_blank">Web oficial ↗</a></p> : null}
+        {heroOfficialUrl ? <p><a href={heroOfficialUrl} rel="noopener noreferrer" target="_blank">Web oficial ↗</a></p> : null}
         {story.amazonUrl ? <p><a href={story.amazonUrl} rel="sponsored noopener noreferrer" target="_blank">Ver en Amazon ↗</a></p> : null}
       </section>
     </main>

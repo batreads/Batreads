@@ -55,6 +55,20 @@ nav {
   padding-block: 3rem 5rem;
 }
 
+body:has(.story-page) {
+  background: #111816;
+  color: #f4fcf9;
+}
+
+.story-page {
+  max-width: 64rem;
+  padding: 42px 24px 104px;
+}
+
+.story-page a {
+  color: #63e6be;
+}
+
 .back-link {
   display: inline-block;
   margin-bottom: 3rem;
@@ -235,34 +249,150 @@ nav {
 
 .story-hero {
   display: grid;
-  grid-template-columns: minmax(12rem, 18rem) 1fr;
-  align-items: center;
-  gap: clamp(2rem, 6vw, 5rem);
+  grid-template-columns: minmax(0, 323px) minmax(0, 1fr);
+  align-items: start;
+  gap: 48px;
+  margin-bottom: 44px;
 }
 
-.story-cover {
+.story-page > .back-link {
+  margin-bottom: 40px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.story-hero-no-cover {
+  grid-template-columns: 1fr;
+}
+
+.story-hero-cover {
   width: 100%;
-  border-radius: .75rem;
-  box-shadow: 0 2rem 4rem #0008;
+  max-width: 323px;
+  aspect-ratio: 323 / 475;
+  overflow: hidden;
+  border: 1px solid #2a3a34;
+  border-radius: 0 24px 24px 0;
+  box-shadow: 0 16px 32px rgb(0 0 0 / 50%);
 }
 
-.story-author {
-  color: #dccbd5;
+.story-hero-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.story-hook {
-  max-width: 42rem;
-  margin-top: 1.5rem;
-  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+.story-hero-info {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  padding-top: 16px;
 }
 
-.story-rating {
-  display: inline-block;
-  margin-top: 1.5rem;
-  padding: .5rem .8rem;
-  border: 1px solid #795b74;
-  border-radius: .5rem;
-  font-weight: 700;
+.story-hero-chip {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border: 1px solid #2a3a34;
+  border-radius: 8px;
+  background: #173c31;
+  color: #63e6be;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.story-hero-chip img {
+  display: block;
+  flex: none;
+}
+
+.story-hero-chip-score {
+  padding-block: 6px;
+  border-color: #685528;
+  background: #1b2a25;
+  color: #f6c85f;
+}
+
+.story-hero-info h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.75rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+.story-hero-author,
+.story-hero-saga {
+  color: #8a9a95;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.story-hero-author a,
+.story-hero-saga a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.story-hero-hook {
+  color: #8a9a95;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.story-hero-actions {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+}
+
+.story-page .story-hero-action {
+  display: inline-flex;
+  min-width: 0;
+  min-height: 52px;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 1px solid #6edcb4;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.story-hero-action img {
+  display: block;
+  flex: none;
+}
+
+.story-page .story-hero-action-secondary {
+  background: #070b13;
+  color: #6edcb4;
+}
+
+.story-page .story-hero-action-primary {
+  background: #6edcb4;
+  color: #0b0f19;
+}
+
+.story-page .story-hero-action:hover,
+.story-page .story-hero-action:focus-visible {
+  box-shadow: 0 0 0 3px rgb(110 220 180 / 20%);
+}
+
+.story-page .story-hero-action:focus-visible {
+  outline: 2px solid #6edcb4;
+  outline-offset: 3px;
 }
 
 .story-section {
@@ -415,8 +545,20 @@ nav {
     grid-template-columns: 1fr;
   }
 
-  .story-cover {
-    max-width: 16rem;
+  .story-hero {
+    gap: 28px;
+  }
+
+  .story-hero-cover {
+    max-width: 260px;
+  }
+
+  .story-hero-info {
+    padding-top: 0;
+  }
+
+  .story-hero-actions {
+    flex-direction: column;
   }
 }
 
