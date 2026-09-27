@@ -39,12 +39,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="site-header-support">
-          <div className="site-header-support-copy">
-            <span>Proyecto independiente</span>
-            <small>Ayúdanos a seguir leyendo</small>
-          </div>
           <button className="site-header-support-button" type="button" disabled title="Próximamente">
-            Buy me a coffee
+            Apoya Batreads
           </button>
         </div>
 
@@ -87,7 +83,7 @@ export function SiteHeader() {
               <small>Ayúdanos a seguir leyendo</small>
             </div>
             <button className="site-header-support-button" type="button" disabled title="Próximamente">
-              Buy me a coffee
+              Apoya Batreads
             </button>
           </div>
           <Link className="site-header-mobile-latest" href="/listas/ultima" onClick={() => setMenuOpen(false)}>

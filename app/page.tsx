@@ -1,13 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-
-const topics = [
-  { label: "Dark romance", href: "/historias?trope=Dark%20romance" },
-  { label: "Reverse Harem", href: "/historias?trope=Reverse%20Harem" },
-  { label: "Mafia", href: "/listas/mafia-romance-en-espanol" },
-  { label: "Age Gap", href: "/historias?trope=Age%20Gap" },
-  { label: "Taboo", href: "/historias?trope=Taboo" },
-];
+import { MoodExplorer } from "./_components/mood-explorer";
 
 export default function Home() {
   return (
@@ -31,21 +24,9 @@ export default function Home() {
               <Image src="/icons/hero-arrow-secondary.svg" alt="" width={20} height={20} />
             </Link>
           </div>
-          <nav className="home-hero-topics" aria-label="Explorar libros por temática">
-            <span>Explora por:</span>
-            <ul>
-              {topics.map((topic) => (
-                <li key={topic.label}>
-                  <Link href={topic.href}>
-                    <Image src="/icons/tag.svg" alt="" width={24} height={24} />
-                    {topic.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
         </div>
       </section>
+      <MoodExplorer />
     </main>
   );
 }
