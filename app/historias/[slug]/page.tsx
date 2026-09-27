@@ -85,9 +85,9 @@ export default async function HistoriaPage({
   ) : null;
 
   return (
-    <main className="story-page">
-      <Link className="back-link" href="/historias">← Todos los libros</Link>
-      <header className={`story-hero${story.coverUrl ? "" : " story-hero-no-cover"}`}>
+    <main className={`story-page${story.coverUrl ? "" : " story-page-no-cover"}`}>
+      <aside className="story-sidebar" aria-label="Portada y opciones de lectura">
+        <Link className="back-link" href="/historias">← Todos los libros</Link>
         {story.coverUrl ? (
           <div className="story-hero-media">
             <div className="story-hero-cover">
@@ -97,6 +97,9 @@ export default async function HistoriaPage({
             {kuNotice}
           </div>
         ) : null}
+      </aside>
+      <div className="story-content">
+      <header className="story-hero">
         <div className="story-hero-info">
           {story.rating !== null ? (
             <span className="story-hero-chip story-hero-chip-score">
@@ -164,6 +167,7 @@ export default async function HistoriaPage({
         {heroOfficialUrl ? <p><a href={heroOfficialUrl} rel="noopener noreferrer" target="_blank">Web oficial ↗</a></p> : null}
         {story.amazonUrl ? <p><a href={story.amazonUrl} rel="sponsored noopener noreferrer" target="_blank">Ver en Amazon ↗</a></p> : null}
       </section>
+      </div>
     </main>
   );
 }
