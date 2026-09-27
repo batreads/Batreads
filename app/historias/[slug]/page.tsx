@@ -44,9 +44,9 @@ function tagSection(title: string, values: string[]) {
 
 function metricList(story: Story) {
   return [
-    ["Darkness", story.darkness], ["Spice", story.spice],
-    ["Toxicity", story.toxicity], ["Violence", story.violence],
-    ["Impacto / WTF", story.impact],
+    ["Oscuridad", story.darkness, "🌑"], ["Spice", story.spice, "🌶️"],
+    ["Toxicidad", story.toxicity, "☠️"], ["Violencia", story.violence, "🔥"],
+    ["WTF (trama)", story.impact, "🤯"],
   ] as const;
 }
 
@@ -63,50 +63,69 @@ export default async function HistoriaPage({
   const relatedPages = seoPages.filter((page) => storiesForSeoPage(page, stories, authors, sagas).some((item) => item.id === story.id));
   const heroOfficialUrl = story.officialUrl && story.officialUrl !== story.amazonUrl ? story.officialUrl : null;
   const isWattpad = heroOfficialUrl ? /^https?:\/\/(?:www\.)?wattpad\.com(?:\/|$)/i.test(heroOfficialUrl) : false;
+  const heroActions = (story.amazonUrl || heroOfficialUrl) ? (
+    <div className="story-hero-actions">
+      {story.amazonUrl ? (
+        <a className="story-hero-action story-hero-action-primary" href={story.amazonUrl} rel="sponsored noopener noreferrer" target="_blank">
+          Comprar en Amazon
+        </a>
+      ) : null}
+      {heroOfficialUrl ? (
+        <a className={`story-hero-action ${story.amazonUrl ? "story-hero-action-secondary" : "story-hero-action-primary"}`} href={heroOfficialUrl} rel="noopener noreferrer" target="_blank">
+          {isWattpad ? "Leer en Wattpad" : "Web oficial"}
+        </a>
+      ) : null}
+    </div>
+  ) : null;
+  const kuNotice = story.kuSpain ? (
+    <p className="story-hero-ku">
+      <img src="/icons/book-open.svg" alt="" width="18" height="18" />
+      Disponible en Kindle Unlimited
+    </p>
+  ) : null;
 
   return (
     <main className="story-page">
       <Link className="back-link" href="/historias">← Todos los libros</Link>
       <header className={`story-hero${story.coverUrl ? "" : " story-hero-no-cover"}`}>
         {story.coverUrl ? (
-          <div className="story-hero-cover">
-            <img src={story.coverUrl} alt={`Portada de ${story.title}`} />
+          <div className="story-hero-media">
+            <div className="story-hero-cover">
+              <img src={story.coverUrl} alt={`Portada de ${story.title}`} />
+            </div>
+            {heroActions}
+            {kuNotice}
           </div>
         ) : null}
         <div className="story-hero-info">
           {story.rating !== null ? (
             <span className="story-hero-chip story-hero-chip-score">
-              <img src="/icons/star.svg" alt="" width="14" height="14" />
-              Puntuación: {score(story.rating)}/5
-            </span>
-          ) : null}
-          {story.kuSpain ? (
-            <span className="story-hero-chip story-hero-chip-ku">
-              <img src="/icons/hero-ku.svg" alt="" width="14" height="14" />
-              Disponible en Kindle Unlimited
+              <img src="/icons/star.svg" alt="" width="18" height="18" />
+              Puntuación de Batreads: {score(story.rating)}/5
             </span>
           ) : null}
           <h1>{story.title}</h1>
           {author ? <p className="story-hero-author">de <Link href={`/autoras/${author.slug}`}>{author.name}</Link></p>
             : story.authorName ? <p className="story-hero-author">de {story.authorName}</p> : null}
           {saga ? <p className="story-hero-saga">Saga: <Link href={`/sagas/${saga.slug}`}>{saga.name}</Link></p> : null}
-          {(story.hook || story.synopsis) ? <p className="story-hero-hook">{story.hook || story.synopsis}</p> : null}
-          {(story.amazonUrl || heroOfficialUrl) ? (
-            <div className="story-hero-actions">
-              {story.amazonUrl ? (
-                <a className="story-hero-action story-hero-action-secondary" href={story.amazonUrl} rel="sponsored noopener noreferrer" target="_blank">
-                  Comprar en Amazon
-                  <img src="/icons/hero-arrow-secondary.svg" alt="" width="20" height="20" />
-                </a>
-              ) : null}
-              {heroOfficialUrl ? (
-                <a className="story-hero-action story-hero-action-primary" href={heroOfficialUrl} rel="noopener noreferrer" target="_blank">
-                  {isWattpad ? "Leer en Wattpad" : "Web oficial"}
-                  <img src="/icons/hero-arrow-primary.svg" alt="" width="20" height="20" />
-                </a>
-              ) : null}
-            </div>
+          {story.tropes.length > 0 ? (
+            <ul className="story-hero-tropes">
+              {story.tropes.slice(0, 3).map((trope) => (
+                <li key={trope}><img src="/icons/hero-ku.svg" alt="" width="14" height="14" />{trope}</li>
+              ))}
+            </ul>
           ) : null}
+          {(story.hook || story.synopsis) ? <p className="story-hero-hook">{story.hook || story.synopsis}</p> : null}
+          <div className="story-hero-metrics" aria-label="Índices del libro">
+            {metricList(story).map(([label, value, icon]) => (
+              <div className="story-hero-metric" key={label}>
+                <div className="story-hero-metric-heading"><span aria-hidden="true">{icon}</span><strong>{score(value)}<em>/5</em></strong></div>
+                <span className="story-hero-metric-label">{label}</span>
+                <span className="story-hero-metric-track" aria-hidden="true"><span style={{ width: `${value === null ? 0 : Math.max(0, Math.min(100, value * 20))}%` }} /></span>
+              </div>
+            ))}
+          </div>
+          {!story.coverUrl ? <>{heroActions}{kuNotice}</> : null}
         </div>
       </header>
 
@@ -117,13 +136,6 @@ export default async function HistoriaPage({
         {story.idealFor ? <section className="story-section"><h2>Ideal para</h2>{paragraphs(story.idealFor)}</section> : null}
         {story.avoidIf ? <section className="story-section"><h2>Evita si</h2>{paragraphs(story.avoidIf)}</section> : null}
       </div>
-
-      <section className="story-section">
-        <h2>Dark Index</h2>
-        <dl className="score-grid">{metricList(story).map(([label, value]) => (
-          <div key={label}><dt>{label}</dt><dd>{score(value)}</dd></div>
-        ))}</dl>
-      </section>
 
       {tagSection("Tropes", story.tropes)}
       {tagSection("Dinámicas de relación", story.relationshipDynamics)}
