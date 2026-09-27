@@ -18,7 +18,7 @@ export default function Home() {
           <p className="home-hero-eyebrow">Dark romance · Romantasy · Lecturas intensas</p>
           <h1 id="home-hero-title">Tu próxima<br /><em>obsesión</em> empieza aquí.</h1>
           <p className="home-hero-description">
-            Dark romance, romantasy y lecturas que cuesta dejar.<br />
+            Dark romance, romantasy y lecturas que cuesta dejar.<br />{" "}
             Encuentra qué leer después.
           </p>
           <div className="home-hero-actions">

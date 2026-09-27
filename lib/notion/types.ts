@@ -11,6 +11,7 @@ export type NotionProperty = {
   multi_select?: { name: string }[];
   number?: number | null;
   url?: string | null;
+  date?: { start: string } | null;
   checkbox?: boolean;
   relation?: { id: string }[];
 };
@@ -19,6 +20,7 @@ export type NotionPage = {
   object: "page";
   id: string;
   url: string;
+  created_time?: string;
   archived?: boolean;
   in_trash?: boolean;
   properties: Record<string, NotionProperty>;
@@ -95,6 +97,8 @@ export type SeoPage = {
   id: string;
   slug: string;
   path: string;
+  publishedAt: string | null;
+  createdAt: string;
   section: string;
   title: string;
   heading: string;

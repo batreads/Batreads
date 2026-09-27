@@ -173,39 +173,11 @@ nav {
   display: flex;
   height: 40px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 24px;
   padding: 0 56px;
   border-top: 1px solid #2a3a34;
   background: #15201c;
-}
-
-.site-header-rail-topics {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-  white-space: nowrap;
-}
-
-.site-header-rail-topics strong {
-  color: #63e6be;
-  font-size: 11px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-
-.site-header-rail-topics > span {
-  width: 24px;
-  height: 1px;
-  background: #2a3a34;
-}
-
-.site-header-rail-topics small {
-  color: #8a9a95;
-  font-size: 11px;
-  letter-spacing: .05em;
-  text-transform: uppercase;
 }
 
 .site-header-rail-latest,
@@ -251,7 +223,7 @@ nav {
 .home-hero {
   position: relative;
   display: flex;
-  min-height: min(48vw, 980px);
+  min-height: max(calc(100svh - 138px), min(48vw, 980px), 640px);
   justify-content: center;
   overflow: hidden;
   isolation: isolate;
@@ -296,7 +268,7 @@ nav {
 .home-hero h1 {
   margin-top: clamp(24px, 2.5vw, 48px);
   font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
-  font-size: clamp(64px, 7.1vw, 148px);
+  font-size: clamp(54px, 5.7vw, 120px);
   font-weight: 700;
   letter-spacing: -.045em;
   line-height: .9;
@@ -310,7 +282,7 @@ nav {
 .home-hero-description {
   margin-top: clamp(26px, 2.5vw, 48px);
   color: #a6b4ae;
-  font-size: clamp(18px, 1.8vw, 36px);
+  font-size: clamp(16px, 1.45vw, 28px);
   line-height: 1.55;
 }
 
@@ -384,7 +356,7 @@ nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 16px;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -392,14 +364,14 @@ nav {
 
 .home-hero-topics a {
   display: inline-flex;
-  min-height: clamp(48px, 3.2vw, 64px);
+  min-height: clamp(38px, 2.6vw, 52px);
   align-items: center;
-  gap: 14px;
-  padding: 0 clamp(15px, 1.4vw, 28px);
-  border-radius: 15px;
+  gap: 9px;
+  padding: 0 clamp(11px, 1vw, 20px);
+  border-radius: 11px;
   background: #123b32;
   color: #63e6be;
-  font-size: clamp(16px, 1.3vw, 27px);
+  font-size: clamp(14px, 1.05vw, 21px);
   text-decoration: none;
   white-space: nowrap;
   transition: transform .2s ease, background-color .2s ease;
@@ -410,8 +382,8 @@ nav {
 }
 
 .home-hero-topics img {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   filter: brightness(0) saturate(100%) invert(80%) sepia(34%) saturate(605%) hue-rotate(95deg) brightness(97%) contrast(90%);
 }
 
@@ -425,7 +397,7 @@ nav {
   }
 
   .home-hero h1 {
-    font-size: clamp(62px, 9vw, 96px);
+    font-size: clamp(52px, 7.2vw, 76px);
   }
 
   .home-hero-topics {
@@ -454,13 +426,13 @@ nav {
 
   .home-hero h1 {
     margin-top: 28px;
-    font-size: clamp(50px, 11.5vw, 68px);
+    font-size: clamp(42px, 10vw, 58px);
     line-height: .98;
   }
 
   .home-hero-description {
     margin-top: 28px;
-    font-size: 17px;
+    font-size: 15px;
     line-height: 1.5;
   }
 
@@ -490,16 +462,16 @@ nav {
   }
 
   .home-hero-topics a {
-    min-height: 40px;
-    gap: 7px;
-    padding: 0 13px;
+    min-height: 36px;
+    gap: 6px;
+    padding: 0 11px;
     border-radius: 9px;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .home-hero-topics img {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 }
 
@@ -509,8 +481,7 @@ nav {
     padding-inline: 24px;
   }
 
-  .site-header-support-copy,
-  .site-header-rail-topics small {
+  .site-header-support-copy {
     display: none;
   }
 }
@@ -530,8 +501,7 @@ nav {
   }
 
   .site-header-nav,
-  .site-header-support,
-  .site-header-rail-topics {
+  .site-header-support {
     display: none;
   }
 

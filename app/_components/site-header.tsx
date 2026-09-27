@@ -60,12 +60,7 @@ export function SiteHeader() {
       </div>
 
       <div className="site-header-rail">
-        <div className="site-header-rail-topics">
-          <strong>Archivo Batreads</strong>
-          <span aria-hidden="true" />
-          <small>Reseñas · Tropos · Lecturas intensas</small>
-        </div>
-        <Link className="site-header-rail-latest" href="/listas">
+        <Link className="site-header-rail-latest" href="/listas/ultima">
           <span className="site-header-status-dot" aria-hidden="true" />
           <span>Explora nuestras listas de lectura</span>
           <span className="site-header-arrow" aria-hidden="true">→</span>
@@ -95,7 +90,7 @@ export function SiteHeader() {
               Buy me a coffee
             </button>
           </div>
-          <Link className="site-header-mobile-latest" href="/listas" onClick={() => setMenuOpen(false)}>
+          <Link className="site-header-mobile-latest" href="/listas/ultima" onClick={() => setMenuOpen(false)}>
             <span className="site-header-status-dot" aria-hidden="true" />
             <span>Explora nuestras listas de lectura</span>
             <span className="site-header-arrow" aria-hidden="true">→</span>

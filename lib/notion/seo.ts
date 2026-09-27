@@ -17,6 +17,8 @@ export function mapSeoPage(page: NotionPage): SeoPage {
     id: page.id,
     slug,
     path,
+    publishedAt: page.properties["Fecha publicación"]?.date?.start ?? null,
+    createdAt: page.created_time ?? "",
     section,
     title: text(page, "SEO title") || title,
     heading: text(page, "H1") || title,
@@ -49,6 +51,15 @@ export async function getSeoPages(): Promise<SeoPage[]> {
   return pages
     .filter((page) => !page.archived && !page.in_trash && select(page, "Estado") === "Publicado")
     .map(mapSeoPage);
+}
+
+export async function getLatestListPage(): Promise<SeoPage | null> {
+  const pages = (await getSeoPages()).filter((page) => page.section === "listas");
+  pages.sort((a, b) =>
+    (b.publishedAt ?? b.createdAt).localeCompare(a.publishedAt ?? a.createdAt)
+    || b.createdAt.localeCompare(a.createdAt),
+  );
+  return pages[0] ?? null;
 }
 
 export async function getSeoPageBySlug(slug: string): Promise<SeoPage | null> {
