@@ -227,7 +227,6 @@ nav {
 .home-hero {
   position: relative;
   display: flex;
-  min-height: clamp(500px, 42vw, 660px);
   justify-content: center;
   overflow: hidden;
   isolation: isolate;
@@ -256,7 +255,7 @@ nav {
   max-width: 1800px;
   flex-direction: column;
   align-items: center;
-  padding: clamp(42px, 3vw, 64px) 28px 56px;
+  padding: clamp(42px, 3vw, 64px) 28px 40px;
   text-align: center;
 }
 
@@ -506,10 +505,6 @@ nav {
 }
 
 @media (max-width: 900px) {
-  .home-hero {
-    min-height: 540px;
-  }
-
   .home-hero-content {
     padding-top: 54px;
   }
@@ -520,16 +515,12 @@ nav {
 }
 
 @media (max-width: 600px) {
-  .home-hero {
-    min-height: 0;
-  }
-
   .home-hero-background {
     object-position: 48% center;
   }
 
   .home-hero-content {
-    padding: 54px 20px 64px;
+    padding: 54px 20px 44px;
   }
 
   .home-hero-eyebrow {
