@@ -13,21 +13,21 @@ export function StoryGrid({
   return (
     <div className="story-grid">
       {stories.map((story) => {
-        const popularity = story.filterValues["Popularidad"]?.[0];
+        const isHiddenGem = story.filterValues["Popularidad"]?.some((value) => value.trim().toLocaleLowerCase("es") === "hidden gem");
         const author = (story.authorId && authorNames[story.authorId]) || story.authorName;
         const description = story.synopsis || story.hook;
         const trope = story.tropes[0];
 
         return (
-          <Link className="story-card" href={`/historias/${story.slug}`} key={story.id}>
+          <Link className={isHiddenGem ? "story-card story-card-hidden-gem" : "story-card"} href={`/historias/${story.slug}`} key={story.id}>
             <div className="story-card-cover">
               {story.coverUrl ? <img src={story.coverUrl} alt={`Portada de ${story.title}`} /> : null}
             </div>
             <div className="story-card-body">
-              {popularity ? (
+              {isHiddenGem ? (
                 <div className="story-card-status">
                   <img src="/icons/gem.svg" alt="" width="14" height="14" />
-                  <span>{popularity}</span>
+                  <span>Hidden Gem</span>
                 </div>
               ) : null}
               <div className="story-card-copy">

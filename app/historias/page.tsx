@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { StoryGrid } from "../_components/story-grid";
 import { getAuthors, getStories } from "@/lib/notion";
 import { getMood, matchesMood } from "@/lib/moods";
@@ -21,15 +20,15 @@ export default async function HistoriasPage({
   const authorNames = Object.fromEntries(authors.map((author) => [author.id, author.name]));
 
   return (
-    <main className="catalog-page">
-      <Link className="back-link" href="/">← Batreads</Link>
-      <header className="page-heading">
-        <p className="eyebrow">Biblioteca editorial</p>
-        <h1>{hasTopicMatches ? mood?.label ?? trope ?? "Historias" : "Historias"}</h1>
-        <p>Descubre historias de dark romance con contexto, intensidad y criterio editorial.</p>
-      </header>
-      {(mood || trope) && !hasTopicMatches ? <p>Todavía no hay historias para esta selección en el catálogo. Puedes explorar las demás lecturas mientras tanto.</p> : null}
-      <StoryGrid stories={hasTopicMatches ? filteredStories : stories} authorNames={authorNames} />
+    <main className="catalog-page stories-catalog-page">
+      <div className="stories-catalog-inner">
+        <header className="page-heading">
+          <h1>{hasTopicMatches ? mood?.label ?? trope ?? "Libros" : "Libros"}</h1>
+          <p>Descubre libros de dark romance con contexto, intensidad y criterio editorial.</p>
+        </header>
+        {(mood || trope) && !hasTopicMatches ? <p>Todavía no hay historias para esta selección en el catálogo. Puedes explorar las demás lecturas mientras tanto.</p> : null}
+        <StoryGrid stories={hasTopicMatches ? filteredStories : stories} authorNames={authorNames} />
+      </div>
     </main>
   );
 }
