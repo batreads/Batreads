@@ -12,7 +12,12 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const story = await getStoryBySlug(slug).catch(() => null);
+  let story: Story | null;
+  try {
+    story = await getStoryBySlug(slug);
+  } catch {
+    return { title: "Batreads", description: "Descubre tu próxima lectura en Batreads." };
+  }
   if (!story) return { title: "Historia no encontrada · Batreads" };
 
   const title = `${story.title} · Batreads`;
