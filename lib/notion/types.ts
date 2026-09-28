@@ -103,6 +103,7 @@ export type SeoPage = {
   title: string;
   heading: string;
   description: string;
+  summary: string;
   intro: string;
   conclusion: string;
   cta: string;

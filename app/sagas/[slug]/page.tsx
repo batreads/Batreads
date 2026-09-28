@@ -26,6 +26,7 @@ export default async function SagaPage({
   const sagaStories = stories.filter((story) => story.sagaId === saga.id);
   const sagaAuthors = authors.filter((author) => saga.authorIds.includes(author.id) || sagaStories.some((story) => story.authorId === author.id));
   const sagaPages = seoPages.filter((page) => page.sagaIds.includes(saga.id));
+  const authorNames = Object.fromEntries(authors.map((author) => [author.id, author.name]));
 
   return (
     <main className="catalog-page">
@@ -34,7 +35,7 @@ export default async function SagaPage({
       {saga.description ? <section className="story-section"><h2>Sobre la saga</h2><p>{saga.description}</p></section> : null}
       {saga.readingOrder ? <p className="entity-note">Orden de lectura: {saga.readingOrder}</p> : null}
       {sagaAuthors.length > 0 ? <section className="story-section"><h2>Autoras</h2><ul className="link-list">{sagaAuthors.map((author) => <li key={author.id}><Link href={`/autoras/${author.slug}`}>{author.name} →</Link></li>)}</ul></section> : null}
-      <section className="story-section"><h2>Historias de la saga</h2><StoryGrid stories={sagaStories} headingLevel={3} /></section>
+      <section className="story-section home-story-cards"><h2>Historias de la saga</h2><StoryGrid stories={sagaStories} authorNames={authorNames} headingLevel={3} /></section>
       {sagaPages.length > 0 ? <section className="story-section"><h2>Listas y guías</h2><ul className="link-list">{sagaPages.map((page) => <li key={page.id}><Link href={page.path}>{page.heading} →</Link></li>)}</ul></section> : null}
     </main>
   );

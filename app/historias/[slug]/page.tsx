@@ -12,13 +12,19 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const story = await getStoryBySlug(slug);
+  const story = await getStoryBySlug(slug).catch(() => null);
   if (!story) return { title: "Historia no encontrada · Batreads" };
 
+  const title = `${story.title} · Batreads`;
+  const description = story.hook || story.synopsis || `Descubre ${story.title} en Batreads y encuentra tu próxima lectura.`;
+  const url = `/historias/${story.slug}`;
+
   return {
-    title: `${story.title} · Batreads`,
-    description: story.hook || story.synopsis,
-    alternates: { canonical: `/historias/${story.slug}` },
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url, type: "article", siteName: "Batreads", locale: "es_ES" },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 
@@ -60,6 +66,7 @@ export default async function HistoriaPage({
   const author = authors.find((item) => item.id === story.authorId);
   const saga = sagas.find((item) => item.id === story.sagaId);
   const relatedStories = stories.filter((item) => item.id !== story.id && story.relatedStoryIds.includes(item.id));
+  const authorNames = Object.fromEntries(authors.map((item) => [item.id, item.name]));
   const relatedPages = seoPages.filter((page) => storiesForSeoPage(page, stories, authors, sagas).some((item) => item.id === story.id));
   const heroOfficialUrl = story.officialUrl && story.officialUrl !== story.amazonUrl ? story.officialUrl : null;
   const isWattpad = heroOfficialUrl ? /^https?:\/\/(?:www\.)?wattpad\.com(?:\/|$)/i.test(heroOfficialUrl) : false;
@@ -153,7 +160,7 @@ export default async function HistoriaPage({
         </section>
       ) : null}
 
-      {relatedStories.length > 0 ? <section className="story-section"><h2>Historias relacionadas</h2><StoryGrid stories={relatedStories} headingLevel={3} /></section> : null}
+      {relatedStories.length > 0 ? <section className="story-section home-story-cards"><h2>Historias relacionadas</h2><StoryGrid stories={relatedStories} authorNames={authorNames} headingLevel={3} /></section> : null}
       {relatedPages.length > 0 ? <section className="story-section"><h2>Listas y guías relacionadas</h2><ul className="link-list">{relatedPages.map((page) => <li key={page.id}><Link href={page.path}>{page.heading} →</Link></li>)}</ul></section> : null}
 
       <section className="story-section">

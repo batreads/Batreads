@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import { getAuthors, getSagas, getSeoPages, getStories } from "@/lib/notion";
+import { siteUrl } from "@/lib/site-url";
 
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteOrigin = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://batreads.vercel.app").origin;
+  const siteOrigin = siteUrl.origin;
   const [stories, authors, sagas, seoPages] = await Promise.all([
     getStories(),
     getAuthors(),

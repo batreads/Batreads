@@ -53,7 +53,7 @@ export default async function Home() {
         </div>
       </section>
       <MoodExplorer />
-      <section className="home-recommendations" aria-labelledby="home-recommendations-title">
+      <section className="home-recommendations home-story-cards" aria-labelledby="home-recommendations-title">
         <div className="home-recommendations-inner">
           <div className="home-recommendations-heading">
             <div>

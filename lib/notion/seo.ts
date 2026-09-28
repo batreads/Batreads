@@ -23,6 +23,7 @@ export function mapSeoPage(page: NotionPage): SeoPage {
     title: text(page, "SEO title") || title,
     heading: text(page, "H1") || title,
     description: text(page, "Meta description") || text(page, "Resumen / entradilla"),
+    summary: text(page, "Resumen / entradilla"),
     intro: text(page, "Introducción"),
     conclusion: text(page, "Conclusión"),
     cta: text(page, "CTA"),
