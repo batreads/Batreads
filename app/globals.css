@@ -347,7 +347,7 @@ nav {
 }
 
 .home-moods {
-  padding: clamp(64px, 5vw, 88px) 32px clamp(76px, 6vw, 104px);
+  padding: clamp(64px, 5vw, 88px) 32px clamp(32px, 3vw, 48px);
   background: var(--home-background);
   color: #f4fcf9;
 }
@@ -466,7 +466,7 @@ nav {
 }
 
 .home-recommendations {
-  padding: clamp(64px, 5vw, 88px) 32px clamp(76px, 6vw, 104px);
+  padding: clamp(32px, 3vw, 48px) 32px clamp(32px, 3vw, 48px);
   background: var(--home-background);
   color: #f4fcf9;
 }
@@ -479,42 +479,276 @@ nav {
   margin-bottom: 48px;
 }
 
-.home-recommendations-more {
+.home-section-more {
   display: inline-flex;
   flex: none;
   align-items: center;
-  gap: 20px;
-  padding-bottom: 8px;
-  color: #63e6be;
-  font-size: clamp(16px, 1.4vw, 24px);
+  gap: 10px;
+  padding-bottom: 5px;
+  color: #83e7c3;
+  font-size: clamp(16px, 1.4vw, 20px);
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
 }
 
-.home-recommendations-more span {
-  font-size: 1.7em;
-  font-weight: 400;
-  line-height: .5;
+.home-section-more:hover,
+.home-section-more:focus-visible {
+  color: #b1f7da;
 }
 
-.home-recommendations-more:hover,
-.home-recommendations-more:focus-visible {
-  color: #a0f3d4;
-}
-
-.home-recommendations-more:focus-visible {
+.home-section-more:focus-visible {
   outline: 2px solid #63e6be;
   outline-offset: 5px;
 }
 
+.home-lists {
+  padding: clamp(32px, 3vw, 48px) 32px clamp(76px, 6vw, 104px);
+  background: var(--home-background);
+  color: #f4fcf9;
+}
+
+.home-lists-inner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.home-lists-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.home-lists-heading h2 {
+  margin: 0;
+  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-size: clamp(36px, 3.6vw, 52px);
+  font-weight: 700;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+}
+
+.home-lists-heading p {
+  margin-top: 14px;
+  color: var(--home-muted);
+  font-size: clamp(16px, 1.25vw, 20px);
+}
+
+.home-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.home-list-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 28px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background: var(--home-surface);
+  color: #f4fcf9;
+  text-decoration: none;
+  transition: border-color .2s ease, transform .2s ease;
+}
+
+.home-list-card:hover,
+.home-list-card:focus-visible {
+  border-color: #63e6be;
+  transform: translateY(-3px);
+}
+
+.home-list-card:focus-visible {
+  outline: 2px solid #63e6be;
+  outline-offset: 4px;
+}
+
+.home-list-card-label {
+  color: #8ce9ca;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.home-list-card h3 {
+  margin: 22px 0 0;
+  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-size: clamp(25px, 2.4vw, 32px);
+  font-weight: 700;
+  letter-spacing: -.025em;
+  line-height: 1.12;
+}
+
+.home-list-card p {
+  margin-top: 12px;
+  color: var(--home-muted);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.home-newsletter {
+  padding: 0 32px 32px;
+  background: var(--home-background);
+}
+
+.home-newsletter-panel {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px 32px 44px;
+  border-radius: 22px;
+  background: #b8ead9;
+  color: #14372f;
+  text-align: center;
+}
+
+.home-newsletter-eyebrow {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .28em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.home-newsletter h2 {
+  margin: 18px auto 0;
+  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 700;
+  letter-spacing: -.035em;
+  line-height: 1.05;
+}
+
+.home-newsletter-description {
+  margin-top: 16px;
+  color: #41645c;
+  font-size: clamp(16px, 1.25vw, 20px);
+}
+
+.home-newsletter-signup {
+  max-width: 440px;
+  margin: 24px auto 0;
+}
+
+.home-newsletter-field {
+  display: flex;
+  height: 56px;
+  align-items: center;
+  border-radius: 14px;
+  background: #f8f9f7;
+}
+
+.home-newsletter-field input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0 24px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #17362f;
+  font: inherit;
+  font-size: 19px;
+}
+
+.home-newsletter-field input::placeholder {
+  color: #879691;
+  opacity: 1;
+}
+
+.home-newsletter-field button {
+  display: grid;
+  width: 64px;
+  height: 100%;
+  flex: none;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #788a84;
+  font: inherit;
+  font-size: 30px;
+}
+
+.home-newsletter-consent {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  color: #41645c;
+  font-size: 16px;
+}
+
+.home-newsletter-consent input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  appearance: none;
+  border: 2px solid #81918a;
+  border-radius: 5px;
+  background: #f8f9f7;
+}
+
+.home-newsletter-status {
+  margin-top: 12px;
+  color: #41645c;
+  font-size: 13px;
+}
+
+@media (max-width: 720px) {
+  .home-lists-heading {
+    display: block;
+  }
+
+  .home-lists .home-section-more {
+    margin-top: 20px;
+  }
+
+  .home-lists-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 600px) {
+  .home-newsletter {
+    padding: 0 20px 20px;
+  }
+
+  .home-newsletter-panel {
+    padding: 40px 20px 36px;
+  }
+
+  .home-newsletter h2 {
+    font-size: clamp(34px, 9vw, 42px);
+  }
+
+  .home-newsletter-description {
+    margin-top: 18px;
+    font-size: 16px;
+  }
+
+  .home-newsletter-signup {
+    margin-top: 24px;
+  }
+
+  .home-newsletter-field {
+    height: 56px;
+  }
+
+  .home-newsletter-consent {
+    font-size: 14px;
+  }
+
   .home-recommendations-heading {
     display: block;
     margin-bottom: 32px;
   }
 
-  .home-recommendations-more {
+  .home-recommendations .home-section-more {
     margin-top: 24px;
   }
 }
@@ -527,8 +761,22 @@ nav {
 
 @media (max-width: 600px) {
   .home-moods,
-  .home-recommendations {
+  .home-recommendations,
+  .home-lists {
     padding: 64px 20px 88px;
+  }
+
+  .home-moods {
+    padding-bottom: 36px;
+  }
+
+  .home-recommendations {
+    padding-top: 36px;
+    padding-bottom: 36px;
+  }
+
+  .home-lists {
+    padding-top: 36px;
   }
 
   .home-moods-eyebrow,
@@ -537,13 +785,23 @@ nav {
   }
 
   .home-moods h2,
-  .home-recommendations-heading h2 {
+  .home-recommendations-heading h2,
+  .home-lists-heading h2 {
     font-size: clamp(34px, 9vw, 42px);
   }
 
   .home-moods-description,
-  .home-recommendations-description {
+  .home-recommendations-description,
+  .home-lists-heading p {
     font-size: 16px;
+  }
+
+  .home-list-card {
+    padding: 24px;
+  }
+
+  .home-list-card h3 {
+    font-size: 28px;
   }
 
   .home-moods-grid {
