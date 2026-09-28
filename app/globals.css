@@ -1377,7 +1377,7 @@ body:has(.story-page) {
   gap: 5px;
 }
 
-.story-card h2 {
+.story-card :is(h2, h3) {
   overflow: hidden;
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
@@ -1485,7 +1485,7 @@ body:has(.story-page) {
   box-shadow: none;
 }
 
-:is(.stories-catalog-page, .home-recommendations) .story-card h2 {
+:is(.stories-catalog-page, .home-recommendations) .story-card :is(h2, h3) {
   font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
   font-size: 25px;
   letter-spacing: -.025em;
@@ -1562,7 +1562,7 @@ body:has(.story-page) {
   box-shadow: 0 0 20px rgb(99 230 190 / 16%);
 }
 
-:is(.stories-catalog-page, .home-recommendations) .story-card-hidden-gem h2 {
+:is(.stories-catalog-page, .home-recommendations) .story-card-hidden-gem :is(h2, h3) {
   color: #d7ffed;
 }
 
@@ -2105,7 +2105,7 @@ body:has(.story-page) {
     min-height: 135px;
   }
 
-  .story-card h2 {
+  .story-card :is(h2, h3) {
     font-size: 21px;
   }
 }

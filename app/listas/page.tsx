@@ -5,6 +5,7 @@ import { getSeoPages } from "@/lib/notion";
 export const metadata: Metadata = {
   title: "Qué leer de dark romance: recomendaciones reales | Batreads",
   description: "Encuentra selecciones de dark romance basadas en libros que hemos leído. Te contamos qué ofrece cada historia para ayudarte a elegir tu próxima lectura.",
+  alternates: { canonical: "/listas" },
 };
 
 export default async function ListasPage() {

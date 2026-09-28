@@ -37,7 +37,7 @@ export default async function AutoraPage({
       </header>
       {author.bio ? <section className="story-section"><h2>Sobre la autora</h2><p>{author.bio}</p></section> : null}
       {authorSagas.length > 0 ? <section className="story-section"><h2>Sagas</h2><ul className="link-list">{authorSagas.map((saga) => <li key={saga.id}><Link href={`/sagas/${saga.slug}`}>{saga.name} →</Link></li>)}</ul></section> : null}
-      <section className="story-section"><h2>Historias de {author.name}</h2><StoryGrid stories={authorStories} /></section>
+      <section className="story-section"><h2>Historias de {author.name}</h2><StoryGrid stories={authorStories} headingLevel={3} /></section>
       {authorPages.length > 0 ? <section className="story-section"><h2>Listas y guías</h2><ul className="link-list">{authorPages.map((page) => <li key={page.id}><Link href={page.path}>{page.heading} →</Link></li>)}</ul></section> : null}
       {author.website ? <p className="external-link"><a href={author.website} rel="noopener noreferrer" target="_blank">Web de la autora ↗</a></p> : null}
     </main>

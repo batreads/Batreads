@@ -5,6 +5,7 @@ import { getAuthors, getStories } from "@/lib/notion";
 export const metadata: Metadata = {
   title: "Autoras de dark romance y libros recomendados | Batreads",
   description: "Conoce a las autoras de los libros que hemos leído y descubre sus historias, sagas y nuestras recomendaciones de lectura.",
+  alternates: { canonical: "/autoras" },
 };
 
 export default async function AutorasPage() {

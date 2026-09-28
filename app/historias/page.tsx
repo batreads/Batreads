@@ -6,6 +6,7 @@ import { getMood, matchesMood } from "@/lib/moods";
 export const metadata: Metadata = {
   title: "Libros de dark romance que hemos leído | Batreads",
   description: "Explora nuestras lecturas de dark romance en español. Cada ficha incluye reseña, sinopsis, tropes, nivel de spice y avisos de contenido.",
+  alternates: { canonical: "/historias" },
 };
 
 export default async function HistoriasPage({

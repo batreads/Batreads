@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { MoodExplorer } from "./_components/mood-explorer";
 import { StoryGrid } from "./_components/story-grid";
 import { getAuthors, getSeoPages, getStories } from "@/lib/notion";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 const featuredSlugs = [
   "nido-de-viboras-ka-knight",
@@ -63,7 +68,7 @@ export default async function Home() {
               Ver más libros <span aria-hidden="true">→</span>
             </Link>
           </div>
-          <StoryGrid stories={featuredStories} authorNames={authorNames} />
+          <StoryGrid stories={featuredStories} authorNames={authorNames} headingLevel={3} />
         </div>
       </section>
       <section className="home-lists" aria-labelledby="home-lists-title">

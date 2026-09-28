@@ -24,7 +24,7 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="site-header-primary">
         <Link className="site-header-brand" href="/" aria-label="Batreads, ir al inicio">
-          <Image src="/images/batreads-logo.png" alt="Batreads" width={435} height={99} priority />
+          <Image src="/images/batreads-logo.png" alt="" width={435} height={99} priority />
         </Link>
 
         <nav className="site-header-nav" aria-label="Secciones principales">

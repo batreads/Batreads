@@ -30,7 +30,7 @@ export function SeoContent({
         {page.description ? <p>{page.description}</p> : null}
       </header>
       {page.intro ? <section className="story-section"><h2>Introducción</h2>{paragraphs(page.intro)}</section> : null}
-      {relatedStories.length > 0 ? <section className="story-section"><h2>Historias relacionadas</h2><StoryGrid stories={relatedStories} /></section> : null}
+      {relatedStories.length > 0 ? <section className="story-section"><h2>Historias relacionadas</h2><StoryGrid stories={relatedStories} headingLevel={3} /></section> : null}
       {relatedAuthors.length > 0 ? <section className="story-section"><h2>Autoras relacionadas</h2><ul className="link-list">{relatedAuthors.map((author) => <li key={author.id}><Link href={`/autoras/${author.slug}`}>{author.name} →</Link></li>)}</ul></section> : null}
       {relatedSagas.length > 0 ? <section className="story-section"><h2>Sagas relacionadas</h2><ul className="link-list">{relatedSagas.map((saga) => <li key={saga.id}><Link href={`/sagas/${saga.slug}`}>{saga.name} →</Link></li>)}</ul></section> : null}
       {page.faqs ? <section className="story-section"><h2>Preguntas frecuentes</h2>{paragraphs(page.faqs)}</section> : null}

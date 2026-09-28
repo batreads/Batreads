@@ -4,11 +4,14 @@ import type { Story } from "@/lib/notion";
 export function StoryGrid({
   stories,
   authorNames = {},
+  headingLevel = 2,
 }: {
   stories: Story[];
   authorNames?: Record<string, string>;
+  headingLevel?: 2 | 3;
 }) {
   if (stories.length === 0) return <p>Todavía no hay historias publicadas.</p>;
+  const Heading = headingLevel === 2 ? "h2" : "h3";
 
   return (
     <div className="story-grid">
@@ -21,7 +24,7 @@ export function StoryGrid({
         return (
           <Link className={isHiddenGem ? "story-card story-card-hidden-gem" : "story-card"} href={`/historias/${story.slug}`} key={story.id}>
             <div className="story-card-cover">
-              {story.coverUrl ? <img src={story.coverUrl} alt={`Portada de ${story.title}`} /> : null}
+              {story.coverUrl ? <img src={story.coverUrl} alt="" /> : null}
             </div>
             <div className="story-card-body">
               {isHiddenGem ? (
@@ -31,7 +34,7 @@ export function StoryGrid({
                 </div>
               ) : null}
               <div className="story-card-copy">
-                <h2>{story.title}</h2>
+                <Heading>{story.title}</Heading>
                 {author ? <p className="story-card-author">{author}</p> : null}
                 {description ? <p className="story-card-description">{description}</p> : null}
               </div>

@@ -5,6 +5,7 @@ import { getSagas, getStories } from "@/lib/notion";
 export const metadata: Metadata = {
   title: "Sagas de dark romance: orden de lectura | Batreads",
   description: "Descubre las sagas de dark romance presentes en Batreads, sus libros y autoras, y consulta el orden de lectura para saber por dónde empezar.",
+  alternates: { canonical: "/sagas" },
 };
 
 export default async function SagasPage() {

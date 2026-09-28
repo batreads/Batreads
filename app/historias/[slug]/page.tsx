@@ -153,7 +153,7 @@ export default async function HistoriaPage({
         </section>
       ) : null}
 
-      {relatedStories.length > 0 ? <section className="story-section"><h2>Historias relacionadas</h2><StoryGrid stories={relatedStories} /></section> : null}
+      {relatedStories.length > 0 ? <section className="story-section"><h2>Historias relacionadas</h2><StoryGrid stories={relatedStories} headingLevel={3} /></section> : null}
       {relatedPages.length > 0 ? <section className="story-section"><h2>Listas y guías relacionadas</h2><ul className="link-list">{relatedPages.map((page) => <li key={page.id}><Link href={page.path}>{page.heading} →</Link></li>)}</ul></section> : null}
 
       <section className="story-section">
