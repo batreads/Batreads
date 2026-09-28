@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getSagas, getStories } from "@/lib/notion";
+
+export const metadata: Metadata = {
+  title: "Sagas de dark romance: orden de lectura | Batreads",
+  description: "Descubre las sagas de dark romance presentes en Batreads, sus libros y autoras, y consulta el orden de lectura para saber por dónde empezar.",
+};
 
 export default async function SagasPage() {
   const [sagas, stories] = await Promise.all([getSagas(), getStories()]);

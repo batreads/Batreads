@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getAuthors, getStories } from "@/lib/notion";
+
+export const metadata: Metadata = {
+  title: "Autoras de dark romance y libros recomendados | Batreads",
+  description: "Conoce a las autoras de los libros que hemos leído y descubre sus historias, sagas y nuestras recomendaciones de lectura.",
+};
 
 export default async function AutorasPage() {
   const [authors, stories] = await Promise.all([getAuthors(), getStories()]);

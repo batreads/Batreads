@@ -6,8 +6,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://batreads.vercel.app"),
-  title: "Batreads",
-  description: "Guía editorial para descubrir historias de dark romance.",
+  title: "Dark romance en español: descubre tu próxima obsesión | Batreads",
+  description: "Descubre tu próxima obsesión con recomendaciones reales de dark romance. Hemos leído los libros y te contamos qué esperar de cada historia antes de elegir.",
   robots: {
     index: false,
     follow: true,

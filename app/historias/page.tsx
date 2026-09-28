@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { StoryGrid } from "../_components/story-grid";
 import { getAuthors, getStories } from "@/lib/notion";
 import { getMood, matchesMood } from "@/lib/moods";
+
+export const metadata: Metadata = {
+  title: "Libros de dark romance que hemos leído | Batreads",
+  description: "Explora nuestras lecturas de dark romance en español. Cada ficha incluye reseña, sinopsis, tropes, nivel de spice y avisos de contenido.",
+};
 
 export default async function HistoriasPage({
   searchParams,
