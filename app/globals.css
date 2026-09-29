@@ -228,7 +228,7 @@ nav {
   display: inline-flex;
   flex: none;
   align-items: center;
-  width: 190px;
+  width: clamp(190px, 22vw, 240px);
 }
 
 .site-header-brand img {
@@ -1054,14 +1054,16 @@ nav {
   }
 
   .site-header-primary {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     height: 76px;
-    justify-content: space-between;
     padding-inline: 20px;
   }
 
   .site-header-brand {
-    width: 141px;
+    grid-column: 2;
+    width: min(190px, calc(100vw - 180px));
+    justify-self: center;
   }
 
   .site-header-nav,
@@ -1071,10 +1073,12 @@ nav {
 
   .site-header-menu-toggle {
     display: inline-flex;
+    grid-column: 3;
     min-height: 38px;
     align-items: center;
     justify-content: center;
-    padding: 0 16px;
+    justify-self: end;
+    padding: 0 10px;
     border: 1px solid var(--page-border);
     border-radius: 999px;
     background: #123235;
