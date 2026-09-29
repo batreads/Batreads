@@ -49,13 +49,21 @@ async function getCoverDataUrl(coverUrl?: string | null): Promise<string | null>
   }
 }
 
-export async function createOpenGraphImage(props: Omit<OpenGraphTemplateProps, "backgroundUrl" | "logoUrl"> = {}): Promise<ImageResponse> {
+export async function createOpenGraphImage(props: Omit<OpenGraphTemplateProps, "backgroundUrl" | "logoUrl"> = {}): Promise<Response> {
   const [assets, coverUrl] = await Promise.all([brandAssets, getCoverDataUrl(props.coverUrl)]);
-  return new ImageResponse(
+  const image = new ImageResponse(
     <OpenGraphTemplate {...props} backgroundUrl={assets.backgroundUrl} logoUrl={assets.logoUrl} coverUrl={coverUrl} />,
     { ...OG_SIZE, fonts: [
       { name: "Liberation Serif", data: assets.serifFont, weight: 400, style: "normal" },
       { name: "Geist", data: assets.sansFont, weight: 400, style: "normal" },
     ] },
   );
+
+  const png = Buffer.from(await image.arrayBuffer());
+  try {
+    const optimized = await sharp(png).png({ palette: true, colours: 256, dither: 0.6, effort: 7 }).toBuffer();
+    return new Response(new Uint8Array(optimized), { headers: { "Content-Type": "image/png" } });
+  } catch {
+    return new Response(new Uint8Array(png), { headers: { "Content-Type": "image/png" } });
+  }
 }
