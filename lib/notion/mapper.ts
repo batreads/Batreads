@@ -21,7 +21,7 @@ function coverUrl(page: NotionPage): string | null {
 
 function filterValues(page: NotionPage): Record<string, string[]> {
   const fields = [
-    "Subgénero", "Tropes", "KU España", "Relación", "Arquetipo LI",
+    "Subgénero", "Tropes", "KU España", "Relación", "Ritmo", "Arquetipo LI",
     "Dinámicas de relación", "Popularidad", "Plataforma", "Autora", "Saga",
     "Sello editorial", "Darkness", "Spice", "Toxicity", "Violence",
     "Publicación Batreads",
