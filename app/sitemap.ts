@@ -19,6 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/autoras",
     "/sagas",
     "/listas",
+    "/apoya",
     "/condiciones-y-aviso-legal",
     "/politica-de-cookies",
     ...stories.map((story) => `/historias/${story.slug}`),

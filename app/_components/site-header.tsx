@@ -39,9 +39,9 @@ export function SiteHeader() {
         </nav>
 
         <div className="site-header-support">
-          <button className="site-header-support-button" type="button" disabled title="Próximamente">
+          <Link className="site-header-support-button" href="/apoya" aria-current={pathname === "/apoya" ? "page" : undefined}>
             Apoya Batreads
-          </button>
+          </Link>
         </div>
 
         <button
@@ -82,9 +82,9 @@ export function SiteHeader() {
               <span>Proyecto independiente</span>
               <small>Ayúdanos a seguir leyendo</small>
             </div>
-            <button className="site-header-support-button" type="button" disabled title="Próximamente">
+            <Link className="site-header-support-button" href="/apoya" aria-current={pathname === "/apoya" ? "page" : undefined} onClick={() => setMenuOpen(false)}>
               Apoya Batreads
-            </button>
+            </Link>
           </div>
           <Link className="site-header-mobile-latest" href="/listas/ultima" onClick={() => setMenuOpen(false)}>
             <span className="site-header-status-dot" aria-hidden="true" />

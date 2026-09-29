@@ -23,6 +23,7 @@ export function SiteFooter() {
           <nav className="site-footer-nav" aria-label="Explorar Batreads">
             <h2>Explora</h2>
             {exploreLinks.map(({ label, href }) => <Link href={href} key={href}>{label}</Link>)}
+            <Link href="/apoya">Apoya Batreads</Link>
           </nav>
           <nav className="site-footer-nav" aria-label="Información legal">
             <h2>Información</h2>
