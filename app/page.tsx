@@ -4,25 +4,15 @@ import Link from "next/link";
 import { MoodExplorer } from "./_components/mood-explorer";
 import { StoryGrid } from "./_components/story-grid";
 import { getAuthors, getSeoPages, getStories } from "@/lib/notion";
+import { recentStories } from "@/lib/notion/recent-stories";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const featuredSlugs = [
-  "nido-de-viboras-ka-knight",
-  "credence",
-  "hunting-adeline",
-  "five-brothers",
-  "srta-mc-millan-abby-assou",
-];
-
 export default async function Home() {
   const [stories, authors, seoPages] = await Promise.all([getStories(), getAuthors(), getSeoPages()]);
-  const featuredStories = [
-    ...featuredSlugs.flatMap((slug) => stories.filter((story) => story.slug === slug)),
-    ...stories.filter((story) => !featuredSlugs.includes(story.slug)),
-  ].slice(0, 4);
+  const latestStories = recentStories(stories, 6);
   const authorNames = Object.fromEntries(authors.map((author) => [author.id, author.name]));
   const lists = seoPages
     .filter((page) => page.section === "listas")
@@ -60,7 +50,7 @@ export default async function Home() {
               <p className="home-recommendations-eyebrow">Selección de libros</p>
               <h2 id="home-recommendations-title">Últimas lecturas</h2>
               <p className="home-recommendations-description">
-                Lo último que hemos leído: cuatro historias intensas y oscuras,
+                Lo último que hemos leído: historias intensas y oscuras,
                 de esas que se leen con la puerta cerrada y cuesta olvidar.
               </p>
             </div>
@@ -68,7 +58,7 @@ export default async function Home() {
               Ver más libros <span aria-hidden="true">→</span>
             </Link>
           </div>
-          <StoryGrid stories={featuredStories} authorNames={authorNames} headingLevel={3} />
+          <StoryGrid stories={latestStories} authorNames={authorNames} headingLevel={3} />
         </div>
       </section>
       <section className="home-lists" aria-labelledby="home-lists-title">

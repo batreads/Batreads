@@ -3,6 +3,7 @@ import path from "node:path";
 import { ImageResponse } from "next/og";
 import sharp from "sharp";
 import { OpenGraphTemplate, type OpenGraphTemplateProps } from "@/components/seo/OpenGraphTemplate";
+import { CollectionOpenGraphTemplate, type CollectionOpenGraphTemplateProps } from "@/components/seo/CollectionOpenGraphTemplate";
 
 export const OG_SIZE = { width: 1200, height: 630 };
 
@@ -53,6 +54,30 @@ export async function createOpenGraphImage(props: Omit<OpenGraphTemplateProps, "
   const [assets, coverUrl] = await Promise.all([brandAssets, getCoverDataUrl(props.coverUrl)]);
   const image = new ImageResponse(
     <OpenGraphTemplate {...props} backgroundUrl={assets.backgroundUrl} logoUrl={assets.logoUrl} coverUrl={coverUrl} />,
+    { ...OG_SIZE, fonts: [
+      { name: "Liberation Serif", data: assets.serifFont, weight: 400, style: "normal" },
+      { name: "Geist", data: assets.sansFont, weight: 400, style: "normal" },
+    ] },
+  );
+
+  const png = Buffer.from(await image.arrayBuffer());
+  try {
+    const optimized = await sharp(png).png({ palette: true, colours: 256, dither: 0.6, effort: 7 }).toBuffer();
+    return new Response(new Uint8Array(optimized), { headers: { "Content-Type": "image/png" } });
+  } catch {
+    return new Response(new Uint8Array(png), { headers: { "Content-Type": "image/png" } });
+  }
+}
+
+export async function createCollectionOpenGraphImage(
+  props: Omit<CollectionOpenGraphTemplateProps, "backgroundUrl" | "logoUrl">,
+): Promise<Response> {
+  const [assets, covers] = await Promise.all([
+    brandAssets,
+    Promise.all(props.coverUrls.slice(0, 3).map(getCoverDataUrl)),
+  ]);
+  const image = new ImageResponse(
+    <CollectionOpenGraphTemplate {...props} backgroundUrl={assets.backgroundUrl} logoUrl={assets.logoUrl} coverUrls={covers.filter((cover): cover is string => Boolean(cover))} />,
     { ...OG_SIZE, fonts: [
       { name: "Liberation Serif", data: assets.serifFont, weight: 400, style: "normal" },
       { name: "Geist", data: assets.sansFont, weight: 400, style: "normal" },

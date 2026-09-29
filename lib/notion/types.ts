@@ -31,6 +31,8 @@ export type Story = {
   slug: string;
   notionSlug: string;
   title: string;
+  publishedAt: string | null;
+  createdAt: string;
   authorId: string | null;
   authorName: string | null;
   sagaId: string | null;

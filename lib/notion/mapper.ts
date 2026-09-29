@@ -65,6 +65,8 @@ export function mapNotionPageToStory(page: NotionPage): Story {
     slug: webSlugByNotionSlug[notionSlug] ?? notionSlug,
     notionSlug,
     title,
+    publishedAt: page.properties["Fecha publicación"]?.date?.start ?? null,
+    createdAt: page.created_time ?? "",
     authorId: relationIds(page, "Autora")[0] ?? null,
     authorName: null,
     sagaId: relationIds(page, "Saga")[0] ?? null,
