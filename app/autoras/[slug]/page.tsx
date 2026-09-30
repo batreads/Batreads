@@ -115,7 +115,7 @@ export default async function AutoraPage({ params }: PageProps) {
           </div>
           {socials.some(([, url]) => externalUrl(url)) || amazonUrl ? (
             <nav className="author-socials" aria-label={`Enlaces de ${author.name}`}>
-              {amazonUrl ? <a className="author-amazon-cta" href={amazonUrl} target="_blank" rel="noopener noreferrer">Buscar libros de {author.name} en Amazon ↗</a> : null}
+              {amazonUrl ? <a className="author-amazon-cta" href={amazonUrl} target="_blank" rel="noopener noreferrer" aria-label={`Buscar libros de ${author.name} en Amazon (abre en otra pestaña)`}>Amazon</a> : null}
               {socials.map(([label, url]) => externalUrl(url) ? <a key={label} href={url!} target="_blank" rel="noopener noreferrer" aria-label={`${label} de ${author.name} (abre en otra pestaña)`}>{label} ↗</a> : null)}
             </nav>
           ) : null}
@@ -150,7 +150,6 @@ export default async function AutoraPage({ params }: PageProps) {
                     <h3>{saga.name}</h3>
                     {saga.description ? <p>{saga.description}</p> : null}
                     <div className="author-saga-footer">
-                      <span>{countLabel(saga.storyIds.length, "historia", "historias")} en Batreads</span>
                       <Link href={`/sagas/${saga.slug}`}>Ver saga →</Link>
                     </div>
                   </div>
@@ -168,10 +167,8 @@ export default async function AutoraPage({ params }: PageProps) {
 
       {author.bio ? (
         <section className="story-section author-about" aria-labelledby="author-about-title">
-          <div>
-            <h2 id="author-about-title">Sobre {author.name}</h2>
-            <p className="author-bio">{author.bio}</p>
-          </div>
+          <h2 id="author-about-title">Sobre {author.name}</h2>
+          <p className="author-bio">{author.bio}</p>
           {facts.length > 0 || amazonUrl ? (
             <aside className="author-facts" aria-label={`Ficha de ${author.name}`}>
               {facts.map(([label, value]) => <div className="author-fact" key={label}><span>{label}</span><strong>{value}</strong></div>)}
