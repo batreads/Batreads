@@ -1,4 +1,4 @@
-import { checkbox, relationIds, select, text, validSlug } from "./properties";
+import { checkbox, number, relationIds, select, text, validSlug } from "./properties";
 import { queryPages } from "./query";
 import type { Author, NotionPage, Saga, SeoPage, Story } from "./types";
 
@@ -9,7 +9,8 @@ export function mapSeoPage(page: NotionPage): SeoPage {
 
   const section = select(page, "Sección web") ?? "listas";
   const rawPath = text(page, "Ruta");
-  const path = /^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(rawPath)
+  const hasExplicitPath = /^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(rawPath);
+  const path = hasExplicitPath
     ? rawPath
     : section === "listas" ? `/listas/${slug}` : `/${slug}`;
 
@@ -17,10 +18,16 @@ export function mapSeoPage(page: NotionPage): SeoPage {
     id: page.id,
     slug,
     path,
+    hasExplicitPath,
+    pageType: select(page, "Tipo de página") ?? "",
+    pageFormat: select(page, "Formato de página") ?? "",
+    topic: select(page, "Entidad / tema") ?? "",
+    priority: number(page, "Prioridad SEO"),
     publishedAt: page.properties["Fecha publicación"]?.date?.start ?? null,
     createdAt: page.created_time ?? "",
     section,
     title: text(page, "SEO title") || title,
+    contentTitle: title,
     heading: text(page, "H1") || title,
     description: text(page, "Meta description") || text(page, "Resumen / entradilla"),
     summary: text(page, "Resumen / entradilla"),

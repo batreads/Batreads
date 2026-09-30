@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { getAuthors, getStories } from "@/lib/notion";
 import { StoriesCatalog } from "./stories-catalog";
+import { Breadcrumbs } from "../_components/breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Libros de dark romance que hemos leído | Batreads",
@@ -18,6 +19,7 @@ export default async function HistoriasPage() {
   return (
     <main className="catalog-page stories-catalog-page">
       <div className="stories-catalog-inner">
+        <Breadcrumbs items={[{ label: "Libros" }]} />
         <Suspense fallback={<p>Preparando el catálogo…</p>}>
           <StoriesCatalog stories={stories} authorNames={authorNames} />
         </Suspense>

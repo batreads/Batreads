@@ -14,6 +14,8 @@ export type NotionProperty = {
   date?: { start: string } | null;
   checkbox?: boolean;
   relation?: { id: string }[];
+  files?: { type: "file" | "external"; file?: { url: string }; external?: { url: string } }[];
+  rollup?: { type: string; number?: number | null };
 };
 
 export type NotionPage = {
@@ -80,6 +82,16 @@ export type Author = {
   country: string[];
   specialties: string[];
   website: string | null;
+  photoUrl: string | null;
+  publicationTypes: string[];
+  storyCount: number | null;
+  instagram: string | null;
+  tiktok: string | null;
+  wattpad: string | null;
+  goodreads: string | null;
+  amazonUrl: string | null;
+  verifiedAt: string | null;
+  featuredCollectionId: string | null;
   storyIds: string[];
   sagaIds: string[];
 };
@@ -99,10 +111,16 @@ export type SeoPage = {
   id: string;
   slug: string;
   path: string;
+  hasExplicitPath: boolean;
+  pageType: string;
+  pageFormat: string;
+  topic: string;
+  priority: number | null;
   publishedAt: string | null;
   createdAt: string;
   section: string;
   title: string;
+  contentTitle: string;
   heading: string;
   description: string;
   summary: string;

@@ -73,7 +73,7 @@ export function CookieNotice() {
         <div className="cookie-notice-copy">
           <h2 id="cookie-notice-title" ref={headingRef} tabIndex={-1}>Cookies en Batreads</h2>
           <p>
-            Ahora no usamos cookies de analítica. Tenemos previsto incorporar Google Analytics 4.
+            Ahora no usamos cookies propias de analítica. Tenemos previsto incorporar Google Analytics 4.
             Tu elección de hoy solo guarda una preferencia; volveremos a preguntarte antes de activarlo.
             Consulta la <Link href="/politica-de-cookies">política de cookies</Link>.
           </p>

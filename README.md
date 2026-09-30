@@ -46,10 +46,10 @@ aproximadamente cada hora.
 - **Historias:** deben tener `Estado ficha = Publicada` y
   `Publicación Batreads = Publicar`.
 - **Autoras:** aparecen si están `Publicada` o si tienen una historia publicada.
-  La biografía y la introducción solo aparecen con estado `Lista` o `Publicada`.
+  La biografía y la introducción se muestran cuando esos campos tienen contenido.
 - **Sagas:** aparecen si su ficha está `Publicada` o si contienen una historia
-  publicada. La descripción y la introducción solo aparecen con estado `Lista`
-  o `Publicada`.
+  publicada. La descripción y la introducción se muestran cuando esos campos
+  tienen contenido.
 - **SEO/Listas:** solo aparecen con `Estado = Publicado`. La URL procede de
   `Ruta`; las páginas de la sección `listas` aparecen además en `/listas`.
   Las colecciones dinámicas utilizan los filtros configurados en Notion y solo

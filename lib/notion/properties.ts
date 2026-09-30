@@ -29,7 +29,16 @@ export function tags(page: NotionPage, name: string): string[] {
 
 export function number(page: NotionPage, name: string): number | null {
   const value = property(page, name);
-  return value?.type === "number" && typeof value.number === "number" ? value.number : null;
+  if (value?.type === "number" && typeof value.number === "number") return value.number;
+  return value?.type === "rollup" && typeof value.rollup?.number === "number" ? value.rollup.number : null;
+}
+
+export function imageUrl(page: NotionPage, name: string): string | null {
+  const value = property(page, name);
+  const file = value?.type === "files" ? value.files?.[0] : undefined;
+  const candidate = file?.type === "external" ? file.external?.url : file?.file?.url;
+  const raw = candidate ?? url(page, name);
+  return raw && /^https:\/\//i.test(raw) ? raw : null;
 }
 
 export function checkbox(page: NotionPage, name: string): boolean {

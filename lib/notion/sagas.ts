@@ -7,14 +7,12 @@ export function mapSaga(page: NotionPage, storiesBySaga: Map<string, string[]>):
   const name = text(page, "Nombre");
   const slug = text(page, "Slug");
   if (!name || !validSlug(slug)) throw new Error(`Saga ${page.id} sin nombre o slug válido.`);
-  const editoriallyReady = ["Lista", "Publicada"].includes(select(page, "Estado ficha") ?? "");
-
   return {
     id: page.id,
     slug,
     name,
-    description: editoriallyReady ? text(page, "Descripción") : "",
-    intro: editoriallyReady ? text(page, "SEO intro") : "",
+    description: text(page, "Descripción"),
+    intro: text(page, "SEO intro"),
     authorIds: relationIds(page, "Autora"),
     storyIds: storiesBySaga.get(page.id) ?? [],
     readingOrder: select(page, "Orden de lectura"),

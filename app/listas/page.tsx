@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Breadcrumbs } from "../_components/breadcrumbs";
 import { getSeoPages } from "@/lib/notion";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export default async function ListasPage() {
   const pages = (await getSeoPages()).filter((page) => page.section === "listas");
   return (
     <main className="catalog-page list-index-page">
-      <Link className="back-link" href="/">← Batreads</Link>
+      <Breadcrumbs items={[{ label: "Listas" }]} />
       <header className="page-heading">
         <p className="eyebrow">Selecciones editoriales</p>
         <h1>Listas <em>Batreads</em></h1>

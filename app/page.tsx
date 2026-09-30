@@ -54,8 +54,8 @@ export default async function Home() {
                 de esas que se leen con la puerta cerrada y cuesta olvidar.
               </p>
             </div>
-            <Link className="home-section-more" href="/historias">
-              Ver más libros <span aria-hidden="true">→</span>
+            <Link className="home-section-more home-hero-action home-hero-action-secondary" href="/historias">
+              Ver más libros <Image src="/icons/hero-arrow-secondary.svg" alt="" width={20} height={20} />
             </Link>
           </div>
           <StoryGrid stories={latestStories} authorNames={authorNames} headingLevel={3} />
@@ -68,8 +68,8 @@ export default async function Home() {
               <h2 id="home-lists-title">Listas Batreads</h2>
               <p>Cuando quieres una recomendación más concreta.</p>
             </div>
-            <Link className="home-section-more" href="/listas">
-              Todas las listas <span aria-hidden="true">→</span>
+            <Link className="home-section-more home-hero-action home-hero-action-secondary" href="/listas">
+              Todas las listas <Image src="/icons/hero-arrow-secondary.svg" alt="" width={20} height={20} />
             </Link>
           </div>
           <div className="home-lists-grid">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { notFound } from "next/navigation";
 import { StoryGrid } from "../../_components/story-grid";
 import { getAuthors, getSagaBySlug, getSagas, getSeoPages, getStories } from "@/lib/notion";
@@ -30,7 +31,7 @@ export default async function SagaPage({
 
   return (
     <main className="catalog-page">
-      <Link className="back-link" href="/sagas">← Todas las sagas</Link>
+      <Breadcrumbs items={[{ label: "Sagas", href: "/sagas" }, { label: saga.name }]} />
       <header className="page-heading"><p className="eyebrow">Saga</p><h1>{saga.name}</h1>{saga.intro ? <p>{saga.intro}</p> : null}</header>
       {saga.description ? <section className="story-section"><h2>Sobre la saga</h2><p>{saga.description}</p></section> : null}
       {saga.readingOrder ? <p className="entity-note">Orden de lectura: {saga.readingOrder}</p> : null}

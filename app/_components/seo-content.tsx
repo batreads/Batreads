@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Breadcrumbs } from "./breadcrumbs";
 import { EditorialListContent } from "./editorial-list-content";
 import { StoryGrid } from "./story-grid";
 import { getEditorialBlocks, storiesForSeoPage, type Author, type Saga, type SeoPage, type Story } from "@/lib/notion";
@@ -35,7 +36,9 @@ export async function SeoContent({
 
   return (
     <main className={`catalog-page${page.section === "listas" ? " list-detail-page" : ""}`}>
-      <Link className="back-link" href={page.section === "listas" ? "/listas" : "/"}>← {page.section === "listas" ? "Todas las listas" : "Batreads"}</Link>
+      <Breadcrumbs items={page.section === "listas"
+        ? [{ label: "Listas", href: "/listas" }, { label: page.heading }]
+        : [{ label: page.heading }]} />
       <header className="page-heading">
         <p className="eyebrow">{page.section === "listas" ? "Lista editorial" : "Guía Batreads"}</p>
         <h1>{page.heading}</h1>

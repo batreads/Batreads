@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Breadcrumbs } from "../_components/breadcrumbs";
 import { getAuthors, getStories } from "@/lib/notion";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export default async function AutorasPage() {
   const [authors, stories] = await Promise.all([getAuthors(), getStories()]);
   return (
     <main className="catalog-page">
-      <Link className="back-link" href="/">← Batreads</Link>
+      <Breadcrumbs items={[{ label: "Autoras" }]} />
       <header className="page-heading">
         <p className="eyebrow">Nombres detrás de las historias</p>
         <h1>Autoras</h1>

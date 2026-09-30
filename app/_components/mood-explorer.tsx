@@ -12,7 +12,9 @@ export function MoodExplorer() {
         <div className="home-moods-grid">
           {moods.map(({ slug, label }) => (
             <Link className="home-mood-card" href={`/historias?mood=${slug}`} key={slug}>
-              <Image src={`/images/moods/${slug}.png`} alt="" fill sizes="(max-width: 600px) 50vw, (max-width: 1020px) 50vw, 25vw" />
+              <span className="home-mood-card-media">
+                <Image src={`/images/moods/${slug}.png`} alt="" fill sizes="(max-width: 600px) 50vw, (max-width: 1020px) 50vw, 25vw" />
+              </span>
               <span className="home-mood-card-title">{label}</span>
               <span className="home-mood-card-arrow" aria-hidden="true">
                 <Image src="/icons/mood-arrow.svg" alt="" width={20} height={20} />

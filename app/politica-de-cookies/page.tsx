@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Breadcrumbs } from "../_components/breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Política de cookies · Batreads",
@@ -11,7 +11,7 @@ export default function CookiePolicyPage() {
   return (
     <main className="legal-page">
       <div className="legal-page-inner">
-        <Link className="legal-back-link" href="/">← Volver al inicio</Link>
+        <Breadcrumbs items={[{ label: "Política de cookies" }]} />
         <header className="legal-heading">
           <p className="eyebrow">Información del sitio</p>
           <h1>Política de <em>cookies</em></h1>
@@ -21,7 +21,7 @@ export default function CookiePolicyPage() {
         <div className="legal-content">
           <section aria-labelledby="cookies-current">
             <h2 id="cookies-current">Uso actual</h2>
-            <p>Batreads no utiliza actualmente cookies de analítica, publicidad ni personalización. La única cookie que establece esta web es una preferencia técnica propia cuando eliges «Aceptar» o «Rechazar» en el aviso.</p>
+            <p>Batreads no instala actualmente cookies propias de analítica, publicidad ni personalización. La única cookie propia que establece esta web es una preferencia técnica cuando eliges «Aceptar» o «Rechazar» en el aviso.</p>
             <div className="cookie-policy-table-wrap">
               <table className="cookie-policy-table">
                 <thead><tr><th scope="col">Nombre</th><th scope="col">Finalidad</th><th scope="col">Titular</th><th scope="col">Duración</th></tr></thead>

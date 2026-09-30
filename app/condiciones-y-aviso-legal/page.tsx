@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Breadcrumbs } from "../_components/breadcrumbs";
 
 export const metadata: Metadata = {
   title: "Condiciones y aviso legal · Batreads",
@@ -11,7 +11,7 @@ export default function LegalPage() {
   return (
     <main className="legal-page">
       <div className="legal-page-inner">
-        <Link className="legal-back-link" href="/">← Volver al inicio</Link>
+        <Breadcrumbs items={[{ label: "Condiciones y aviso legal" }]} />
         <header className="legal-heading">
           <p className="eyebrow">Información del sitio</p>
           <h1>Condiciones y <em>aviso legal</em></h1>

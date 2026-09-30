@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Breadcrumbs } from "../_components/breadcrumbs";
 import { getSagas, getStories } from "@/lib/notion";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export default async function SagasPage() {
   const [sagas, stories] = await Promise.all([getSagas(), getStories()]);
   return (
     <main className="catalog-page">
-      <Link className="back-link" href="/">← Batreads</Link>
+      <Breadcrumbs items={[{ label: "Sagas" }]} />
       <header className="page-heading"><p className="eyebrow">Universos para explorar</p><h1>Sagas</h1></header>
       {sagas.length === 0 ? <p>Todavía no hay sagas con historias publicadas.</p> : (
         <div className="entity-grid">{sagas.map((saga) => (

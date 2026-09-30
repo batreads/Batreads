@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { notFound } from "next/navigation";
 import { StoryGrid } from "../../_components/story-grid";
 import { getAuthors, getSagas, getSeoPages, getStories, getStoryBySlug, storiesForSeoPage, type Story } from "@/lib/notion";
@@ -98,8 +99,8 @@ export default async function HistoriaPage({
 
   return (
     <main className={`story-page${story.coverUrl ? "" : " story-page-no-cover"}`}>
+      <Breadcrumbs items={[{ label: "Libros", href: "/historias" }, { label: story.title }]} />
       <aside className="story-sidebar" aria-label="Portada y opciones de lectura">
-        <Link className="back-link" href="/historias">← Todos los libros</Link>
         {story.coverUrl ? (
           <div className="story-hero-media">
             <div className="story-hero-cover">
