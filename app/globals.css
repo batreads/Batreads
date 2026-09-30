@@ -3726,15 +3726,10 @@ body:has(.story-page) {
 }
 
 .author-chips {
+  --card-border: #2a5050;
+  --card-subtle: #173235;
   gap: 8px;
   margin-top: 24px;
-}
-
-.author-chip {
-  padding: 7px 12px;
-  border: 1px solid #326159;
-  border-radius: 999px;
-  background: #173532;
   color: #c7f4e3;
   font-size: 12px;
 }
@@ -3743,7 +3738,7 @@ body:has(.story-page) {
   max-width: 740px;
   margin: 24px 0 0;
   color: #d5e8e1;
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: clamp(18px, 2vw, 22px);
   line-height: 1.5;
   white-space: pre-line;
@@ -3785,6 +3780,21 @@ body:has(.story-page) {
 .author-section-actions a:hover {
   border-color: var(--page-accent);
   color: var(--page-accent);
+}
+
+.author-socials .author-amazon-cta {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-color: var(--page-accent);
+  background: var(--page-accent);
+  color: #082019;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.author-socials .author-amazon-cta:hover {
+  background: #b1f3df;
+  color: #082019;
 }
 
 .author-portrait {
@@ -3840,7 +3850,8 @@ body:has(.story-page) {
 .author-saga-copy > p:not(.eyebrow) {
   margin: 0;
   color: #bed2ca;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.55;
 }
 
 .author-saga-covers {
@@ -3878,9 +3889,21 @@ body:has(.story-page) {
 }
 
 .author-saga-footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 9px 16px;
+  border: 1px solid var(--page-accent);
+  border-radius: 9px;
   color: var(--page-accent);
+  font-size: 14px;
   font-weight: 700;
   text-decoration: none;
+}
+
+.author-saga-footer a:hover {
+  background: var(--page-accent);
+  color: #082019;
 }
 
 .author-section-heading {

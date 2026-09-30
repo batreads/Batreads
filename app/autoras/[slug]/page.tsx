@@ -80,6 +80,7 @@ export default async function AutoraPage({ params }: PageProps) {
     ["Instagram", author.instagram], ["TikTok", author.tiktok], ["Wattpad", author.wattpad],
     ["Goodreads", author.goodreads], ["Web", author.website],
   ] as const;
+  const heroTags = [...author.specialties, ...author.publicationTypes];
   const facts = [
     ["País", author.country.join(", ")],
     ["Especialidades", author.specialties.join(", ")],
@@ -96,9 +97,14 @@ export default async function AutoraPage({ params }: PageProps) {
         <div className="author-hero-copy">
           <p className="eyebrow">Autora</p>
           <h1>{author.name}</h1>
-          {[...author.country, ...author.publicationTypes, ...author.specialties].length > 0 ? (
+          {heroTags.length > 0 ? (
             <div className="author-chips">
-              {[...author.country, ...author.publicationTypes, ...author.specialties].map((value) => <span className="author-chip" key={value}>{value}</span>)}
+              {heroTags.map((value) => (
+                <span className="story-card-tag" key={value}>
+                  <img src="/icons/tag.svg" alt="" width="12" height="12" />
+                  {value}
+                </span>
+              ))}
             </div>
           ) : null}
           {author.intro ? <p className="author-intro">{author.intro}</p> : null}
@@ -109,8 +115,8 @@ export default async function AutoraPage({ params }: PageProps) {
           </div>
           {socials.some(([, url]) => externalUrl(url)) || amazonUrl ? (
             <nav className="author-socials" aria-label={`Enlaces de ${author.name}`}>
+              {amazonUrl ? <a className="author-amazon-cta" href={amazonUrl} target="_blank" rel="noopener noreferrer">Buscar libros de {author.name} en Amazon ↗</a> : null}
               {socials.map(([label, url]) => externalUrl(url) ? <a key={label} href={url!} target="_blank" rel="noopener noreferrer" aria-label={`${label} de ${author.name} (abre en otra pestaña)`}>{label} ↗</a> : null)}
-              {amazonUrl ? <a href={amazonUrl} target="_blank" rel="noopener noreferrer">Buscar libros de {author.name} en Amazon ↗</a> : null}
             </nav>
           ) : null}
         </div>
@@ -120,7 +126,6 @@ export default async function AutoraPage({ params }: PageProps) {
       <section className="story-section home-story-cards author-stories" id="historias" aria-labelledby="author-stories-title">
         <div className="author-section-heading">
           <div>
-            <p className="eyebrow">En Batreads</p>
             <h2 id="author-stories-title">Historias de {author.name} en Batreads</h2>
             <p className="author-catalog-note">En Batreads solo mostramos las historias que hemos añadido y clasificado. La autora puede tener más obras publicadas.</p>
           </div>
@@ -133,7 +138,6 @@ export default async function AutoraPage({ params }: PageProps) {
 
       {authorSagas.length > 0 ? (
         <section className="story-section author-sagas" aria-labelledby="author-sagas-title">
-          <p className="eyebrow">Universos</p>
           <h2 id="author-sagas-title">Sagas</h2>
           <div className="author-saga-grid">
             {authorSagas.map((saga) => {
@@ -165,7 +169,6 @@ export default async function AutoraPage({ params }: PageProps) {
       {author.bio ? (
         <section className="story-section author-about" aria-labelledby="author-about-title">
           <div>
-            <p className="eyebrow">Sobre la autora</p>
             <h2 id="author-about-title">Sobre {author.name}</h2>
             <p className="author-bio">{author.bio}</p>
           </div>
@@ -180,7 +183,7 @@ export default async function AutoraPage({ params }: PageProps) {
 
       {collection ? (
         <section className="story-section author-discover" aria-labelledby="author-discover-title">
-          <p className="eyebrow">Sigue leyendo</p>
+          <p className="eyebrow">Listas que te recomendamos que leas</p>
           <Link className="home-list-card author-discover-card" href={collection.path}>
             <span className="home-list-card-label">Selección editorial</span>
             <h2 id="author-discover-title">{collection.contentTitle}</h2>
