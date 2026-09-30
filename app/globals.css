@@ -5,14 +5,32 @@
   --page-text: #f4fcf9;
   --page-muted: #9aabaa;
   --page-accent: #63e6be;
+  --font-body: var(--font-inter), Arial, Helvetica, sans-serif;
+  --font-display: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
   color-scheme: dark;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
   background: var(--page-background);
   color: var(--page-text);
 }
 
 * {
   box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }
 
 body {
@@ -28,14 +46,93 @@ body {
 .site-footer-inner {
   max-width: 1088px;
   margin: 0 auto;
-  padding: 56px 32px 24px;
+  padding: 32px 32px 24px;
+}
+
+.site-footer-newsletter {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(280px, 1fr);
+  align-items: center;
+  gap: 40px;
+  padding: 28px 32px;
+  border-radius: 16px;
+  background: #b8ead9;
+  color: #14372f;
+}
+
+.site-footer-newsletter-eyebrow {
+  margin: 0 0 10px;
+  color: #205a4a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.site-footer-newsletter h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(23px, 2.5vw, 30px);
+  letter-spacing: -.03em;
+  line-height: 1.15;
+}
+
+.site-footer-newsletter-copy > p:last-child {
+  max-width: 420px;
+  margin: 10px 0 0;
+  color: #41645c;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.site-footer-newsletter-actions {
+  min-width: 0;
+}
+
+.site-footer-newsletter-cta {
+  display: inline-flex;
+  width: 100%;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 12px 24px;
+  border-radius: 9px;
+  background: #143b34;
+  color: #f4fcf9;
+  font-size: 14px;
+  font-weight: 750;
+  text-align: center;
+  text-decoration: none;
+}
+
+.site-footer-newsletter-cta:hover {
+  background: #20564a;
+}
+
+.site-footer-newsletter-cta span {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.site-footer-newsletter-terms {
+  margin: 10px 0 0;
+  color: #41645c;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.site-footer-newsletter-terms a {
+  color: #143b34;
+  text-underline-offset: 2px;
 }
 
 .site-footer-top {
   display: grid;
   grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr));
   gap: 48px;
-  padding-bottom: 54px;
+  padding: 40px 0 42px;
 }
 
 .site-footer-brand {
@@ -151,7 +248,7 @@ body {
 
 .legal-heading h1 {
   margin: 16px 0 20px;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(42px, 7vw, 72px);
   letter-spacing: -.045em;
   line-height: 1.02;
@@ -175,7 +272,7 @@ body {
 
 .legal-content h2 {
   margin: 0 0 16px;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(26px, 3vw, 32px);
   line-height: 1.2;
 }
@@ -240,7 +337,7 @@ body {
 
 .cookie-notice-copy h2 {
   margin: 0 0 8px;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: 26px;
 }
 
@@ -310,7 +407,17 @@ body {
   }
 
   .site-footer-inner {
-    padding: 40px 20px 24px;
+    padding: 28px 20px 24px;
+  }
+
+  .site-footer-newsletter {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    padding: 24px 20px;
+  }
+
+  .site-footer-newsletter-cta {
+    gap: 12px;
   }
 
   .site-footer-top {
@@ -392,7 +499,7 @@ body {
 
 .not-found-hero h1 {
   margin-top: clamp(24px, 2.5vw, 48px);
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(54px, 5.7vw, 120px);
   font-weight: 700;
   letter-spacing: -.045em;
@@ -426,7 +533,7 @@ body {
   gap: 13px;
   margin-top: 28px;
   color: var(--page-muted);
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: 16px;
   font-style: italic;
 }
@@ -535,7 +642,7 @@ nav {
   background: var(--page-background);
   box-shadow: 0 12px 36px rgb(0 0 0 / 12%);
   color: #f4fcf9;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
 }
 
 .site-header-primary {
@@ -766,7 +873,7 @@ nav {
 
 .home-hero h1 {
   margin-top: clamp(24px, 2.5vw, 48px);
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(54px, 5.7vw, 120px);
   font-weight: 700;
   letter-spacing: -.045em;
@@ -857,7 +964,7 @@ nav {
 .home-moods h2,
 .home-recommendations-heading h2 {
   margin: 16px 0 0;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(36px, 3.6vw, 52px);
   font-weight: 700;
   letter-spacing: -.04em;
@@ -928,6 +1035,7 @@ nav {
   right: 78px;
   bottom: 26px;
   left: 26px;
+  font-family: var(--font-body);
   font-size: clamp(16px, 1.2vw, 21px);
   font-weight: 700;
   line-height: 1.2;
@@ -1009,7 +1117,7 @@ nav {
 
 .home-lists-heading h2 {
   margin: 0;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(36px, 3.6vw, 52px);
   font-weight: 700;
   letter-spacing: -.04em;
@@ -1064,7 +1172,7 @@ nav {
 
 .home-list-card h3 {
   margin: 22px 0 0;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(25px, 2.4vw, 32px);
   font-weight: 700;
   letter-spacing: -.025em;
@@ -1103,7 +1211,7 @@ nav {
 
 .home-newsletter h2 {
   margin: 18px auto 0;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(36px, 4vw, 52px);
   font-weight: 700;
   letter-spacing: -.035em;
@@ -1693,7 +1801,7 @@ body:has(.story-page) {
   border-radius: 8px;
   background: var(--card-subtle);
   color: #4fd19c;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
   line-height: 1.2;
@@ -1715,7 +1823,7 @@ body:has(.story-page) {
 .story-card :is(h2, h3) {
   overflow: hidden;
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: 24px;
   font-weight: 700;
   line-height: 1.15;
@@ -1746,7 +1854,7 @@ body:has(.story-page) {
   flex-direction: column;
   align-items: flex-start;
   gap: 6px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
   font-size: 12px;
   line-height: 1.2;
 }
@@ -1841,7 +1949,7 @@ body:has(.story-page) {
 
 .stories-catalog-page .page-heading h1 {
   margin: 0 0 12px;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(54px, 5vw, 76px);
   font-weight: 700;
   letter-spacing: -.04em;
@@ -1896,7 +2004,7 @@ body:has(.story-page) {
 }
 
 .stories-filter-title {
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(23px, 2.3vw, 30px);
   line-height: 1.1;
 }
@@ -2198,7 +2306,7 @@ body:has(.story-page) {
 
 .stories-no-results h2 {
   margin: 0 0 8px;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
 }
 
 .stories-no-results button {
@@ -2246,7 +2354,7 @@ body:has(.story-page) {
 }
 
 :is(.stories-catalog-page, .home-story-cards) .story-card :is(h2, h3) {
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: 25px;
   letter-spacing: -.025em;
 }
@@ -2515,7 +2623,7 @@ body:has(.story-page) {
 
 .story-hero-info h1 {
   margin: 30px 0 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
   font-size: clamp(2.75rem, 5vw, 3.5rem);
   font-weight: 700;
   line-height: 1.1;
@@ -2976,7 +3084,7 @@ body:has(.story-page) {
 .list-detail-page .page-heading h1 {
   max-width: 900px;
   margin: 20px 0 0;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(46px, 5vw, 68px);
   font-weight: 700;
   letter-spacing: -.045em;
@@ -3004,7 +3112,7 @@ body:has(.story-page) {
 
 .list-index-page .home-list-card h2 {
   margin: 22px 0 0;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(25px, 2.4vw, 32px);
   font-weight: 700;
   letter-spacing: -.025em;
@@ -3031,7 +3139,7 @@ body:has(.story-page) {
 .list-detail-page .story-section h2 {
   max-width: 800px;
   margin: 0 0 24px;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(32px, 3vw, 40px);
   font-weight: 700;
   letter-spacing: -.04em;
@@ -3041,7 +3149,7 @@ body:has(.story-page) {
 .list-detail-page .seo-intro-section h2 {
   margin-bottom: 16px;
   color: #8ce9ca;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: .14em;
@@ -3086,7 +3194,7 @@ body:has(.story-page) {
   display: block;
   margin-bottom: 8px;
   color: var(--page-text);
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: 22px;
   font-weight: 700;
   line-height: 1.2;
@@ -3102,7 +3210,7 @@ body:has(.story-page) {
 .list-detail-page .editorial-section h3 {
   max-width: 70ch;
   margin: 32px 0 8px;
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(23px, 2.2vw, 27px);
   font-weight: 700;
   letter-spacing: -.025em;
@@ -3404,7 +3512,7 @@ body:has(.story-page) {
 .support-heading h1,
 .support-card h3,
 .support-thanks h2 {
-  font-family: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -.035em;
 }

@@ -13,6 +13,29 @@ export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="site-footer-inner">
+        <section className="site-footer-newsletter" aria-labelledby="footer-newsletter-title">
+          <div className="site-footer-newsletter-copy">
+            <p className="site-footer-newsletter-eyebrow">Newsletter Batreads</p>
+            <h2 id="footer-newsletter-title">Tu dosis mensual de historias cuestionables.</h2>
+            <p>Nuevos dark romance, hidden gems y recomendaciones seleccionadas en español.</p>
+          </div>
+          <div className="site-footer-newsletter-actions">
+            <a
+              className="site-footer-newsletter-cta"
+              href="https://batreads.substack.com/subscribe"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Suscríbete a la newsletter de Batreads (abre en una pestaña nueva)"
+            >
+              Suscríbete a la newsletter <span aria-hidden="true">↗</span>
+            </a>
+            <p className="site-footer-newsletter-terms">
+              La suscripción se completa en Substack. Consulta sus{" "}
+              <a href="https://substack.com/tos">Términos de uso</a> y su{" "}
+              <a href="https://substack.com/privacy">Política de privacidad</a>.
+            </p>
+          </div>
+        </section>
         <div className="site-footer-top">
           <div className="site-footer-about">
             <Link className="site-footer-brand" href="/" aria-label="Batreads, ir al inicio">

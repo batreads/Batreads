@@ -83,26 +83,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-      <section className="home-newsletter" aria-labelledby="home-newsletter-title">
-        <div className="home-newsletter-panel">
-          <p className="home-newsletter-eyebrow">Newsletter Batreads</p>
-          <h2 id="home-newsletter-title">Tu dosis mensual de historias cuestionables.</h2>
-          <p className="home-newsletter-description">
-            Nuevos dark romance, hidden gems y recomendaciones seleccionadas en español.
-          </p>
-          <div className="home-newsletter-signup" aria-describedby="home-newsletter-status">
-            <div className="home-newsletter-field">
-              <input type="email" aria-label="Tu correo electrónico" placeholder="tu@email.com" disabled />
-              <button type="button" aria-label="Suscripciones próximamente" disabled>→</button>
-            </div>
-            <label className="home-newsletter-consent">
-              <input type="checkbox" disabled />
-              <span>Acepto recibir historias por email (y algún desvelo).</span>
-            </label>
-            <p id="home-newsletter-status" className="home-newsletter-status">Suscripciones próximamente.</p>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
