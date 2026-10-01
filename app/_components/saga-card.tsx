@@ -2,11 +2,12 @@ import Link from "next/link";
 import type { Saga, Story } from "@/lib/notion";
 import "./saga-card.css";
 
-export function SagaCard({ saga, stories, authorName, headingLevel = 2 }: {
+export function SagaCard({ saga, stories, authorName, headingLevel = 2, showArt = true }: {
   saga: Saga;
   stories: Story[];
   authorName?: string;
   headingLevel?: 2 | 3;
+  showArt?: boolean;
 }) {
   const Heading = headingLevel === 2 ? "h2" : "h3";
   const covers = stories.filter((story) => story.coverUrl).slice(0, 3);
@@ -17,8 +18,8 @@ export function SagaCard({ saga, stories, authorName, headingLevel = 2 }: {
   const description = saga.intro || saga.description;
 
   return (
-    <Link className="saga-card" href={`/sagas/${saga.slug}`}>
-      <div className="saga-card-art" aria-hidden="true">
+    <Link className={`saga-card${showArt ? "" : " saga-card-no-art"}`} href={`/sagas/${saga.slug}`}>
+      {showArt ? <div className="saga-card-art" aria-hidden="true">
         {saga.coverUrl ? <img className="saga-card-feature-cover" src={saga.coverUrl} alt="" /> : covers.length > 0 ? (
           <div className={`saga-card-covers saga-card-covers-${covers.length}`}>
             {covers.map((story) => <img src={story.coverUrl!} alt="" key={story.id} />)}
@@ -28,7 +29,7 @@ export function SagaCard({ saga, stories, authorName, headingLevel = 2 }: {
           <img src="/icons/book-open.svg" alt="" width="18" height="18" />
           {count} {count === 1 ? "libro" : "libros"}
         </span>
-      </div>
+      </div> : null}
       <div className="saga-card-body">
         <Heading>{saga.name}</Heading>
         {byline ? <p className="saga-card-author">{byline}</p> : null}
