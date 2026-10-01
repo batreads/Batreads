@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { StoryCardRating } from "../../_components/story-card-rating";
 import { getAuthors, getSagaBySlug, getSagas, getSeoPages, getStories, type Story } from "@/lib/notion";
+import { sagaDescription } from "@/lib/seo-metadata";
 import "./saga.css";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return saga
     ? {
         title: saga.seoTitle || `${saga.name} · Batreads`,
-        description: saga.metaDescription || saga.intro || saga.description,
+        description: sagaDescription(saga),
         alternates: { canonical: `/sagas/${saga.slug}` },
       }
     : { title: "Saga no encontrada · Batreads" };

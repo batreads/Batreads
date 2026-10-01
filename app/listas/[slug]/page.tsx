@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { SeoContent } from "../../_components/seo-content";
 import { getAuthors, getSagas, getSeoPageBySlug, getSeoPages, getStories } from "@/lib/notion";
+import { brandedTitle, seoPageDescription } from "@/lib/seo-metadata";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -12,7 +13,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const page = await getSeoPageBySlug((await params).slug);
   return page && page.section === "listas"
-    ? { title: `${page.title} · Batreads`, description: page.description, alternates: { canonical: page.path }, robots: { index: false, follow: true } }
+    ? { title: brandedTitle(page.title), description: seoPageDescription(page), alternates: { canonical: page.path }, robots: { index: false, follow: true } }
     : { title: "Lista no encontrada · Batreads" };
 }
 

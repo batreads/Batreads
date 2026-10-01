@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SeoContent } from "../_components/seo-content";
 import { getAuthors, getSagas, getSeoPageByPath, getSeoPages, getStories } from "@/lib/notion";
+import { brandedTitle, seoPageDescription } from "@/lib/seo-metadata";
 
 type PageProps = { params: Promise<{ slug: string[] }> };
 
@@ -16,17 +17,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!page) return { title: "Página no encontrada · Batreads" };
 
   const image = `/og/guia${page.path}`;
+  const title = brandedTitle(page.title);
+  const description = seoPageDescription(page);
   return {
-    title: `${page.title} · Batreads`,
-    description: page.description,
+    title,
+    description,
     alternates: { canonical: page.path },
     robots: { index: false, follow: true },
     openGraph: {
-      title: `${page.title} · Batreads`, description: page.description, url: page.path,
+      title, description, url: page.path,
       type: "article", siteName: "Batreads", locale: "es_ES",
       images: [{ url: image, width: 1200, height: 630, alt: `Guía ${page.heading} de Batreads` }],
     },
-    twitter: { card: "summary_large_image", title: `${page.title} · Batreads`, description: page.description, images: [image] },
+    twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }
 

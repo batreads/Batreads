@@ -6,6 +6,7 @@ import { StoryGrid } from "../../_components/story-grid";
 import { SagaCard } from "../../_components/saga-card";
 import { getAuthorBySlug, getAuthors, getSagas, getSeoPages, getStories } from "@/lib/notion";
 import type { Author, SeoPage } from "@/lib/notion";
+import { authorDescription } from "@/lib/seo-metadata";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -61,7 +62,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const author = await getAuthorBySlug((await params).slug);
   return author
-    ? { title: `${author.name} · Batreads`, description: author.intro || author.bio, alternates: { canonical: `/autoras/${author.slug}` } }
+    ? { title: `${author.name} · Batreads`, description: authorDescription(author), alternates: { canonical: `/autoras/${author.slug}` } }
     : { title: "Autora no encontrada · Batreads" };
 }
 
