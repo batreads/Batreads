@@ -1,5 +1,6 @@
 import { checkbox, number, relationIds, select, tags, text, url, validSlug } from "./properties";
 import type { NotionPage, Story } from "./types";
+import { imageSource } from "./image-source";
 
 const webSlugByNotionSlug: Record<string, string> = {
   "credence-penelope-douglas": "credence",
@@ -11,12 +12,7 @@ export function notionSlugForWebSlug(slug: string): string {
 }
 
 function coverUrl(page: NotionPage): string | null {
-  const raw = url(page, "Portada URL");
-  if (!raw) return null;
-  if (raw.startsWith("public/images/")) return `/${raw.slice("public/".length)}`;
-  if (raw.startsWith("/images/")) return raw;
-  if (/^https:\/\//.test(raw)) return raw;
-  return null;
+  return imageSource(url(page, "Portada URL"));
 }
 
 function filterValues(page: NotionPage): Record<string, string[]> {
@@ -102,7 +98,9 @@ export function mapNotionPageToStory(page: NotionPage): Story {
     characters: number(page, "Personajes"),
     romance: number(page, "Romance"),
     originality: number(page, "Originalidad"),
+    originalTitle: text(page, "Título original"),
     originalYear: number(page, "Año original"),
+    chapterCount: number(page, "Capítulos"),
     pageCount: number(page, "Páginas papel"),
     format: tags(page, "Formatos"),
     publisher: text(page, "Editorial española"),

@@ -6,6 +6,7 @@ import { StoryGrid } from "../../_components/story-grid";
 import { StoryCardRating } from "../../_components/story-card-rating";
 import { SagaCard } from "../../_components/saga-card";
 import { getAuthors, getSagas, getSeoPages, getStories, getStoryBySlug, storiesForSeoPage, type Story } from "@/lib/notion";
+import { EditorialImage } from "../../_components/editorial-image";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -44,18 +45,6 @@ function paragraphs(value: string) {
   return value.split(/\n\s*\n/).filter(Boolean).map((paragraph, index) => (
     <p key={index}>{paragraph}</p>
   ));
-}
-
-function reviewParagraphs(value: string) {
-  return value.split(/\n\s*\n/).filter(Boolean).map((paragraph, index) => {
-    if (index > 0) return <p key={index}>{paragraph}</p>;
-    const leadEnd = [...paragraph.matchAll(/[.!?](?=\s|$)/g)].find((match) => {
-      const precedingWord = paragraph.slice(0, match.index).match(/([\p{L}]+)$/u)?.[1].toLocaleLowerCase("es");
-      return !["sr", "sra", "srta", "dr", "dra"].includes(precedingWord ?? "");
-    })?.index ?? -1;
-    if (leadEnd < 0) return <p key={index}>{paragraph}</p>;
-    return <p key={index}><strong>{paragraph.slice(0, leadEnd + 1)}</strong>{paragraph.slice(leadEnd + 1)}</p>;
-  });
 }
 
 function tagSection(title: string, values: string[]) {
@@ -113,6 +102,20 @@ export default async function HistoriaPage({
       Disponible en Kindle Unlimited
     </p>
   ) : null;
+  const heroTopline = (story.rating !== null || isHiddenGem) ? (
+    <div className="story-hero-topline">
+      {story.rating !== null ? (
+        <div className="story-hero-rating">
+          <strong className="story-hero-rating-value" aria-hidden="true">{score(story.rating)}</strong>
+          <div className="story-hero-rating-detail">
+            <span className="story-hero-rating-label">Puntuación de Batreads</span>
+            <StoryCardRating rating={story.rating} />
+          </div>
+        </div>
+      ) : null}
+      {isHiddenGem ? <span className="story-hero-gem"><img src="/icons/gem.svg" alt="" width="16" height="16" />Hidden Gem</span> : null}
+    </div>
+  ) : null;
 
   return (
     <main className={`story-page${story.coverUrl ? "" : " story-page-no-cover"}`}>
@@ -121,7 +124,9 @@ export default async function HistoriaPage({
         {story.coverUrl ? (
           <div className="story-hero-media">
             <div className="story-hero-cover">
-              <img src={story.coverUrl} alt={`Portada de ${story.title}`} />
+              <EditorialImage src={story.coverUrl} alt={`Portada de ${story.title}`} width={290} height={427}
+                sizes="(max-width: 640px) 100vw, 290px" loading="eager" fetchPriority="high" />
+              {heroTopline ? <div className="story-cover-topline">{heroTopline}</div> : null}
             </div>
             {heroActions}
             {kuNotice}
@@ -131,20 +136,7 @@ export default async function HistoriaPage({
       <div className="story-content">
       <header className="story-hero">
         <div className="story-hero-info">
-          {(story.rating !== null || isHiddenGem) ? (
-            <div className="story-hero-topline">
-              {story.rating !== null ? (
-                <div className="story-hero-rating">
-                  <strong className="story-hero-rating-value" aria-hidden="true">{score(story.rating)}</strong>
-                  <div className="story-hero-rating-detail">
-                    <span className="story-hero-rating-label">Puntuación de Batreads</span>
-                    <StoryCardRating rating={story.rating} />
-                  </div>
-                </div>
-              ) : null}
-              {isHiddenGem ? <span className="story-hero-gem"><img src="/icons/gem.svg" alt="" width="16" height="16" />Hidden Gem</span> : null}
-            </div>
-          ) : null}
+          {heroTopline}
           <h1>{story.title}</h1>
           <div className="story-hero-details">
             {author ? <p className="story-hero-author">de <Link href={`/autoras/${author.slug}`}>{author.name}</Link></p>
@@ -175,6 +167,8 @@ export default async function HistoriaPage({
         </div>
       </header>
 
+      {heroActions ? <div className="story-mobile-purchase">{heroActions}{kuNotice}</div> : null}
+
       {story.synopsis ? <section className="story-section"><h2>La historia</h2>{paragraphs(story.synopsis)}</section> : null}
 
       <div className="story-columns">
@@ -182,7 +176,7 @@ export default async function HistoriaPage({
         {story.avoidIf ? <section className="story-section"><h2><span className="story-fit-icon story-fit-icon-avoid" aria-hidden="true">×</span>Evita si</h2>{paragraphs(story.avoidIf)}</section> : null}
       </div>
 
-      {story.review ? <section className="story-section story-review"><h2>Reseña de Batreads</h2>{reviewParagraphs(story.review)}</section> : null}
+      {story.review ? <section className="story-section story-review"><h2>Reseña de Batreads</h2>{paragraphs(story.review)}</section> : null}
 
       {tagSection("Tropes y temas recurrentes", story.tropes)}
       {tagSection("Dinámicas de relación", story.relationshipDynamics)}
@@ -203,7 +197,7 @@ export default async function HistoriaPage({
           {saga ? (
             <div className="story-related-group story-related-saga">
               <p className="story-related-label">La saga</p>
-              <SagaCard saga={saga} stories={sagaStories} authorName={sagaAuthorNames} headingLevel={3} showArt={false} />
+              <SagaCard saga={saga} stories={sagaStories} authorName={sagaAuthorNames} headingLevel={3} showArt={false} showGenre={false} showLink={false} />
             </div>
           ) : null}
           {relatedStories.length > 0 ? (
@@ -219,7 +213,9 @@ export default async function HistoriaPage({
       <section className="story-section">
         <h2>Datos del libro</h2>
         <dl className="book-facts">
+          {story.originalTitle ? <div><dt>Título original</dt><dd>{story.originalTitle}</dd></div> : null}
           {story.originalYear ? <div><dt>Año original</dt><dd>{story.originalYear}</dd></div> : null}
+          <div><dt>Capítulos</dt><dd>{story.chapterCount ?? "—"}</dd></div>
           {story.pageCount ? <div><dt>Páginas</dt><dd>{story.pageCount}</dd></div> : null}
           {story.publisher ? <div><dt>Editorial</dt><dd>{story.publisher}</dd></div> : null}
           {story.format.length ? <div><dt>Formatos</dt><dd>{story.format.join(", ")}</dd></div> : null}

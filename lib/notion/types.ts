@@ -66,7 +66,9 @@ export type Story = {
   characters: number | null;
   romance: number | null;
   originality: number | null;
+  originalTitle: string;
   originalYear: number | null;
+  chapterCount: number | null;
   pageCount: number | null;
   format: string[];
   publisher: string;
