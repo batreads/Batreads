@@ -70,6 +70,7 @@ export function mapNotionPageToStory(page: NotionPage): Story {
     authorId: relationIds(page, "Autora")[0] ?? null,
     authorName: null,
     sagaId: relationIds(page, "Saga")[0] ?? null,
+    sagaNumber: number(page, "N.º en saga"),
     relatedStoryIds: [
       ...relationIds(page, "Parecidos a"),
       ...relationIds(page, "Siguiente libro"),

@@ -2,7 +2,7 @@ import type { ReactElement } from "react";
 
 export type CollectionOpenGraphTemplateProps = {
   title: string;
-  kind: "list" | "guide" | "saga";
+  kind: "list" | "guide" | "saga" | "author";
   coverUrls: string[];
   backgroundUrl: string;
   logoUrl: string;
@@ -12,6 +12,7 @@ const labels = {
   list: "SELECCIÓN EDITORIAL",
   guide: "GUÍA DE LECTURA",
   saga: "UN UNIVERSO POR DESCUBRIR",
+  author: "LIBROS DE UNA AUTORA",
 };
 
 export function CollectionOpenGraphTemplate({
@@ -58,7 +59,7 @@ export function CollectionOpenGraphTemplate({
       <div style={{ position: "absolute", left: 76, bottom: 43, width: 1048, display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex", width: 1048, height: 1, backgroundColor: "rgba(185, 232, 209, .45)" }} />
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 15, color: "#c4d5d0", fontFamily: "Geist", fontSize: 17 }}>
-          <span>{kind === "saga" ? "SAGAS" : kind === "guide" ? "GUÍAS" : "LISTAS"}  /  BATREADS</span>
+          <span>{kind === "saga" ? "SAGAS" : kind === "author" ? "AUTORAS" : kind === "guide" ? "GUÍAS" : "LISTAS"}  /  BATREADS</span>
           <span>batreads.es</span>
         </div>
       </div>

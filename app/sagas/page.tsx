@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Breadcrumbs } from "../_components/breadcrumbs";
-import { getSagas, getStories } from "@/lib/notion";
+import { SagaCard } from "../_components/saga-card";
+import { getAuthors, getSagas, getStories } from "@/lib/notion";
 
 export const metadata: Metadata = {
   title: "Sagas de dark romance: orden de lectura | Batreads",
@@ -10,18 +10,20 @@ export const metadata: Metadata = {
 };
 
 export default async function SagasPage() {
-  const [sagas, stories] = await Promise.all([getSagas(), getStories()]);
+  const [sagas, stories, authors] = await Promise.all([getSagas(), getStories(), getAuthors()]);
+  const authorNames = new Map(authors.map((author) => [author.id, author.name]));
   return (
     <main className="catalog-page">
       <Breadcrumbs items={[{ label: "Sagas" }]} />
       <header className="page-heading"><p className="eyebrow">Universos para explorar</p><h1>Sagas</h1></header>
       {sagas.length === 0 ? <p>Todavía no hay sagas con historias publicadas.</p> : (
-        <div className="entity-grid">{sagas.map((saga) => (
-          <Link className="entity-card" href={`/sagas/${saga.slug}`} key={saga.id}>
-            <h2>{saga.name}</h2>
-            {saga.intro || saga.description ? <p>{saga.intro || saga.description}</p> : null}
-            <span>{stories.filter((story) => story.sagaId === saga.id).length} historias · Ver saga →</span>
-          </Link>
+        <div className="saga-card-grid">{sagas.map((saga) => (
+          <SagaCard
+            key={saga.id}
+            saga={saga}
+            stories={stories.filter((story) => story.sagaId === saga.id)}
+            authorName={saga.authorIds.map((id) => authorNames.get(id)).filter(Boolean).join(", ") || undefined}
+          />
         ))}</div>
       )}
     </main>

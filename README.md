@@ -49,7 +49,11 @@ aproximadamente cada hora.
   La biografía y la introducción se muestran cuando esos campos tienen contenido.
 - **Sagas:** aparecen si su ficha está `Publicada` o si contienen una historia
   publicada. La descripción y la introducción se muestran cuando esos campos
-  tienen contenido.
+  tienen contenido. Para mostrar libros que aún no tienen ficha en Batreads,
+  añade a la saga una propiedad de texto `Títulos en orden` en Notion, con un
+  título por línea (en orden de lectura). La posición de cada línea corresponde
+  al `N.º en saga`; los títulos aparecen aunque no exista edición en español.
+  La ficha publicada, si existe, prevalece sobre el título de esa lista.
 - **SEO/Listas:** solo aparecen con `Estado = Publicado`. La URL procede de
   `Ruta`; las páginas de la sección `listas` aparecen además en `/listas`.
   Las colecciones dinámicas utilizan los filtros configurados en Notion y solo

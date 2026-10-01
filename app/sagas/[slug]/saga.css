@@ -1,0 +1,70 @@
+.saga-page { max-width: 1180px; padding-bottom: 100px; }
+.saga-page .breadcrumbs { margin-bottom: 28px; }
+.saga-page a:focus-visible { outline: 2px solid var(--page-accent); outline-offset: 4px; }
+.saga-kicker { margin: 0; color: var(--page-accent); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.saga-hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, .7fr); align-items: center; gap: 44px; min-height: 380px; }
+.saga-hero h1 { max-width: 710px; margin: 10px 0 18px; font-size: clamp(42px, 5.5vw, 72px); font-weight: 600; letter-spacing: -.045em; line-height: .99; }
+.saga-hero-intro { max-width: 710px; color: #d6e8e3; font-size: 16px; line-height: 1.7; }
+.saga-hero-intro p { margin: 0 0 10px; }
+.saga-tags { margin-top: 22px; }
+.saga-actions, .saga-inline-links { display: flex; flex-wrap: wrap; gap: 9px; }
+.saga-actions { margin-top: 24px; }
+.saga-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; min-height: 44px; padding: 10px 15px; border: 1px solid #4c7774; border-radius: 11px; color: #eefaf5; font-size: 13px; font-weight: 700; line-height: 1.2; text-decoration: none; transition: background .2s, border-color .2s, transform .2s; }
+.saga-button:hover { border-color: var(--page-accent); background: #1d4443; transform: translateY(-2px); }
+.saga-button-primary { border-color: var(--page-accent); background: var(--page-accent); color: #09221d; }
+.saga-button-primary:hover { background: #a0f3d7; color: #09221d; }
+.saga-hero-art { position: relative; display: grid; min-height: 330px; place-items: center; overflow: hidden; background: radial-gradient(circle at center, #1f4740 0, #11302e 36%, transparent 72%); }
+.saga-main-cover { position: relative; z-index: 1; max-width: 60%; max-height: 290px; object-fit: contain; box-shadow: 0 20px 35px #0008; }
+.saga-cover-stack { position: relative; z-index: 1; width: 100%; height: 290px; }
+.saga-cover-stack img { position: absolute; top: 50%; left: 50%; width: min(42%, 145px); height: 225px; object-fit: cover; border-radius: 4px; box-shadow: 0 15px 30px #0009; transform: translate(-50%, -50%) rotate(-5deg); }
+.saga-cover-stack img:nth-child(2) { transform: translate(-8%, -48%) rotate(7deg); }
+.saga-cover-stack img:nth-child(3) { transform: translate(-95%, -49%) rotate(-12deg); }
+.saga-cover-stack-1 img { transform: translate(-50%, -50%); }
+.saga-art-monogram { color: #a2e4d0; font-family: var(--font-display); font-size: 180px; line-height: 1; opacity: .4; }
+.saga-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin: 18px 0 0; padding: 22px 0; border-top: 1px solid var(--page-border); border-bottom: 1px solid var(--page-border); }
+.saga-facts div + div { padding-left: 20px; border-left: 1px solid var(--page-border); }
+.saga-facts dt { color: #9ab5ad; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.saga-facts dd { margin: 6px 0 0; color: #f4fcf9; font-size: 17px; font-weight: 700; }
+.saga-section { margin-top: 60px; scroll-margin-top: 30px; }
+.saga-section h2 { margin: 6px 0 20px; font-size: clamp(29px, 3vw, 39px); font-weight: 600; letter-spacing: -.025em; line-height: 1.15; }
+.saga-intro-section > p:not(.saga-kicker), .saga-order-explainer { max-width: 850px; margin: 0 0 12px; color: #cfdfda; font-size: 15px; line-height: 1.75; }
+.saga-order-explainer p { margin: 0 0 12px; }
+.saga-inline-links { margin-top: 20px; }
+.saga-inline-links a { color: #a6efd4; font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.saga-inline-links a:hover { color: #e2fff2; }
+.saga-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.saga-heading-note { margin-bottom: 23px; color: #9cb3ac; font-size: 13px; text-align: right; }
+.saga-progress { display: flex; align-items: baseline; gap: 12px; margin: 22px 0 20px; color: #b6cec3; font-size: 13px; }
+.saga-progress strong { color: var(--page-accent); font-size: 27px; }
+.saga-progress strong span { color: #9cb2aa; font-size: 18px; font-weight: 400; }
+.saga-progress-track { align-self: center; width: 130px; height: 7px; overflow: hidden; border-radius: 10px; background: #294644; }
+.saga-progress-track > span { display: block; height: 100%; border-radius: inherit; background: var(--page-accent); }
+.saga-books { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.saga-book { --card-subtle: #173235; --card-border: #2a5050; display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 19px; min-width: 0; padding: 20px; border: 1px solid var(--page-border); border-radius: 16px; background: #102629; }
+.saga-book-art { position: relative; isolation: isolate; width: 160px; height: 190px; align-self: start; }
+.saga-book-number { position: absolute; z-index: -1; top: -18px; right: -1px; color: rgb(117 221 190 / 26%); font-family: var(--font-display); font-size: 136px; font-weight: 700; letter-spacing: -.11em; line-height: 1; pointer-events: none; }
+.saga-book-cover { position: absolute; bottom: 1px; left: 7px; display: grid; width: 110px; height: 166px; place-items: center; overflow: hidden; border: 1px solid #4a6b63; border-radius: 7px; background: #1d4543; box-shadow: 9px 16px 24px rgb(0 0 0 / 38%); color: #a8ddd0; font-family: var(--font-display); text-decoration: none; transform: rotate(-5deg); transition: transform .2s ease; }
+.saga-book-cover:hover, .saga-book-cover:focus-visible { transform: rotate(-2deg) translateY(-3px); }
+.saga-book-cover img { width: 100%; height: 100%; object-fit: cover; }
+.saga-book-copy { min-width: 0; }
+.saga-book h3 { margin: 4px 0 8px; font-size: 25px; line-height: 1.15; }
+.saga-book h3 a { color: inherit; text-decoration: none; }
+.saga-book h3 a:hover { color: var(--page-accent); }
+.saga-book-hook { display: -webkit-box; overflow: hidden; margin: 0; color: #bdcec7; font-size: 13px; line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+.saga-book .story-card-rating { margin: 6px 0 10px; }
+.saga-book-tags { gap: 6px; margin-top: 13px; }
+.saga-book-tags .story-card-tag { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border: 1px solid var(--card-border); border-radius: 8px; background: var(--card-subtle); color: #b8cbc5; font-size: 12px; line-height: 1.2; }
+.saga-book .saga-actions { margin-top: 17px; }
+.saga-book .saga-button { min-height: 36px; padding: 7px 10px; font-size: 11px; }
+.saga-book-pending { border-style: dashed; background: transparent; }
+.saga-book-art-pending .saga-book-number { color: rgb(143 228 196 / 35%); }
+.saga-book-cover-pending { border: 1px dashed #42635f; background: linear-gradient(145deg, rgb(28 63 61 / 85%), rgb(10 35 37 / 78%)); box-shadow: none; }
+.saga-book-state { margin: 15px 0 0; color: #8fe4c4; font-size: 12px; font-weight: 700; }
+.saga-faq { display: grid; }
+.saga-faq-item { padding: 20px 0 22px; border-bottom: 1px solid var(--page-border); }
+.saga-faq-item:first-child { border-top: 1px solid var(--page-border); }
+.saga-faq-item h3 { margin: 0 0 9px; font-family: var(--font-body); font-size: 16px; font-weight: 750; }
+.saga-faq-item p { max-width: 850px; margin: 0; color: #c3d6cd; font-size: 14px; line-height: 1.7; }
+@media (max-width: 850px) { .saga-hero { grid-template-columns: 1fr; gap: 20px; } .saga-hero-art { min-height: 240px; } .saga-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .saga-facts div:nth-child(3) { padding-left: 0; border-left: 0; } .saga-books { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .saga-page { padding-top: 25px; } .saga-hero h1 { font-size: clamp(42px, 11vw, 58px); } .saga-hero-intro { font-size: 14px; } .saga-hero-art { min-height: 190px; } .saga-cover-stack { height: 195px; } .saga-cover-stack img { width: 90px; height: 145px; } .saga-facts { gap: 10px; } .saga-facts div + div { padding-left: 10px; } .saga-facts div:nth-child(3) { padding-left: 0; } .saga-facts dd { font-size: 15px; } .saga-section { margin-top: 44px; } .saga-section-heading { display: block; } .saga-heading-note { display: block; margin-top: -10px; text-align: left; } .saga-book { grid-template-columns: 112px minmax(0, 1fr); gap: 13px; padding: 14px; } .saga-book-art { width: 112px; height: 150px; } .saga-book-number { top: -6px; right: 0; font-size: 98px; } .saga-book-cover { width: 85px; height: 130px; } .saga-book h3 { font-size: 21px; } }
+@media (max-width: 600px) { .saga-progress strong { flex: none; white-space: nowrap; } .saga-progress-track { width: 72px; flex: none; } }

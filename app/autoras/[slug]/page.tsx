@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { StoryGrid } from "../../_components/story-grid";
+import { SagaCard } from "../../_components/saga-card";
 import { getAuthorBySlug, getAuthors, getSagas, getSeoPages, getStories } from "@/lib/notion";
 import type { Author, SeoPage } from "@/lib/notion";
 
@@ -139,27 +140,10 @@ export default async function AutoraPage({ params }: PageProps) {
       {authorSagas.length > 0 ? (
         <section className="story-section author-sagas" aria-labelledby="author-sagas-title">
           <h2 id="author-sagas-title">Sagas</h2>
-          <div className="author-saga-grid">
+          <div className="saga-card-grid">
             {authorSagas.map((saga) => {
               const sagaStoryIds = new Set(saga.storyIds);
-              const covers = stories.filter((story) => sagaStoryIds.has(story.id) && story.coverUrl).slice(0, 4);
-              return (
-                <article className={`author-saga-card${covers.length > 0 ? " author-saga-card-with-covers" : ""}`} key={saga.id}>
-                  <div className="author-saga-copy">
-                    <p className="eyebrow">Saga</p>
-                    <h3>{saga.name}</h3>
-                    {saga.description ? <p>{saga.description}</p> : null}
-                    <div className="author-saga-footer">
-                      <Link href={`/sagas/${saga.slug}`}>Ver saga →</Link>
-                    </div>
-                  </div>
-                  {covers.length > 0 ? (
-                    <div className="author-saga-covers" aria-hidden="true">
-                      {covers.map((story) => <img src={story.coverUrl!} alt="" key={story.id} />)}
-                    </div>
-                  ) : null}
-                </article>
-              );
+              return <SagaCard key={saga.id} saga={saga} stories={stories.filter((story) => sagaStoryIds.has(story.id))} authorName={author.name} headingLevel={3} />;
             })}
           </div>
         </section>

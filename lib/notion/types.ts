@@ -38,6 +38,7 @@ export type Story = {
   authorId: string | null;
   authorName: string | null;
   sagaId: string | null;
+  sagaNumber: number | null;
   relatedStoryIds: string[];
   filterValues: Record<string, string[]>;
   coverUrl: string | null;
@@ -105,6 +106,20 @@ export type Saga = {
   authorIds: string[];
   storyIds: string[];
   readingOrder: string | null;
+  originalTitle: string;
+  sagaType: string | null;
+  status: string | null;
+  bookCount: number | null;
+  bookTitles: string[];
+  spanishAvailability: string | null;
+  kindleUnlimited: string | null;
+  standalone: string | null;
+  bookRelationship: string | null;
+  whyReadInOrder: string;
+  faqs: { question: string; answer: string }[];
+  coverUrl: string | null;
+  seoTitle: string;
+  metaDescription: string;
 };
 
 export type SeoPage = {

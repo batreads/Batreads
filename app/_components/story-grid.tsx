@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Story } from "@/lib/notion";
+import { StoryCardRating } from "./story-card-rating";
 
 export function StoryGrid({
   stories,
@@ -21,7 +22,6 @@ export function StoryGrid({
         const description = story.synopsis || story.hook;
         const subgenre = story.subgenres.find((value) => value.trim().toLocaleLowerCase("es") !== "dark romance") ?? story.subgenres[0];
         const trope = story.tropes[0];
-        const filledStars = story.rating === null ? 0 : Math.max(0, Math.min(5, Math.round(story.rating)));
 
         return (
           <Link className={isHiddenGem ? "story-card story-card-hidden-gem" : "story-card"} href={`/historias/${story.slug}`} key={story.id}>
@@ -38,18 +38,7 @@ export function StoryGrid({
               <div className="story-card-copy">
                 <Heading>{story.title}</Heading>
                 {author ? <p className="story-card-author">{author}</p> : null}
-                {story.rating !== null ? (
-                  <span className="story-card-rating" aria-label={`Puntuación: ${story.rating} de 5`}>
-                    <span className="story-card-rating-stars" aria-hidden="true">
-                      {Array.from({ length: 5 }, (_, index) => (
-                        <svg className={index < filledStars ? "story-card-rating-star is-filled" : "story-card-rating-star"} viewBox="0 0 24 24" key={index}>
-                          <path d="m12 2.5 3.04 6.17 6.81.99-4.93 4.8 1.16 6.78L12 18.04l-6.08 3.2 1.16-6.78-4.93-4.8 6.81-.99L12 2.5Z" />
-                        </svg>
-                      ))}
-                    </span>
-                    <span className="story-card-rating-score" aria-hidden="true">{story.rating}<span>/5</span></span>
-                  </span>
-                ) : null}
+                {story.rating !== null ? <StoryCardRating rating={story.rating} /> : null}
                 {description ? <p className="story-card-description">{description}</p> : null}
               </div>
               {subgenre || trope ? (
