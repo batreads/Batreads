@@ -3,6 +3,33 @@ import { StoryGrid } from "./story-grid";
 import type { EditorialBlock, Story } from "@/lib/notion";
 
 type EditorialSection = { id: string; title: string | null; blocks: EditorialBlock[] };
+type TextBlock = Extract<EditorialBlock, { text: string }>;
+
+function publicHref(href: string | null, notionPathsById: Record<string, string>): string | null {
+  if (!href) return null;
+  if (href.startsWith("/")) return href;
+  try {
+    const url = new URL(href);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+    if (url.hostname === "notion.so" || url.hostname.endsWith(".notion.so") || url.hostname === "app.notion.com") {
+      const id = url.pathname.match(/([a-f0-9]{32})(?:\/)?$/i)?.[1];
+      return id ? notionPathsById[id.toLowerCase()] ?? null : null;
+    }
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
+function renderText(block: TextBlock, notionPathsById: Record<string, string>): ReactNode {
+  return block.richText.map((part, index) => {
+    let content: ReactNode = part.text;
+    if (part.bold) content = <strong>{content}</strong>;
+    if (part.italic) content = <em>{content}</em>;
+    const href = publicHref(part.href, notionPathsById);
+    return href ? <a href={href} key={index}>{content}</a> : <span key={index}>{content}</span>;
+  });
+}
 
 function sectionsFromBlocks(blocks: EditorialBlock[]): EditorialSection[] {
   const sections: EditorialSection[] = [{ id: "intro", title: null, blocks: [] }];
@@ -18,7 +45,7 @@ function sectionsFromBlocks(blocks: EditorialBlock[]): EditorialSection[] {
   return sections.filter((section) => section.blocks.length > 0);
 }
 
-function renderBlocks(blocks: EditorialBlock[]): ReactNode[] {
+function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, string>): ReactNode[] {
   const result: ReactNode[] = [];
   let index = 0;
 
@@ -31,16 +58,18 @@ function renderBlocks(blocks: EditorialBlock[]): ReactNode[] {
       const children = items.map((item) => {
         const text = "text" in item ? item.text : "";
         const labeled = text.match(/^([^:]{2,80}):\s+(.+)$/);
-        return <li key={item.id}>{labeled ? <><strong>{labeled[1]}:</strong> {labeled[2]}</> : text}</li>;
+        return <li key={item.id}>{"richText" in item && item.richText.some((part) => part.href)
+          ? renderText(item, notionPathsById)
+          : labeled ? <><strong>{labeled[1]}:</strong> {labeled[2]}</> : text}</li>;
       });
       result.push(type === "bulleted_list_item"
         ? <ul key={block.id}>{children}</ul>
         : <ol key={block.id}>{children}</ol>);
       continue;
     }
-    if (block.type === "paragraph") result.push(<p key={block.id}>{block.text}</p>);
-    if (block.type === "callout") result.push(<aside className="editorial-callout" key={block.id}>{block.text}</aside>);
-    if (block.type === "heading_3") result.push(<h3 key={block.id}>{block.text}</h3>);
+    if (block.type === "paragraph") result.push(<p key={block.id}>{renderText(block, notionPathsById)}</p>);
+    if (block.type === "callout") result.push(<aside className="editorial-callout" key={block.id}>{renderText(block, notionPathsById)}</aside>);
+    if (block.type === "heading_3") result.push(<h3 key={block.id}>{renderText(block, notionPathsById)}</h3>);
     if (block.type === "divider") result.push(<hr key={block.id} />);
     if (block.type === "table" && block.rows.length > 0) {
       const [firstRow, ...remainingRows] = block.rows;
@@ -61,11 +90,12 @@ function renderBlocks(blocks: EditorialBlock[]): ReactNode[] {
   return result;
 }
 
-export function EditorialListContent({ blocks, stories, authorNames }: { blocks: EditorialBlock[]; stories: Story[]; authorNames: Record<string, string> }) {
-  const sections = sectionsFromBlocks(blocks);
+export function EditorialListContent({ blocks, stories, authorNames, booksLike = false, notionPathsById = {} }: { blocks: EditorialBlock[]; stories: Story[]; authorNames: Record<string, string>; booksLike?: boolean; notionPathsById?: Record<string, string> }) {
+  const visibleBlocks = booksLike ? blocks.filter((block) => block.type !== "callout" || !block.text.startsWith("Cómo elegimos estos libros.")) : blocks;
+  const sections = sectionsFromBlocks(visibleBlocks);
   const chooserIndex = sections.findIndex((section) => section.title?.startsWith("Encuentra el "));
   const gridAfter = chooserIndex >= 0 ? chooserIndex : 0;
-  const books = stories.length > 0 ? (
+  const books = !booksLike && stories.length > 0 ? (
     <section className="story-section seo-books-section home-story-cards" aria-labelledby="editorial-books-title">
       <h2 id="editorial-books-title">Libros recomendados</h2>
       <StoryGrid stories={stories} authorNames={authorNames} headingLevel={3} />
@@ -74,15 +104,17 @@ export function EditorialListContent({ blocks, stories, authorNames }: { blocks:
 
   return (
     <div className="editorial-list-content">
-      {sections.map((section, index) => (
-        <div key={section.id}>
+      {sections.map((section, index) => {
+        const sectionStory = booksLike ? stories.find((story) => section.title?.startsWith(`${story.title}:`)) : undefined;
+        return <div key={section.id}>
           <section className={`story-section editorial-section${section.title ? "" : " seo-intro-section"}${section.title?.startsWith("Preguntas frecuentes") ? " editorial-faq-section" : ""}${index === chooserIndex ? " editorial-choice-section" : ""}${section.title?.startsWith("Libros de mafia romance") ? " editorial-metrics-section" : ""}`}>
             <h2>{section.title ?? "Introducción"}</h2>
-            {renderBlocks(section.blocks)}
+            {renderBlocks(section.blocks, notionPathsById)}
+            {sectionStory ? <div className="editorial-inline-story home-story-cards"><StoryGrid stories={[sectionStory]} authorNames={authorNames} headingLevel={3} /></div> : null}
           </section>
           {index === gridAfter ? books : null}
-        </div>
-      ))}
+        </div>;
+      })}
       {sections.length === 0 ? books : null}
     </div>
   );

@@ -1,6 +1,8 @@
 export type NotionRichText = {
   plain_text?: string;
-  text?: { content?: string };
+  href?: string | null;
+  text?: { content?: string; link?: { url: string } | null };
+  annotations?: { bold?: boolean; italic?: boolean };
 };
 
 export type NotionProperty = {

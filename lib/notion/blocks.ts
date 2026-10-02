@@ -23,7 +23,7 @@ type BlockList = {
 };
 
 export type EditorialBlock =
-  | { id: string; type: "paragraph" | "callout" | "heading_2" | "heading_3" | "bulleted_list_item" | "numbered_list_item"; text: string }
+  | { id: string; type: "paragraph" | "callout" | "heading_2" | "heading_3" | "bulleted_list_item" | "numbered_list_item"; text: string; richText: { text: string; href: string | null; bold: boolean; italic: boolean }[] }
   | { id: string; type: "table"; rows: string[][]; hasHeader: boolean }
   | { id: string; type: "divider" };
 
@@ -61,8 +61,19 @@ export async function getEditorialBlocks(pageId: string): Promise<EditorialBlock
       block.type === "paragraph" || block.type === "callout" || block.type === "heading_2" ||
       block.type === "heading_3" || block.type === "bulleted_list_item" || block.type === "numbered_list_item"
     ) {
-      const text = joinText(block[block.type]?.rich_text);
-      return text ? { id: block.id, type: block.type, text } : null;
+      const parts = block[block.type]?.rich_text ?? [];
+      const text = joinText(parts);
+      return text ? {
+        id: block.id,
+        type: block.type,
+        text,
+        richText: parts.map((part) => ({
+          text: part.plain_text ?? part.text?.content ?? "",
+          href: part.href ?? part.text?.link?.url ?? null,
+          bold: part.annotations?.bold ?? false,
+          italic: part.annotations?.italic ?? false,
+        })),
+      } : null;
     }
     return null;
   }));

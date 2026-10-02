@@ -3429,6 +3429,26 @@ body:has(.story-page) {
   line-height: 1.7;
 }
 
+.books-like-page .editorial-section > p,
+.books-like-page .editorial-section li {
+  font-weight: 300;
+}
+
+.books-like-page .editorial-section a {
+  color: var(--page-accent);
+  text-decoration: underline;
+  text-underline-offset: .16em;
+}
+
+.books-like-page .editorial-inline-story {
+  max-width: 800px;
+  margin-top: 30px;
+}
+
+.books-like-page .editorial-inline-story .story-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .list-detail-page .editorial-list-content > div + div > .editorial-section {
   padding-top: 48px;
   border-top: 1px solid #1d3a3b;

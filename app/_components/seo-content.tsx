@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Breadcrumbs } from "./breadcrumbs";
 import { EditorialListContent } from "./editorial-list-content";
 import { StoryGrid } from "./story-grid";
-import { getEditorialBlocks, storiesForSeoPage, type Author, type Saga, type SeoPage, type Story } from "@/lib/notion";
+import { getEditorialBlocks, getSeoPages, storiesForSeoPage, type Author, type Saga, type SeoPage, type Story } from "@/lib/notion";
 
 function paragraphs(value: string) {
   return value.split(/\n\s*\n/).filter(Boolean).map((paragraph, index) => <p key={index}>{paragraph}</p>);
@@ -32,10 +32,17 @@ export async function SeoContent({
   const authorNames = Object.fromEntries(authors.map((author) => [author.id, author.name]));
   const relatedAuthors = authors.filter((author) => page.authorIds.includes(author.id));
   const relatedSagas = sagas.filter((saga) => page.sagaIds.includes(saga.id));
-  const editorialBlocks = await getEditorialBlocks(page.id);
+  const [editorialBlocks, seoPages] = await Promise.all([getEditorialBlocks(page.id), getSeoPages()]);
+  const notionPathsById = Object.fromEntries([
+    ...stories.map((story) => [story.id, `/historias/${story.slug}`]),
+    ...authors.map((author) => [author.id, `/autoras/${author.slug}`]),
+    ...sagas.map((saga) => [saga.id, `/sagas/${saga.slug}`]),
+    ...seoPages.map((seoPage) => [seoPage.id, seoPage.path]),
+  ].map(([id, path]) => [id.replaceAll("-", "").toLowerCase(), path]));
+  const booksLike = page.pageType === "BooksLikeLanding";
 
   return (
-    <main className={`catalog-page${page.section === "listas" ? " list-detail-page" : ""}`}>
+    <main className={`catalog-page${page.section === "listas" ? " list-detail-page" : ""}${booksLike ? " books-like-page" : ""}`}>
       <Breadcrumbs items={page.section === "listas"
         ? [{ label: "Listas", href: "/listas" }, { label: page.heading }]
         : [{ label: page.heading }]} />
@@ -44,7 +51,7 @@ export async function SeoContent({
         <h1>{page.heading}</h1>
         {page.summary || page.description ? <p>{page.summary || page.description}</p> : null}
       </header>
-      {editorialBlocks.length > 0 ? <EditorialListContent blocks={editorialBlocks} stories={relatedStories} authorNames={authorNames} /> : (
+      {editorialBlocks.length > 0 ? <EditorialListContent blocks={editorialBlocks} stories={relatedStories} authorNames={authorNames} booksLike={booksLike} notionPathsById={notionPathsById} /> : (
         <>
           {page.intro ? <section className="story-section seo-intro-section"><h2>Introducción</h2>{paragraphs(page.intro)}</section> : null}
           {relatedStories.length > 0 ? <section className="story-section seo-books-section home-story-cards"><h2>{page.section === "listas" ? "Libros recomendados" : "Historias relacionadas"}</h2><StoryGrid stories={relatedStories} authorNames={authorNames} headingLevel={3} /></section> : null}
