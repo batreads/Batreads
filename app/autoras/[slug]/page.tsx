@@ -29,7 +29,7 @@ function externalUrl(value: string | null) {
 function isPublicCollection(page: SeoPage) {
   return page.section === "listas"
     && page.hasExplicitPath
-    && page.pageType === "Colección"
+    && (page.pageType === "Colección" || page.pageType === "CollectionLanding")
     && (page.pageFormat === "Colección dinámica" || page.dynamicCollection);
 }
 

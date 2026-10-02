@@ -2,14 +2,19 @@ import { checkbox, number, relationIds, select, text, validSlug } from "./proper
 import { queryPages } from "./query";
 import type { Author, NotionPage, Saga, SeoPage, Story } from "./types";
 
+const listTemplates = new Set(["CollectionLanding", "BooksLikeLanding", "RankingLanding", "ReadingOrderLanding"]);
+const priorityRanks: Record<string, number> = { Alta: 3, Media: 2, Baja: 1 };
+
 export function mapSeoPage(page: NotionPage): SeoPage {
   const slug = text(page, "Slug");
   const title = text(page, "Título");
   if (!title || !validSlug(slug)) throw new Error(`Página SEO ${page.id} sin título o slug válido.`);
 
-  const section = select(page, "Sección web") ?? "listas";
   const rawPath = text(page, "Ruta");
   const hasExplicitPath = /^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(rawPath);
+  const pageType = select(page, "Plantilla frontend") ?? select(page, "Tipo de página") ?? "";
+  const section = select(page, "Sección web")
+    ?? (hasExplicitPath && (rawPath.startsWith("/listas/") || listTemplates.has(pageType)) ? "listas" : "guias");
   const path = hasExplicitPath
     ? rawPath
     : section === "listas" ? `/listas/${slug}` : `/${slug}`;
@@ -19,10 +24,10 @@ export function mapSeoPage(page: NotionPage): SeoPage {
     slug,
     path,
     hasExplicitPath,
-    pageType: select(page, "Tipo de página") ?? "",
+    pageType,
     pageFormat: select(page, "Formato de página") ?? "",
     topic: select(page, "Entidad / tema") ?? "",
-    priority: number(page, "Prioridad SEO"),
+    priority: priorityRanks[select(page, "Prioridad SEO") ?? ""] ?? number(page, "Prioridad SEO"),
     publishedAt: page.properties["Fecha publicación"]?.date?.start ?? null,
     createdAt: page.created_time ?? "",
     section,
@@ -106,11 +111,18 @@ function matchesFilter(
 }
 
 export function storiesForSeoPage(page: SeoPage, stories: Story[], authors: Author[] = [], sagas: Saga[] = []): Story[] {
-  const explicitIds = new Set([...page.relatedStoryIds, ...page.mainStoryIds]);
+  const isBooksLikePage = page.pageType === "BooksLikeLanding";
+  const explicitIds = isBooksLikePage
+    ? page.relatedStoryIds
+    : [...page.relatedStoryIds, ...page.mainStoryIds];
+  const explicitOrder = new Map(explicitIds.map((id, index) => [id, index]));
+  const mainStoryIds = new Set(page.mainStoryIds);
+
   return stories.filter((story) => {
-    if (explicitIds.has(story.id)) return true;
+    if (isBooksLikePage && mainStoryIds.has(story.id)) return false;
+    if (explicitOrder.has(story.id)) return true;
     if (!page.dynamicCollection || !page.filter1.field) return false;
     return matchesFilter(story, page.filter1, authors, sagas)
       && (!page.filter2.field || matchesFilter(story, page.filter2, authors, sagas));
-  });
+  }).sort((a, b) => (explicitOrder.get(a.id) ?? Infinity) - (explicitOrder.get(b.id) ?? Infinity));
 }

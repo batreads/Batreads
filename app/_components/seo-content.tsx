@@ -32,7 +32,7 @@ export async function SeoContent({
   const authorNames = Object.fromEntries(authors.map((author) => [author.id, author.name]));
   const relatedAuthors = authors.filter((author) => page.authorIds.includes(author.id));
   const relatedSagas = sagas.filter((saga) => page.sagaIds.includes(saga.id));
-  const editorialBlocks = page.path === "/mafia-romance-en-espanol" ? await getEditorialBlocks(page.id) : [];
+  const editorialBlocks = await getEditorialBlocks(page.id);
 
   return (
     <main className={`catalog-page${page.section === "listas" ? " list-detail-page" : ""}`}>
