@@ -30,7 +30,11 @@ export async function SeoContent({
 }) {
   const relatedStories = storiesForSeoPage(page, stories, authors, sagas);
   const authorNames = Object.fromEntries(authors.map((author) => [author.id, author.name]));
-  const relatedAuthors = authors.filter((author) => page.authorIds.includes(author.id));
+  const relatedAuthorIds = new Set(page.authorIds);
+  if (page.pageType === "BooksLikeLanding") {
+    for (const story of relatedStories) if (story.authorId) relatedAuthorIds.add(story.authorId);
+  }
+  const relatedAuthors = authors.filter((author) => relatedAuthorIds.has(author.id));
   const relatedSagas = sagas.filter((saga) => page.sagaIds.includes(saga.id));
   const [editorialBlocks, seoPages] = await Promise.all([getEditorialBlocks(page.id), getSeoPages()]);
   const notionPathsById = Object.fromEntries([
@@ -47,9 +51,9 @@ export async function SeoContent({
         ? [{ label: "Listas", href: "/listas" }, { label: page.heading }]
         : [{ label: page.heading }]} />
       <header className="page-heading">
-        <p className="eyebrow">{page.section === "listas" ? "Lista editorial" : "Guía Batreads"}</p>
+        {booksLike ? (page.topic ? <p className="eyebrow">{page.topic}</p> : null) : <p className="eyebrow">{page.section === "listas" ? "Lista editorial" : "Guía Batreads"}</p>}
         <h1>{page.heading}</h1>
-        {page.summary || page.description ? <p>{page.summary || page.description}</p> : null}
+        {!booksLike && (page.summary || page.description) ? <p>{page.summary || page.description}</p> : null}
       </header>
       {editorialBlocks.length > 0 ? <EditorialListContent blocks={editorialBlocks} stories={relatedStories} authorNames={authorNames} booksLike={booksLike} notionPathsById={notionPathsById} /> : (
         <>

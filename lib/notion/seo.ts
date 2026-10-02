@@ -12,7 +12,8 @@ export function mapSeoPage(page: NotionPage): SeoPage {
 
   const rawPath = text(page, "Ruta");
   const hasExplicitPath = /^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(rawPath);
-  const pageType = select(page, "Plantilla frontend") ?? select(page, "Tipo de página") ?? "";
+  const selectedPageType = select(page, "Plantilla frontend") ?? select(page, "Tipo de página") ?? "";
+  const pageType = selectedPageType === "Libros parecidos" ? "BooksLikeLanding" : selectedPageType;
   const section = select(page, "Sección web")
     ?? (hasExplicitPath && (rawPath.startsWith("/listas/") || listTemplates.has(pageType)) ? "listas" : "guias");
   const path = hasExplicitPath

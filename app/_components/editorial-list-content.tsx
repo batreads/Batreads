@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { FaqList, type FaqItem } from "./faq-list";
 import { StoryGrid } from "./story-grid";
 import type { EditorialBlock, Story } from "@/lib/notion";
 
@@ -90,6 +91,21 @@ function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, 
   return result;
 }
 
+function faqItemsFromBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, string>): FaqItem[] {
+  const items: FaqItem[] = [];
+  for (const block of blocks) {
+    if (block.type === "heading_3") {
+      items.push({ question: block.text, answer: "" });
+    } else if (block.type === "paragraph") {
+      const answer = renderText(block, notionPathsById);
+      const last = items[items.length - 1];
+      if (last) last.answer = last.answer ? <>{last.answer} {answer}</> : answer;
+      else items.push({ answer });
+    }
+  }
+  return items;
+}
+
 export function EditorialListContent({ blocks, stories, authorNames, booksLike = false, notionPathsById = {} }: { blocks: EditorialBlock[]; stories: Story[]; authorNames: Record<string, string>; booksLike?: boolean; notionPathsById?: Record<string, string> }) {
   const visibleBlocks = booksLike ? blocks.filter((block) => block.type !== "callout" || !block.text.startsWith("Cómo elegimos estos libros.")) : blocks;
   const sections = sectionsFromBlocks(visibleBlocks);
@@ -108,8 +124,10 @@ export function EditorialListContent({ blocks, stories, authorNames, booksLike =
         const sectionStory = booksLike ? stories.find((story) => section.title?.startsWith(`${story.title}:`)) : undefined;
         return <div key={section.id}>
           <section className={`story-section editorial-section${section.title ? "" : " seo-intro-section"}${section.title?.startsWith("Preguntas frecuentes") ? " editorial-faq-section" : ""}${index === chooserIndex ? " editorial-choice-section" : ""}${section.title?.startsWith("Libros de mafia romance") ? " editorial-metrics-section" : ""}`}>
-            <h2>{section.title ?? "Introducción"}</h2>
-            {renderBlocks(section.blocks, notionPathsById)}
+            {section.title || !booksLike ? <h2>{section.title ?? "Introducción"}</h2> : null}
+            {booksLike && section.title?.startsWith("Preguntas frecuentes")
+              ? <FaqList items={faqItemsFromBlocks(section.blocks, notionPathsById)} />
+              : renderBlocks(section.blocks, notionPathsById)}
             {sectionStory ? <div className="editorial-inline-story home-story-cards"><StoryGrid stories={[sectionStory]} authorNames={authorNames} headingLevel={3} /></div> : null}
           </section>
           {index === gridAfter ? books : null}

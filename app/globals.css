@@ -7,6 +7,7 @@
   --page-accent: #63e6be;
   --font-body: var(--font-inter), Arial, Helvetica, sans-serif;
   --font-display: Didot, "Bodoni 72", "Times New Roman", Georgia, serif;
+  --type-body: 1.125rem;
   color-scheme: dark;
   font-family: var(--font-body);
   background: var(--page-background);
@@ -3434,7 +3435,9 @@ body:has(.story-page) {
   font-weight: 300;
 }
 
-.books-like-page .editorial-section a {
+.books-like-page .editorial-section > p a,
+.books-like-page .editorial-section li a,
+.books-like-page .faq-list-item p a {
   color: var(--page-accent);
   text-decoration: underline;
   text-underline-offset: .16em;
@@ -3629,7 +3632,7 @@ body:has(.story-page) {
   border-top: 1px solid var(--page-border);
 }
 
-.list-detail-page .editorial-faq-section h3 {
+.list-detail-page:not(.books-like-page) .editorial-faq-section h3 {
   max-width: none;
   margin: 20px 0 0;
   padding: 20px 24px 0;
@@ -3640,7 +3643,7 @@ body:has(.story-page) {
   font-size: 22px;
 }
 
-.list-detail-page .editorial-faq-section h3 + p {
+.list-detail-page:not(.books-like-page) .editorial-faq-section h3 + p {
   max-width: none;
   margin: 0;
   padding: 8px 24px 20px;
@@ -4089,6 +4092,56 @@ body:has(.story-page) {
     grid-column: 2;
     justify-self: start;
   }
+}
+
+.books-like-page .editorial-section > p,
+.books-like-page .editorial-section.seo-intro-section > p {
+  color: #d4e1dc;
+  font-size: var(--type-body);
+  line-height: 1.6;
+}
+
+.books-like-page .editorial-inline-story .story-card {
+  color: var(--page-text);
+  text-decoration: none;
+}
+
+.books-like-page .editorial-inline-story .story-card :is(h2, h3) {
+  color: var(--page-text);
+  text-decoration: none;
+}
+
+.faq-list {
+  display: grid;
+  max-width: 850px;
+  border-top: 1px solid var(--page-border);
+}
+
+.faq-list-item {
+  padding: 20px 0 22px;
+  border-bottom: 1px solid var(--page-border);
+}
+
+.list-detail-page .editorial-section .faq-list-item h3,
+.faq-list-item h3,
+.faq-list-item h4 {
+  margin: 0 0 9px;
+  color: var(--page-text);
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+.faq-list-item p {
+  max-width: 70ch;
+  margin: 0;
+  color: #c3d6cd;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.65;
+  white-space: pre-line;
 }
 
 .author-page {
