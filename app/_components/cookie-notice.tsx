@@ -131,17 +131,17 @@ export function CookieNotice() {
     <section className="cookie-notice" aria-labelledby="cookie-notice-title">
       <div className="cookie-notice-inner">
         <div className="cookie-notice-copy">
-          <h2 id="cookie-notice-title" ref={headingRef} tabIndex={-1}>Cookies en Batreads</h2>
+          <h2 id="cookie-notice-title" ref={headingRef} tabIndex={-1}>El murciélago quiere saber qué buscas 🦇</h2>
           <p>
-            Solo si pulsas «Aceptar», Google Analytics 4 instalará cookies para medir las visitas
-            y las páginas consultadas. Si pulsas «Rechazar», no cargaremos Analytics.
-            Guardamos tu elección y puedes cambiarla desde el pie de página. Consulta la{" "}
+            Si aceptas, Google Analytics 4 usará cookies para medir qué páginas visitas y mejorar
+            nuestras recomendaciones. Si rechazas, no cargaremos Analytics. Puedes cambiar tu elección
+            desde el pie de página. Lee nuestra{" "}
             <Link href="/politica-de-cookies">política de cookies</Link>.
           </p>
         </div>
         <div className="cookie-notice-actions">
-          <button type="button" onClick={() => save("rejected")}>Rechazar</button>
-          <button type="button" onClick={() => save("accepted")}>Aceptar</button>
+          <button className="cookie-notice-reject" type="button" onClick={() => save("rejected")}>Rechazar</button>
+          <button className="cookie-notice-accept" type="button" onClick={() => save("accepted")}>Aceptar</button>
         </div>
       </div>
     </section>

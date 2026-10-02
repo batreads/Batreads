@@ -353,17 +353,32 @@ body {
   min-width: 116px;
   min-height: 44px;
   padding: 10px 16px;
-  border: 1px solid var(--page-accent);
+  border: 2px solid var(--page-accent);
   border-radius: 8px;
-  background: var(--page-accent);
-  color: #092024;
   font: inherit;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
 }
 
-.cookie-notice-actions button:hover {
+.cookie-notice-actions .cookie-notice-reject {
+  border-color: transparent;
+  background: transparent;
+  color: var(--page-accent);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.cookie-notice-actions .cookie-notice-reject:hover {
+  color: #a2f4d8;
+}
+
+.cookie-notice-accept {
+  background: var(--page-accent);
+  color: #092024;
+}
+
+.cookie-notice-accept:hover {
   background: #a2f4d8;
 }
 
