@@ -20,26 +20,30 @@ export default function CookiePolicyPage() {
 
         <div className="legal-content">
           <section aria-labelledby="cookies-current">
-            <h2 id="cookies-current">Uso actual</h2>
-            <p>Batreads no instala actualmente cookies propias de analítica, publicidad ni personalización. La única cookie propia que establece esta web es una preferencia técnica cuando eliges «Aceptar» o «Rechazar» en el aviso.</p>
+            <h2 id="cookies-current">Cookies que utilizamos</h2>
+            <p>Batreads guarda tu elección sobre las cookies de analítica. Google Analytics 4 solo se carga cuando pulsas «Aceptar» en el aviso; si pulsas «Rechazar», no enviamos mediciones a Google Analytics. No utilizamos Google Ads.</p>
             <div className="cookie-policy-table-wrap">
               <table className="cookie-policy-table">
                 <thead><tr><th scope="col">Nombre</th><th scope="col">Finalidad</th><th scope="col">Titular</th><th scope="col">Duración</th></tr></thead>
-                <tbody><tr><td><code>batreads_cookie_preference</code></td><td>Recordar tu elección, la fecha y la versión del aviso para no preguntarte en cada visita.</td><td>Batreads</td><td>180 días</td></tr></tbody>
+                <tbody>
+                  <tr><td><code>batreads_cookie_preference</code></td><td>Recordar tu elección, la fecha y la versión del aviso para no preguntarte en cada visita.</td><td>Batreads</td><td>180 días</td></tr>
+                  <tr><td><code>_ga</code></td><td>Distinguir visitantes para obtener estadísticas de uso. Solo se instala tras aceptar.</td><td>Google Analytics</td><td>Hasta 2 años</td></tr>
+                  <tr><td><code>_ga_*</code></td><td>Mantener el estado de la sesión de Analytics. Solo se instala tras aceptar.</td><td>Google Analytics</td><td>Hasta 2 años</td></tr>
+                </tbody>
               </table>
             </div>
-            <p>Esta cookie sirve únicamente para recordar la elección que has realizado. No se usa para medir tu actividad ni para mostrar publicidad.</p>
+            <p>La duración efectiva de las cookies de Analytics puede ser menor según el navegador. La cookie de preferencias no mide tu actividad.</p>
           </section>
 
-          <section aria-labelledby="cookies-planned">
-            <h2 id="cookies-planned">Google Analytics 4, previsto pero inactivo</h2>
-            <p>Tenemos previsto usar Google Analytics 4 para conocer el uso general de la web. Todavía no hemos instalado su etiqueta, por lo que Batreads no coloca cookies de Google Analytics ni envía mediciones a este servicio. Tampoco usamos Google Ads.</p>
-            <p>Antes de activarlo, publicaremos el detalle de las cookies y su duración reales, actualizaremos este aviso y te pediremos una nueva decisión. La elección guardada ahora no se utilizará como consentimiento para activar Google Analytics 4.</p>
+          <section aria-labelledby="cookies-analytics">
+            <h2 id="cookies-analytics">Medición con Google Analytics 4</h2>
+            <p>Si aceptas, usamos Google Analytics 4 para conocer datos estadísticos sobre las visitas y las páginas consultadas. El identificador de medición de Batreads es <code>G-8JDPRM1WFL</code>. El servicio lo presta Google; puedes consultar su <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">política de privacidad</a>.</p>
+            <p>Las decisiones guardadas antes de activar Analytics no se consideran consentimiento para esta medición. Por eso volvemos a mostrar el aviso tras el cambio.</p>
           </section>
 
           <section aria-labelledby="cookies-control">
             <h2 id="cookies-control">Cómo cambiar tu elección</h2>
-            <p>Puedes abrir de nuevo el aviso mediante «Cambiar preferencias de cookies», disponible en el pie de todas las páginas. También puedes borrar esta cookie desde la configuración de tu navegador; en ese caso, volveremos a mostrarte el aviso.</p>
+            <p>Puedes abrir de nuevo el aviso mediante «Cambiar preferencias de cookies», disponible en el pie de todas las páginas. Si retiras tu consentimiento, dejamos de cargar Analytics en las siguientes visitas y eliminamos sus cookies accesibles desde esta web. También puedes borrar las cookies desde la configuración de tu navegador; en ese caso, volveremos a mostrarte el aviso.</p>
           </section>
 
         </div>
