@@ -16,14 +16,14 @@ export function mapSeoPage(page: NotionPage): SeoPage {
   const pageType = selectedPageType === "Libros parecidos" ? "BooksLikeLanding" : selectedPageType;
   const section = select(page, "Sección web")
     ?? (hasExplicitPath && (rawPath.startsWith("/listas/") || listTemplates.has(pageType)) ? "listas" : "guias");
-  const path = hasExplicitPath
-    ? rawPath
-    : section === "listas" ? `/listas/${slug}` : `/${slug}`;
+  const rawOrDefaultPath = hasExplicitPath ? rawPath : section === "listas" ? `/listas/${slug}` : `/${slug}`;
+  const path = section === "listas" ? `/listas/${slug}` : rawOrDefaultPath;
 
   return {
     id: page.id,
     slug,
     path,
+    legacyPath: rawOrDefaultPath !== path ? rawOrDefaultPath : null,
     hasExplicitPath,
     pageType,
     pageFormat: select(page, "Formato de página") ?? "",
@@ -82,7 +82,10 @@ export async function getSeoPageBySlug(slug: string): Promise<SeoPage | null> {
 }
 
 export async function getSeoPageByPath(path: string): Promise<SeoPage | null> {
-  return (await getSeoPages()).find((page) => page.path === path) ?? null;
+  const pages = await getSeoPages();
+  return pages.find((page) => page.path === path)
+    ?? pages.find((page) => page.legacyPath === path)
+    ?? null;
 }
 
 function matchesFilter(

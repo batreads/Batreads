@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { SeoContent } from "../../_components/seo-content";
 import { getAuthors, getSagas, getSeoPageBySlug, getSeoPages, getStories } from "@/lib/notion";
 import { brandedTitle, seoPageDescription } from "@/lib/seo-metadata";
@@ -23,7 +23,6 @@ export default async function ListaPage({
   const { slug } = await params;
   const page = await getSeoPageBySlug(slug);
   if (!page || page.section !== "listas") notFound();
-  if (page.path !== `/listas/${slug}`) redirect(page.path);
   const [stories, authors, sagas] = await Promise.all([getStories(), getAuthors(), getSagas()]);
 
   return <SeoContent page={page} stories={stories} authors={authors} sagas={sagas} />;

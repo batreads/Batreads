@@ -130,6 +130,7 @@ export type SeoPage = {
   id: string;
   slug: string;
   path: string;
+  legacyPath: string | null;
   hasExplicitPath: boolean;
   pageType: string;
   pageFormat: string;
