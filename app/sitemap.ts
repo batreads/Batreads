@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getSeoPages(),
   ]);
 
-  const paths = [
+  const staticPaths = [
     "/",
     "/historias",
     "/autoras",
@@ -22,21 +22,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/apoya",
     "/condiciones-y-aviso-legal",
     "/politica-de-cookies",
-    ...stories.map((story) => `/historias/${story.slug}`),
-    ...authors.map((author) => `/autoras/${author.slug}`),
-    ...sagas.map((saga) => `/sagas/${saga.slug}`),
   ];
 
   const entries = new Map<string, MetadataRoute.Sitemap[number]>();
-  for (const path of paths) {
+  for (const path of staticPaths) {
     const url = new URL(path, siteOrigin).toString();
     entries.set(url, { url });
+  }
+
+  for (const story of stories) {
+    const url = new URL(`/historias/${story.slug}`, siteOrigin).toString();
+    entries.set(url, { url, ...(story.updatedAt ? { lastModified: story.updatedAt } : {}) });
+  }
+
+  for (const author of authors) {
+    const url = new URL(`/autoras/${author.slug}`, siteOrigin).toString();
+    entries.set(url, { url, ...(author.updatedAt ? { lastModified: author.updatedAt } : {}) });
+  }
+
+  for (const saga of sagas) {
+    const url = new URL(`/sagas/${saga.slug}`, siteOrigin).toString();
+    entries.set(url, { url, ...(saga.updatedAt ? { lastModified: saga.updatedAt } : {}) });
   }
 
   for (const page of seoPages.filter((page) => page.indexable)) {
     const url = new URL(page.path, siteOrigin).toString();
     if (!entries.has(url)) {
-      entries.set(url, { url, ...(page.publishedAt ? { lastModified: page.publishedAt } : {}) });
+      entries.set(url, { url, ...(page.updatedAt ? { lastModified: page.updatedAt } : {}) });
     }
   }
 

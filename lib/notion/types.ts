@@ -25,6 +25,7 @@ export type NotionPage = {
   id: string;
   url: string;
   created_time?: string;
+  last_edited_time?: string;
   archived?: boolean;
   in_trash?: boolean;
   properties: Record<string, NotionProperty>;
@@ -36,6 +37,7 @@ export type Story = {
   notionSlug: string;
   title: string;
   publishedAt: string | null;
+  updatedAt: string | null;
   createdAt: string;
   authorId: string | null;
   authorName: string | null;
@@ -96,6 +98,7 @@ export type Author = {
   goodreads: string | null;
   amazonUrl: string | null;
   verifiedAt: string | null;
+  updatedAt: string | null;
   featuredCollectionId: string | null;
   storyIds: string[];
   sagaIds: string[];
@@ -105,6 +108,7 @@ export type Saga = {
   id: string;
   slug: string;
   name: string;
+  updatedAt: string | null;
   description: string;
   intro: string;
   authorIds: string[];
@@ -137,6 +141,7 @@ export type SeoPage = {
   topic: string;
   priority: number | null;
   publishedAt: string | null;
+  updatedAt: string | null;
   createdAt: string;
   section: string;
   title: string;

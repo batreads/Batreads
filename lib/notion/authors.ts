@@ -25,6 +25,7 @@ function mapAuthor(page: NotionPage): Author {
     goodreads: url(page, "Goodreads"),
     amazonUrl: url(page, "Amazon Author"),
     verifiedAt: page.properties["Última verificación"]?.date?.start ?? null,
+    updatedAt: page.last_edited_time ?? null,
     featuredCollectionId: relationIds(page, "Colección destacada")[0] ?? null,
     storyIds: relationIds(page, "Historias"),
     sagaIds: relationIds(page, "Sagas"),

@@ -30,6 +30,7 @@ export function mapSeoPage(page: NotionPage): SeoPage {
     topic: select(page, "Entidad / tema") ?? "",
     priority: priorityRanks[select(page, "Prioridad SEO") ?? ""] ?? number(page, "Prioridad SEO"),
     publishedAt: page.properties["Fecha publicación"]?.date?.start ?? null,
+    updatedAt: page.last_edited_time ?? null,
     createdAt: page.created_time ?? "",
     section,
     title: text(page, "SEO title") || title,
