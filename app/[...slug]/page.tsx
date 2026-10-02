@@ -24,7 +24,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     alternates: { canonical: page.path },
-    robots: { index: false, follow: true },
     openGraph: {
       title, description, url: page.path,
       type: "article", siteName: "Batreads", locale: "es_ES",

@@ -20,11 +20,6 @@ export const metadata: Metadata = {
     locale: "es_ES",
   },
   twitter: { card: "summary_large_image" },
-  robots: {
-    index: false,
-    follow: true,
-    googleBot: { index: false, follow: true },
-  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

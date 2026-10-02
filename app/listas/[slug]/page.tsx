@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const page = await getSeoPageBySlug((await params).slug);
   return page && page.section === "listas"
-    ? { title: brandedTitle(page.title), description: seoPageDescription(page), alternates: { canonical: page.path }, robots: { index: false, follow: true } }
+    ? { title: brandedTitle(page.title), description: seoPageDescription(page), alternates: { canonical: page.path } }
     : { title: "Lista no encontrada · Batreads" };
 }
 
