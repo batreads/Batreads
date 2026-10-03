@@ -21,7 +21,7 @@ export default function ApoyaPage() {
         <header className="support-heading">
           <p className="eyebrow">Dos formas de apoyar</p>
           <h1>Apoya <em>Batreads</em></h1>
-          <p>Una recomendación a una amiga o una colaboración editorial. Ambas ayudan a que Batreads pueda seguir sumando historias y guías.</p>
+          <p>Una recomendación a una amiga o una colaboración editorial. Ambas ayudan a que Batreads pueda seguir sumando historias y listas de lectura.</p>
         </header>
 
         <section className="support-options" aria-label="Formas de apoyar Batreads">
@@ -69,7 +69,7 @@ export default function ApoyaPage() {
           <span className="support-thanks-heart" aria-hidden="true">♥</span>
           <div>
             <h2>Y si solo vienes a buscar libros, también está bien.</h2>
-            <p>Leer las guías, descubrir historias y volver cuando buscas qué leer después ya hace que Batreads tenga sentido.</p>
+            <p>Explorar las listas, descubrir historias y volver cuando buscas qué leer después ya hace que Batreads tenga sentido.</p>
           </div>
           <Link className="support-thanks-action" href="/historias">Explorar libros <span aria-hidden="true">→</span></Link>
         </aside>

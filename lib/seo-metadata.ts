@@ -26,5 +26,5 @@ export function seoPageDescription(page: Pick<SeoPage, "description" | "intro" |
     return `${firstSentence.slice(0, lastSpace > 0 ? lastSpace : 156).trimEnd()}…`;
   }
 
-  return `Descubre ${page.contentTitle} en Batreads y consulta nuestras guías y recomendaciones de lectura.`;
+  return `Descubre ${page.contentTitle} en Batreads y encuentra recomendaciones de lectura.`;
 }

@@ -47,23 +47,21 @@ export async function SeoContent({
 
   return (
     <main className={`catalog-page${page.section === "listas" ? " list-detail-page" : ""}${booksLike ? " books-like-page" : ""}`}>
-      <Breadcrumbs items={page.section === "listas"
-        ? [{ label: "Listas", href: "/listas" }, { label: page.heading }]
-        : [{ label: page.heading }]} />
+      <Breadcrumbs items={[{ label: "Listas", href: "/listas" }, { label: page.heading }]} />
       <header className="page-heading">
-        {booksLike ? (page.topic ? <p className="eyebrow">{page.topic}</p> : null) : <p className="eyebrow">{page.section === "listas" ? "Lista editorial" : "Guía Batreads"}</p>}
+        {booksLike ? (page.topic ? <p className="eyebrow">{page.topic}</p> : null) : <p className="eyebrow">Lista editorial</p>}
         <h1>{page.heading}</h1>
         {!booksLike && (page.summary || page.description) ? <p>{page.summary || page.description}</p> : null}
       </header>
       {editorialBlocks.length > 0 ? <EditorialListContent blocks={editorialBlocks} stories={relatedStories} authorNames={authorNames} booksLike={booksLike} notionPathsById={notionPathsById} /> : (
         <>
           {page.intro ? <section className="story-section seo-intro-section"><h2>Introducción</h2>{paragraphs(page.intro)}</section> : null}
-          {relatedStories.length > 0 ? <section className="story-section seo-books-section home-story-cards"><h2>{page.section === "listas" ? "Libros recomendados" : "Historias relacionadas"}</h2><StoryGrid stories={relatedStories} authorNames={authorNames} headingLevel={3} /></section> : null}
+          {relatedStories.length > 0 ? <section className="story-section seo-books-section home-story-cards"><h2>Libros recomendados</h2><StoryGrid stories={relatedStories} authorNames={authorNames} headingLevel={3} /></section> : null}
         </>
       )}
       {relatedAuthors.length > 0 ? <section className="story-section"><h2>Autoras relacionadas</h2><ul className="link-list">{relatedAuthors.map((author) => <li key={author.id}><Link href={`/autoras/${author.slug}`}>{author.name} →</Link></li>)}</ul></section> : null}
       {relatedSagas.length > 0 ? <section className="story-section"><h2>Sagas relacionadas</h2><ul className="link-list">{relatedSagas.map((saga) => <li key={saga.id}><Link href={`/sagas/${saga.slug}`}>{saga.name} →</Link></li>)}</ul></section> : null}
-      {editorialBlocks.length === 0 && page.faqs ? <section className="story-section faq-section"><h2>Preguntas frecuentes</h2>{page.section === "listas" ? faqParagraphs(page.faqs) : paragraphs(page.faqs)}</section> : null}
+      {editorialBlocks.length === 0 && page.faqs ? <section className="story-section faq-section"><h2>Preguntas frecuentes</h2>{faqParagraphs(page.faqs)}</section> : null}
       {editorialBlocks.length === 0 && page.conclusion ? <section className="story-section"><h2>Para terminar</h2>{paragraphs(page.conclusion)}</section> : null}
       {editorialBlocks.length === 0 && page.cta ? <p className="entity-note">{page.cta}</p> : null}
     </main>

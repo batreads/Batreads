@@ -1,6 +1,6 @@
 # Batreads
 
-Batreads es una guía editorial de dark romance centrada en el descubrimiento de
+Batreads es un sitio editorial de dark romance centrado en el descubrimiento de
 historias mediante valoraciones de intensidad, tropes, warnings y recomendaciones
 editoriales.
 

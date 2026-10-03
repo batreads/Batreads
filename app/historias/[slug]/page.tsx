@@ -208,7 +208,7 @@ export default async function HistoriaPage({
           ) : null}
         </section>
       ) : null}
-      {relatedPages.length > 0 ? <section className="story-section"><h2>Listas y guías relacionadas</h2><ul className="link-list">{relatedPages.map((page) => <li key={page.id}><Link href={page.path}>{page.heading} →</Link></li>)}</ul></section> : null}
+      {relatedPages.length > 0 ? <section className="story-section"><h2>Listas relacionadas</h2><ul className="link-list">{relatedPages.map((page) => <li key={page.id}><Link href={page.path}>{page.heading} →</Link></li>)}</ul></section> : null}
 
       <section className="story-section">
         <h2>Datos del libro</h2>

@@ -14,10 +14,9 @@ export function mapSeoPage(page: NotionPage): SeoPage {
   const hasExplicitPath = /^\/[a-z0-9-]+(?:\/[a-z0-9-]+)*$/.test(rawPath);
   const selectedPageType = select(page, "Plantilla frontend") ?? select(page, "Tipo de página") ?? "";
   const pageType = selectedPageType === "Libros parecidos" ? "BooksLikeLanding" : selectedPageType;
-  const section = select(page, "Sección web")
-    ?? (hasExplicitPath && (rawPath.startsWith("/listas/") || listTemplates.has(pageType)) ? "listas" : "guias");
-  const rawOrDefaultPath = hasExplicitPath ? rawPath : section === "listas" ? `/listas/${slug}` : `/${slug}`;
-  const path = section === "listas" ? `/listas/${slug}` : rawOrDefaultPath;
+  const section = "listas";
+  const rawOrDefaultPath = hasExplicitPath ? rawPath : `/listas/${slug}`;
+  const path = `/listas/${slug}`;
 
   return {
     id: page.id,
@@ -65,6 +64,13 @@ export async function getSeoPages(): Promise<SeoPage[]> {
   const pages = await queryPages("SEO", { property: "Estado", select: { equals: "Publicado" } });
   return pages
     .filter((page) => !page.archived && !page.in_trash && select(page, "Estado") === "Publicado")
+    .filter((page) => {
+      const pageType = select(page, "Plantilla frontend") ?? select(page, "Tipo de página") ?? "";
+      return select(page, "Sección web") === "listas"
+        || text(page, "Ruta").startsWith("/listas/")
+        || listTemplates.has(pageType)
+        || pageType === "Libros parecidos";
+    })
     .map(mapSeoPage);
 }
 

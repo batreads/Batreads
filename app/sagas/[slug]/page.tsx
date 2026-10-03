@@ -148,7 +148,7 @@ export default async function SagaPage({ params }: PageProps) {
 
       {saga.faqs.length > 0 ? <section className="saga-section"><p className="saga-kicker">Resolvemos tus dudas</p><h2>Preguntas frecuentes</h2><div className="saga-faq">{saga.faqs.map(({ question, answer }) => <div className="saga-faq-item" key={question}><h3>{question}</h3><p>{answer}</p></div>)}</div></section> : null}
 
-      {sagaPages.length > 0 ? <section className="saga-section"><p className="saga-kicker">Sigue explorando</p><h2>Listas y guías</h2><div className="saga-inline-links">{sagaPages.map((page) => <Link key={page.id} href={page.path}>{page.heading} <span aria-hidden="true">→</span></Link>)}</div></section> : null}
+      {sagaPages.length > 0 ? <section className="saga-section"><p className="saga-kicker">Sigue explorando</p><h2>Listas de lectura</h2><div className="saga-inline-links">{sagaPages.map((page) => <Link key={page.id} href={page.path}>{page.heading} <span aria-hidden="true">→</span></Link>)}</div></section> : null}
     </main>
   );
 }

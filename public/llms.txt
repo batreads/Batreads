@@ -1,0 +1,10 @@
+# Batreads
+
+> Batreads es un sitio editorial en español para descubrir libros de dark romance y romantasy mediante fichas de lectura, autoras, sagas y listas de recomendaciones.
+
+## Explorar Batreads
+
+- [Historias](https://www.batreads.com/historias): fichas de libros, reseñas y avisos de contenido.
+- [Autoras](https://www.batreads.com/autoras): autoras y sus libros disponibles en Batreads.
+- [Sagas](https://www.batreads.com/sagas): sagas y orden de lectura.
+- [Listas](https://www.batreads.com/listas): selecciones editoriales para encontrar qué leer después.

@@ -17,7 +17,7 @@ export function SupportSharing() {
   async function shareSite() {
     const data = {
       title: "Batreads",
-      text: "Mira Batreads, una guía para descubrir dark romance y romantasy.",
+      text: "Mira Batreads: libros y listas de dark romance y romantasy.",
       url: window.location.origin,
     };
 
