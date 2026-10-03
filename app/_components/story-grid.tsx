@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Story } from "@/lib/notion";
 import { StoryCardRating } from "./story-card-rating";
+import { EditorialImage } from "./editorial-image";
 
 export function StoryGrid({
   stories,
@@ -26,7 +27,8 @@ export function StoryGrid({
         return (
           <Link className={isHiddenGem ? "story-card story-card-hidden-gem" : "story-card"} href={`/historias/${story.slug}`} key={story.id}>
             <div className="story-card-cover">
-              {story.coverUrl ? <img src={story.coverUrl} alt="" /> : null}
+              {story.coverUrl ? <EditorialImage src={story.coverUrl} alt="" width={116} height={177}
+                sizes="(max-width: 600px) 86px, 116px" loading="lazy" /> : null}
             </div>
             <div className="story-card-body">
               {isHiddenGem ? (
