@@ -1,3 +1,5 @@
+import type { Story } from "@/lib/notion";
+
 export const moods = [
   { slug: "spice", label: "Quiero mucho spice" },
   { slug: "oscuro", label: "Algo muy oscuro" },
@@ -15,13 +17,31 @@ export type MoodFilterKey = "subgenre" | "tropes" | "relationship" | "rhythm" | 
 export const moodFilters: Record<Mood["slug"], Partial<Record<MoodFilterKey, string[]>>> = {
   spice: { spicy: ["4", "5"] },
   oscuro: { dark: ["4", "5"] },
-  thriller: { plot: ["3", "4", "5"], violence: ["3", "4", "5"] },
-  "enemies-to-lovers": { tropes: ["Enemies to Lovers"] },
-  "reverse-harem": { relationship: ["Why Choose"] },
+  thriller: { subgenre: ["Thriller", "Suspense", "Romantic Suspense"] },
+  "enemies-to-lovers": { tropes: ["De enemigos a amantes · Enemies to Lovers"] },
+  "reverse-harem": { relationship: ["Relación múltiple · Why Choose"] },
   toxicas: { toxicity: ["4", "5"] },
   trama: { plot: ["4", "5"] },
   adictivo: { rhythm: ["Rápido"] },
 };
+
+export function matchesMood(story: Story, mood: Mood): boolean {
+  return Object.entries(moodFilters[mood.slug]).every(([key, values]) => {
+    if (!values?.length) return false;
+    switch (key as MoodFilterKey) {
+      case "subgenre": return values.some((value) => story.subgenres.includes(value));
+      case "tropes": return values.some((value) => story.tropes.includes(value));
+      case "relationship": return values.some((value) => story.relationshipTypes.includes(value));
+      case "rhythm": return values.some((value) => (story.filterValues["Ritmo"] ?? []).includes(value));
+      case "dark": return story.darkness !== null && values.includes(String(story.darkness));
+      case "spicy": return story.spice !== null && values.includes(String(story.spice));
+      case "toxicity": return story.toxicity !== null && values.includes(String(story.toxicity));
+      case "violence": return story.violence !== null && values.includes(String(story.violence));
+      case "plot": return story.plot !== null && values.includes(String(story.plot));
+      case "rating": return story.rating !== null && values.some((value) => story.rating! >= Number(value));
+    }
+  });
+}
 
 export function getMood(slug: string | undefined): Mood | undefined {
   return moods.find((mood) => mood.slug === (slug === "taboo" ? "enemies-to-lovers" : slug));

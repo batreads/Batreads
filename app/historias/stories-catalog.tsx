@@ -107,7 +107,7 @@ export function StoriesCatalog({ stories, authorNames }: { stories: Story[]; aut
   const mood = getMood(moodParam ?? undefined);
   const selected = useMemo(() => Object.fromEntries(definitions.map(({ key, options }) => [
     key, [...new Set([...(mood ? moodFilters[mood.slug][key] ?? [] : []), ...searchParams.getAll(key)])]
-      .filter((value) => options.includes(value)),
+      .filter((value) => options.includes(value) || Boolean(mood && moodFilters[mood.slug][key]?.includes(value))),
   ])) as Record<FilterKey, string[]>, [definitions, searchParams, mood]);
   const trope = searchParams.get("trope")?.trim() || null;
   const sortParam = searchParams.get("sort");
