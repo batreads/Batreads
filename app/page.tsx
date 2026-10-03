@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { MoodExplorer } from "./_components/mood-explorer";
 import { StoryGrid } from "./_components/story-grid";
@@ -9,6 +9,24 @@ import { recentStories } from "@/lib/notion/recent-stories";
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
+
+const { props: { srcSet: desktopHeroSrcSet } } = getImageProps({
+  src: "/images/home-hero.png",
+  alt: "",
+  width: 1810,
+  height: 869,
+  sizes: "100vw",
+});
+
+const { props: mobileHeroProps } = getImageProps({
+  src: "/images/home-hero-mobile.webp",
+  alt: "",
+  width: 750,
+  height: 1000,
+  sizes: "100vw",
+  loading: "eager",
+  fetchPriority: "high",
+});
 
 export default async function Home() {
   const [stories, authors, seoPages] = await Promise.all([getStories(), getAuthors(), getSeoPages()]);
@@ -22,7 +40,10 @@ export default async function Home() {
   return (
     <main className="home-page">
       <section className="home-hero" aria-labelledby="home-hero-title">
-        <Image className="home-hero-background" src="/images/home-hero.png" alt="" fill priority sizes="100vw" />
+        <picture className="home-hero-picture">
+          <source media="(min-width: 601px)" srcSet={desktopHeroSrcSet} sizes="100vw" />
+          <img {...mobileHeroProps} className="home-hero-background" />
+        </picture>
         <div className="home-hero-content">
           <p className="home-hero-eyebrow">Dark romance · Romantasy · Lecturas intensas</p>
           <h1 id="home-hero-title">Tu próxima<br /><em>obsesión</em> empieza aquí.</h1>
