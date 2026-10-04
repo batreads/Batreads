@@ -2,7 +2,8 @@ import type { MetadataRoute } from "next";
 import { getAuthors, getSagas, getSeoPages, getStories } from "@/lib/notion";
 import { siteUrl } from "@/lib/site-url";
 
-export const revalidate = 3600;
+// Build the XML on each request; Notion responses retain their hourly cache.
+export const revalidate = 0;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteOrigin = siteUrl.origin;
