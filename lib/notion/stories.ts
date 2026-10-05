@@ -16,9 +16,20 @@ const publicationFilter = {
 };
 
 export async function getStories(): Promise<Story[]> {
-  return (await queryPages("HISTORIAS", publicationFilter))
-    .filter(isPublishedStoryPage)
-    .map(mapNotionPageToStory);
+  const [pages, authors, sagas] = await Promise.all([
+    queryPages("HISTORIAS", publicationFilter),
+    queryPages("AUTORAS"),
+    queryPages("SAGAS"),
+  ]);
+  const authorNames = new Map(authors.map((page) => [page.id, getNotionPageTitle(page)]));
+  const sagaNames = new Map(sagas.map((page) => [page.id, getNotionPageTitle(page)]));
+
+  return pages.filter(isPublishedStoryPage).map((page) => {
+    const story = mapNotionPageToStory(page);
+    story.authorName = story.authorId ? authorNames.get(story.authorId) ?? null : null;
+    story.sagaName = story.sagaId ? sagaNames.get(story.sagaId) ?? null : null;
+    return story;
+  });
 }
 
 export async function getStoryBySlug(slug: string): Promise<Story | null> {
@@ -34,10 +45,12 @@ export async function getStoryBySlug(slug: string): Promise<Story | null> {
 
   const story = mapNotionPageToStory(pages[0]);
 
-  if (story.authorId) {
-    const author = await notionRequest<unknown>(`/pages/${story.authorId}`);
-    if (isNotionPage(author)) story.authorName = getNotionPageTitle(author);
-  }
+  const [author, saga] = await Promise.all([
+    story.authorId ? notionRequest<unknown>(`/pages/${story.authorId}`) : null,
+    story.sagaId ? notionRequest<unknown>(`/pages/${story.sagaId}`) : null,
+  ]);
+  if (isNotionPage(author)) story.authorName = getNotionPageTitle(author);
+  if (isNotionPage(saga)) story.sagaName = getNotionPageTitle(saga);
 
   return story;
 }

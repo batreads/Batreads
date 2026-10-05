@@ -142,7 +142,8 @@ export default async function HistoriaPage({
           <div className="story-hero-details">
             {author ? <p className="story-hero-author">de <Link href={`/autoras/${author.slug}`}>{author.name}</Link></p>
               : story.authorName ? <p className="story-hero-author">de {story.authorName}</p> : null}
-            {saga ? <p className="story-hero-saga">Saga <Link href={`/sagas/${saga.slug}`}>{saga.name}</Link></p> : null}
+            {saga ? <p className="story-hero-saga">Saga <Link href={`/sagas/${saga.slug}`}>{saga.name}</Link></p>
+              : story.sagaName ? <p className="story-hero-saga">Saga {story.sagaName}</p> : null}
           </div>
           {(story.hook || story.synopsis) ? <p className="story-hero-hook">{story.hook || story.synopsis}</p> : null}
           {story.tropes.length > 0 ? (

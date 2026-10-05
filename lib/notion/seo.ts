@@ -104,9 +104,9 @@ function matchesFilter(
   if (!filter.field || !filter.value) return false;
   if (!(filter.field in story.filterValues)) return false;
   const relatedName = filter.field === "Autora"
-    ? authors.find((author) => author.id === story.authorId)?.name
+    ? authors.find((author) => author.id === story.authorId)?.name ?? story.authorName
     : filter.field === "Saga"
-      ? sagas.find((saga) => saga.id === story.sagaId)?.name
+      ? sagas.find((saga) => saga.id === story.sagaId)?.name ?? story.sagaName
       : undefined;
   const values = [...story.filterValues[filter.field], ...(relatedName ? [relatedName] : [])]
     .map((value) => value.toLocaleLowerCase("es"));
