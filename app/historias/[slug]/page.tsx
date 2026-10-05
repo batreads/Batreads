@@ -7,6 +7,7 @@ import { StoryCardRating } from "../../_components/story-card-rating";
 import { SagaCard } from "../../_components/saga-card";
 import { getAuthors, getSagas, getSeoPages, getStories, getStoryBySlug, storiesForSeoPage, type Story } from "@/lib/notion";
 import { EditorialImage } from "../../_components/editorial-image";
+import { BookSharing } from "../../_components/book-sharing";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -223,6 +224,17 @@ export default async function HistoriaPage({
         {wattpadUrl ? <p><a href={wattpadUrl} rel="noopener noreferrer" target="_blank">Leer en Wattpad ↗</a></p> : null}
         {story.amazonUrl ? <p><a href={story.amazonUrl} rel="sponsored noopener noreferrer" target="_blank">Ver en Amazon ↗</a></p> : null}
       </section>
+      <BookSharing book={{
+        id: story.id,
+        slug: story.slug,
+        title: story.title,
+        authorName: author?.name || story.authorName,
+        rating: story.rating,
+        spice: story.spice,
+        tropes: story.tropes,
+        subgenres: story.subgenres,
+        idealFor: story.idealFor,
+      }} />
       </div>
     </main>
   );
