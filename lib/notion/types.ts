@@ -42,6 +42,7 @@ export type Story = {
   authorId: string | null;
   authorName: string | null;
   sagaId: string | null;
+  sagaName: string | null;
   sagaNumber: number | null;
   relatedStoryIds: string[];
   filterValues: Record<string, string[]>;

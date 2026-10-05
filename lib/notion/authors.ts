@@ -1,7 +1,19 @@
 import { imageUrl, number, relationIds, select, tags, text, url, validSlug } from "./properties";
 import { queryPages } from "./query";
-import { getStories } from "./stories";
 import type { Author, NotionPage } from "./types";
+
+// These exact author records were public before publication became opt-in.
+const previouslyPublishedAuthorIds = new Set([
+  "3e70b771-a822-81d7-9c4e-c29b5d6c6239", // Clarissa Wild
+  "3e60b771-a822-816a-b65c-e7d9e3122e0b", // Alba Gil Cabrera
+  "3e30b771-a822-8104-921e-fa664b0915b4", // K.A. Knight
+  "3e30b771-a822-811e-a3ea-d43804735d3d", // Abby Assou
+  "3e30b771-a822-8122-aeaf-d1d79294f2d2", // Lucía Solla Sobral
+  "3e30b771-a822-8191-9a44-fc452f863459", // Penelope Douglas
+  "3e30b771-a822-8194-8a35-d6dbca576c5e", // Harley Laroux
+  "3e30b771-a822-81c8-9415-f7525dd6969a", // Ana Coello
+  "3e30b771-a822-81dc-ba18-ee056f439fa4", // L.M.R. Bello
+]);
 
 function mapAuthor(page: NotionPage): Author {
   const name = text(page, "Nombre");
@@ -33,13 +45,15 @@ function mapAuthor(page: NotionPage): Author {
 }
 
 export async function getAuthors(): Promise<Author[]> {
-  const [pages, stories] = await Promise.all([queryPages("AUTORAS"), getStories()]);
-  const publicAuthorIds = new Set(stories.map((story) => story.authorId));
+  const pages = await queryPages("AUTORAS");
 
   return pages
     .filter((page) => !page.archived && !page.in_trash)
-    .filter((page) => select(page, "Estado") !== "Descartada")
-    .filter((page) => select(page, "Estado") === "Publicada" || publicAuthorIds.has(page.id))
+    .filter((page) => {
+      const status = select(page, "Estado");
+      return status === "Publicada"
+        || (status !== "Descartada" && previouslyPublishedAuthorIds.has(page.id));
+    })
     .map(mapAuthor)
     .sort((a, b) => a.name.localeCompare(b.name, "es"));
 }

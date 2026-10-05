@@ -61,11 +61,9 @@ export async function getSagas(): Promise<Saga[]> {
   for (const story of stories) {
     if (story.sagaId) storiesBySaga.set(story.sagaId, [...(storiesBySaga.get(story.sagaId) ?? []), story.id]);
   }
-  const publicSagaIds = new Set(stories.map((story) => story.sagaId));
-
   return pages
     .filter((page) => !page.archived && !page.in_trash)
-    .filter((page) => select(page, "Estado ficha") === "Publicada" || publicSagaIds.has(page.id))
+    .filter((page) => select(page, "Estado ficha") === "Publicada")
     .map((page) => mapSaga(page, storiesBySaga))
     .sort((a, b) => a.name.localeCompare(b.name, "es"));
 }
