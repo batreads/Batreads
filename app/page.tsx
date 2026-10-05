@@ -46,18 +46,18 @@ export default async function Home() {
         </picture>
         <div className="home-hero-content">
           <p className="home-hero-eyebrow">Dark romance · Romantasy · Lecturas intensas</p>
-          <h1 id="home-hero-title">Tu próxima<br /><em>obsesión</em> empieza aquí.</h1>
+          <h1 id="home-hero-title">Dark romance en español<br />para tu próxima <em>obsesión</em></h1>
           <p className="home-hero-description">
             Lecturas de dark romance que cuesta dejar.<br />{" "}
             Encuentra qué leer después.
           </p>
           <div className="home-hero-actions">
             <Link className="home-hero-action home-hero-action-primary" href="/historias">
-              Explorar libros
+              Ver libros de dark romance
               <Image src="/icons/hero-arrow-primary.svg" alt="" width={20} height={20} />
             </Link>
             <Link className="home-hero-action home-hero-action-secondary" href="/listas">
-              Qué leer después
+              Ver recomendaciones
               <Image src="/icons/hero-arrow-secondary.svg" alt="" width={20} height={20} />
             </Link>
           </div>
@@ -87,7 +87,7 @@ export default async function Home() {
           <div className="home-lists-heading">
             <div>
               <h2 id="home-lists-title">Listas Batreads</h2>
-              <p>Cuando quieres una recomendación más concreta.</p>
+              <p>Selecciones de dark romance para elegir según lo que te apetece leer.</p>
             </div>
             <Link className="home-section-more home-hero-action home-hero-action-secondary" href="/listas">
               Todas las listas <Image src="/icons/hero-arrow-secondary.svg" alt="" width={20} height={20} />
