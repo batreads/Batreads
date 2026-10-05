@@ -2831,6 +2831,63 @@ body:has(.story-page) {
   font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
+.book-sharing {
+  margin-top: 3rem;
+}
+
+.book-sharing h2 {
+  color: var(--page-muted);
+  font-family: var(--font-body);
+  font-size: var(--type-small);
+  font-weight: 700;
+}
+
+.book-sharing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+}
+
+.book-sharing-actions :is(button, a) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: .55rem .85rem;
+  border: 1px solid var(--page-border);
+  border-radius: .5rem;
+  background: transparent;
+  color: var(--page-text);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.3;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.book-sharing-actions :is(button, a):hover,
+.book-sharing-actions :is(button, a):focus-visible {
+  border-color: var(--page-accent);
+  color: var(--page-accent);
+}
+
+.book-sharing-actions :is(button, a):focus-visible {
+  outline: 2px solid var(--page-accent);
+  outline-offset: 2px;
+}
+
+.book-sharing-feedback {
+  min-height: 1.4em;
+  margin: .65rem 0 0;
+  color: var(--page-muted);
+  font-size: var(--type-small);
+  line-height: 1.4;
+}
+
+.book-sharing-feedback:empty {
+  display: none;
+}
+
 .story-section p {
   max-width: 48rem;
   margin-bottom: 1rem;
