@@ -61,9 +61,24 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const author = await getAuthorBySlug((await params).slug);
-  return author
-    ? { title: `${author.name} · Batreads`, description: authorDescription(author), alternates: { canonical: `/autoras/${author.slug}` } }
-    : { title: "Autora no encontrada · Batreads" };
+  if (!author) return { title: "Autora no encontrada · Batreads" };
+
+  const title = author.seoTitle || `${author.name} · Batreads`;
+  const description = authorDescription(author);
+  return {
+    title,
+    description,
+    alternates: { canonical: `/autoras/${author.slug}` },
+    openGraph: {
+      title,
+      description,
+      url: `/autoras/${author.slug}`,
+      siteName: "Batreads",
+      type: "website",
+      locale: "es_ES",
+    },
+    twitter: { card: "summary_large_image", title, description },
+  };
 }
 
 export default async function AutoraPage({ params }: PageProps) {

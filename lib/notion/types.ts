@@ -85,6 +85,8 @@ export type Author = {
   id: string;
   slug: string;
   name: string;
+  seoTitle: string;
+  metaDescription: string;
   bio: string;
   intro: string;
   country: string[];

@@ -23,6 +23,8 @@ function mapAuthor(page: NotionPage): Author {
     id: page.id,
     slug,
     name,
+    seoTitle: text(page, "SEO title").replace(/\\+\|/g, "|"),
+    metaDescription: text(page, "Meta description"),
     bio: text(page, "Bio corta"),
     intro: text(page, "SEO intro"),
     country: select(page, "País autora") ? [select(page, "País autora")!] : tags(page, "País autora"),

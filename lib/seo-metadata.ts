@@ -5,8 +5,8 @@ export function brandedTitle(title: string): string {
   return /\bBatreads\b/i.test(value) ? value : `${value} · Batreads`;
 }
 
-export function authorDescription(author: Pick<Author, "name" | "intro" | "bio">): string {
-  return author.intro || author.bio
+export function authorDescription(author: Pick<Author, "name" | "metaDescription" | "intro" | "bio">): string {
+  return author.metaDescription || author.intro || author.bio
     || `Conoce a ${author.name} en Batreads y descubre la información disponible sobre sus libros.`;
 }
 
