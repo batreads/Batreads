@@ -25,6 +25,7 @@
 .saga-facts div + div { padding-left: 20px; border-left: 1px solid var(--page-border); }
 .saga-facts dt { color: #9ab5ad; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .saga-facts dd { margin: 6px 0 0; color: #f4fcf9; font-size: 17px; font-weight: 700; }
+.saga-facts .story-card-rating { margin-top: 0; }
 .saga-section { margin-top: 60px; scroll-margin-top: 30px; }
 .saga-section h2 { margin: 6px 0 20px; font-size: clamp(29px, 3vw, 39px); font-weight: 600; letter-spacing: -.025em; line-height: 1.15; }
 .saga-intro-section > p:not(.saga-kicker), .saga-order-explainer { max-width: 850px; margin: 0 0 12px; color: #cfdfda; font-size: 15px; line-height: 1.75; }
@@ -65,6 +66,57 @@
 .saga-faq-item:first-child { border-top: 1px solid var(--page-border); }
 .saga-faq-item h3 { margin: 0 0 9px; font-family: var(--font-body); font-size: 16px; font-weight: 750; }
 .saga-faq-item p { max-width: 850px; margin: 0; color: #c3d6cd; font-size: 14px; line-height: 1.7; }
+@media (min-width: 851px) {
+  .saga-hero { grid-template-columns: minmax(0, 1.25fr) minmax(360px, .95fr); gap: 32px; }
+  .saga-hero-art { min-height: 420px; }
+  .saga-main-cover { max-width: 76%; max-height: 365px; }
+  .saga-cover-stack { height: 380px; }
+  .saga-cover-stack img { width: min(52%, 205px); height: 320px; }
+}
 @media (max-width: 850px) { .saga-hero { grid-template-columns: 1fr; gap: 20px; } .saga-hero-art { min-height: 240px; } .saga-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .saga-facts div:nth-child(3) { padding-left: 0; border-left: 0; } .saga-books { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .saga-page { padding-top: 25px; } .saga-hero h1 { font-size: clamp(42px, 11vw, 58px); } .saga-hero-intro { font-size: 14px; } .saga-hero-art { min-height: 190px; } .saga-cover-stack { height: 195px; } .saga-cover-stack img { width: 90px; height: 145px; } .saga-facts { gap: 10px; } .saga-facts div + div { padding-left: 10px; } .saga-facts div:nth-child(3) { padding-left: 0; } .saga-facts dd { font-size: 15px; } .saga-section { margin-top: 44px; } .saga-section-heading { display: block; } .saga-heading-note { display: block; margin-top: -10px; text-align: left; } .saga-book { grid-template-columns: 112px minmax(0, 1fr); gap: 13px; padding: 14px; } .saga-book-art { width: 112px; height: 150px; } .saga-book-number { top: -6px; right: 0; font-size: 98px; } .saga-book-cover { width: 85px; height: 130px; } .saga-book h3 { font-size: 21px; } }
+@media (max-width: 600px) {
+  .saga-hero { gap: 22px; }
+  .saga-hero-art {
+    display: block;
+    order: -1;
+    width: calc(100% + 48px);
+    height: clamp(180px, 52vw, 220px);
+    min-height: 0;
+    margin-inline: -24px;
+  }
+  .saga-cover-stack {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    height: 100%;
+  }
+  .saga-cover-stack-1 { grid-template-columns: 1fr; }
+  .saga-cover-stack-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .saga-cover-stack img,
+  .saga-cover-stack img:first-child,
+  .saga-cover-stack img:nth-child(2),
+  .saga-cover-stack img:nth-child(3) {
+    position: static;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    object-position: center 45%;
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+  }
+  .saga-main-cover {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+    object-position: center 45%;
+    box-shadow: none;
+  }
+  .saga-art-monogram { display: grid; height: 100%; place-items: center; }
+}
 @media (max-width: 600px) { .saga-progress strong { flex: none; white-space: nowrap; } .saga-progress-track { width: 72px; flex: none; } }

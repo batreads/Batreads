@@ -81,6 +81,10 @@ export default async function SagaPage({ params }: PageProps) {
 
   const sagaStories = stories.filter((story) => story.sagaId === saga.id)
     .sort((a, b) => (a.sagaNumber ?? Number.MAX_SAFE_INTEGER) - (b.sagaNumber ?? Number.MAX_SAFE_INTEGER) || a.title.localeCompare(b.title, "es"));
+  const ratedStories = sagaStories.filter((story) => story.rating !== null && Number.isFinite(story.rating));
+  const averageRating = ratedStories.length > 0
+    ? Number((ratedStories.reduce((sum, story) => sum + story.rating!, 0) / ratedStories.length).toFixed(1))
+    : null;
   const sagaAuthors = authors.filter((author) => saga.authorIds.includes(author.id) || sagaStories.some((story) => story.authorId === author.id));
   const sagaPages = seoPages.filter((page) => page.sagaIds.includes(saga.id));
   const firstBook = sagaStories[0];
@@ -102,7 +106,6 @@ export default async function SagaPage({ params }: PageProps) {
           <h1>{saga.name}</h1>
           {saga.intro ? <div className="saga-hero-intro">{paragraphs(saga.intro).map((part) => <p key={part}>{part}</p>)}</div> : null}
           <ul className="story-hero-tropes saga-tags">
-            {saga.spanishAvailability ? <li><img src="/icons/hero-ku.svg" alt="" width="14" height="14" />Español: {saga.spanishAvailability.toLowerCase()}</li> : null}
             {saga.readingOrder ? <li><img src="/icons/hero-ku.svg" alt="" width="14" height="14" />Orden {saga.readingOrder.toLowerCase()}</li> : null}
             {saga.standalone === "Sí" ? <li><img src="/icons/hero-ku.svg" alt="" width="14" height="14" />Autoconclusivos</li> : null}
             {saga.bookRelationship ? <li><img src="/icons/hero-ku.svg" alt="" width="14" height="14" />{saga.bookRelationship}</li> : null}
@@ -124,8 +127,8 @@ export default async function SagaPage({ params }: PageProps) {
       <dl className="saga-facts">
         {saga.status ? <div><dt>Estado</dt><dd>{saga.status}</dd></div> : null}
         {total > 0 ? <div><dt>Libros</dt><dd>{total} {total === 1 ? "libro" : "libros"}</dd></div> : null}
-        {saga.spanishAvailability ? <div><dt>En español</dt><dd>{saga.spanishAvailability}</dd></div> : null}
-        {saga.kindleUnlimited ? <div><dt>Kindle Unlimited</dt><dd>{saga.kindleUnlimited}</dd></div> : null}
+        <div><dt>Valoración media</dt><dd>{averageRating !== null ? <StoryCardRating rating={averageRating} /> : "Sin valorar"}</dd></div>
+        {saga.standalone ? <div><dt>¿Autoconclusivos?</dt><dd>{saga.standalone}</dd></div> : null}
       </dl>
 
       {saga.description ? (
