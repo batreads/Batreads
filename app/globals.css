@@ -2230,6 +2230,58 @@ body:has(.story-page) {
   cursor: pointer;
 }
 
+.stories-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 34px;
+}
+
+.stories-pagination-pages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.stories-pagination-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stories-pagination button {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 8px 11px;
+  border: 1px solid var(--page-border);
+  border-radius: 9px;
+  background: var(--page-surface);
+  color: var(--page-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.stories-pagination button:hover:not(:disabled),
+.stories-pagination button[aria-current="page"] {
+  border-color: var(--page-accent);
+  background: #173d39;
+  color: #bdffe4;
+}
+
+.stories-pagination button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.stories-pagination-ellipsis {
+  color: var(--page-muted);
+}
+
 .stories-catalog-page :is(button, select, input):focus-visible {
   outline: 2px solid var(--page-accent);
   outline-offset: 3px;

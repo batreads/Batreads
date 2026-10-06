@@ -1,45 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { StoryGrid } from "../_components/story-grid";
-import { getMood, moodFilters } from "@/lib/moods";
 import type { Story } from "@/lib/notion";
-
-type FilterKey = "subgenre" | "tropes" | "relationship" | "rhythm" | "rating" | "dark" | "spicy" | "toxicity" | "violence" | "plot";
-type SortKey = "recommended" | "rating" | "dark" | "spicy" | "title";
-type FilterDefinition = { key: FilterKey; label: string; options: string[] };
-
-const filterKeys: FilterKey[] = ["subgenre", "tropes", "relationship", "rhythm", "rating", "dark", "spicy", "toxicity", "violence", "plot"];
-const ratingOptions = ["3", "3.5", "4", "4.5"];
-const sortLabels: Record<SortKey, string> = {
-  recommended: "Recomendadas",
-  rating: "Mejor valoradas",
-  dark: "Más oscuras",
-  spicy: "Más spicy",
-  title: "Título A–Z",
-};
-
-function normalize(value: string) {
-  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("es");
-}
-
-function textOptions(stories: Story[], field: "subgenres" | "tropes" | "relationshipTypes") {
-  return [...new Set(stories.flatMap((story) => story[field]).map((value) => value.trim()).filter(Boolean))]
-    .sort((a, b) => a.localeCompare(b, "es"));
-}
-
-function rhythmOptions(stories: Story[]) {
-  return [...new Set(stories.flatMap((story) => story.filterValues["Ritmo"] ?? []))]
-    .sort((a, b) => a.localeCompare(b, "es"));
-}
-
-function levelOptions(stories: Story[], field: "darkness" | "spice" | "toxicity" | "violence" | "plot") {
-  return [...new Set(stories.map((story) => story[field]).filter((value): value is number =>
-    value !== null && Number.isInteger(value) && value >= 1 && value <= 5))]
-    .sort((a, b) => a - b)
-    .map(String);
-}
+import { filterKeys, sortLabels, STORIES_PER_PAGE, type FilterDefinition, type FilterKey, type SortKey } from "@/lib/story-catalog";
 
 function selectionLabel(key: FilterKey, values: string[]) {
   if (["dark", "spicy", "toxicity", "violence", "plot"].includes(key)) {
@@ -53,71 +18,48 @@ function selectionLabel(key: FilterKey, values: string[]) {
   return values.join(" o ");
 }
 
-function matchesGroup(story: Story, key: FilterKey, values: string[]) {
-  if (values.length === 0) return true;
-  switch (key) {
-    case "subgenre": return values.some((value) => story.subgenres.includes(value));
-    case "tropes": return values.some((value) => story.tropes.includes(value));
-    case "relationship": return values.some((value) => story.relationshipTypes.includes(value));
-    case "rhythm": return values.some((value) => (story.filterValues["Ritmo"] ?? []).includes(value));
-    case "rating": return story.rating !== null && values.some((value) => story.rating! >= Number(value));
-    case "dark": return story.darkness !== null && values.some((value) => story.darkness === Number(value));
-    case "spicy": return story.spice !== null && values.some((value) => story.spice === Number(value));
-    case "toxicity": return story.toxicity !== null && values.some((value) => story.toxicity === Number(value));
-    case "violence": return story.violence !== null && values.some((value) => story.violence === Number(value));
-    case "plot": return story.plot !== null && values.some((value) => story.plot === Number(value));
-  }
+function paginationItems(page: number, pageCount: number) {
+  if (pageCount <= 7) return Array.from({ length: pageCount }, (_, index) => index + 1);
+  const pages = new Set([1, pageCount, page - 1, page, page + 1]);
+  return [...pages].filter((item) => item >= 1 && item <= pageCount).sort((a, b) => a - b);
 }
 
-function sortStories(stories: Story[], sort: SortKey) {
-  if (sort === "recommended") return stories;
-  return [...stories].sort((a, b) => {
-    if (sort === "title") return a.title.localeCompare(b.title, "es");
-    const field = sort === "rating" ? "rating" : sort === "dark" ? "darkness" : "spice";
-    const aValue = a[field];
-    const bValue = b[field];
-    if (aValue === null && bValue !== null) return 1;
-    if (aValue !== null && bValue === null) return -1;
-    return (bValue ?? 0) - (aValue ?? 0) || a.title.localeCompare(b.title, "es");
-  });
-}
-
-export function StoriesCatalog({ stories, authorNames }: { stories: Story[]; authorNames: Record<string, string> }) {
+export function StoriesCatalog({
+  stories,
+  authorNames,
+  definitions,
+  selected,
+  moodLabel,
+  hasMood,
+  trope,
+  sort,
+  total,
+  page,
+  pageCount,
+}: {
+  stories: Story[];
+  authorNames: Record<string, string>;
+  definitions: FilterDefinition[];
+  selected: Record<FilterKey, string[]>;
+  moodLabel: string | null;
+  hasMood: boolean;
+  trope: string | null;
+  sort: SortKey;
+  total: number;
+  page: number;
+  pageCount: number;
+}) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [panelOpen, setPanelOpen] = useState(false);
   const [openFilter, setOpenFilter] = useState<FilterKey | null>(null);
   const filterAreaRef = useRef<HTMLDivElement>(null);
   const filterButtonsRef = useRef<Partial<Record<FilterKey, HTMLButtonElement>>>({});
   const resultsRef = useRef<HTMLDivElement>(null);
-
-  const definitions = useMemo<FilterDefinition[]>(() => [
-    { key: "subgenre", label: "Subgénero", options: textOptions(stories, "subgenres") },
-    { key: "tropes", label: "Tropes", options: textOptions(stories, "tropes") },
-    { key: "relationship", label: "Relación", options: textOptions(stories, "relationshipTypes") },
-    { key: "rhythm", label: "Ritmo", options: rhythmOptions(stories) },
-    { key: "rating", label: "Valoración", options: ratingOptions },
-    { key: "dark", label: "Dark", options: levelOptions(stories, "darkness") },
-    { key: "spicy", label: "Spicy", options: levelOptions(stories, "spice") },
-    { key: "toxicity", label: "Toxicidad", options: levelOptions(stories, "toxicity") },
-    { key: "violence", label: "Violencia", options: levelOptions(stories, "violence") },
-    { key: "plot", label: "Trama", options: levelOptions(stories, "plot") },
-  ], [stories]);
-
-  const moodParam = searchParams.get("mood");
-  const mood = getMood(moodParam ?? undefined);
-  const selected = useMemo(() => Object.fromEntries(definitions.map(({ key, options }) => [
-    key, [...new Set([...(mood ? moodFilters[mood.slug][key] ?? [] : []), ...searchParams.getAll(key)])]
-      .filter((value) => options.includes(value) || Boolean(mood && moodFilters[mood.slug][key]?.includes(value))),
-  ])) as Record<FilterKey, string[]>, [definitions, searchParams, mood]);
-  const trope = searchParams.get("trope")?.trim() || null;
-  const sortParam = searchParams.get("sort");
-  const sort: SortKey = sortParam && sortParam in sortLabels ? sortParam as SortKey : "recommended";
+  const previousPageRef = useRef(page);
+  const shouldScrollToResultsRef = useRef(false);
 
   const activeCount = filterKeys.reduce((count, key) => count + Number(selected[key].length > 0), 0) + Number(Boolean(trope));
-  const filteredStories = useMemo(() => sortStories(stories.filter((story) =>
-    (!trope || normalize(trope) === "dark romance" || story.tropes.some((item) => normalize(item).includes(normalize(trope))))
-    && filterKeys.every((key) => matchesGroup(story, key, selected[key]))
-  ), sort), [stories, mood, trope, selected, sort]);
 
   useEffect(() => {
     if (!openFilter) return;
@@ -135,16 +77,44 @@ export function StoriesCatalog({ stories, authorNames }: { stories: Story[]; aut
     };
   }, [openFilter]);
 
+  useEffect(() => {
+    if (!shouldScrollToResultsRef.current || previousPageRef.current === page) {
+      previousPageRef.current = page;
+      return;
+    }
+
+    shouldScrollToResultsRef.current = false;
+    previousPageRef.current = page;
+    const results = resultsRef.current;
+    if (!results) return;
+
+    results.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "start",
+    });
+  }, [page]);
+
   function updateUrl(update: (params: URLSearchParams) => void) {
     const params = new URLSearchParams(searchParams.toString());
     update(params);
+    params.delete("page");
     const query = params.toString();
-    window.history.pushState(null, "", `/historias${query ? `?${query}` : ""}`);
+    router.push(`/historias${query ? `?${query}` : ""}`);
+  }
+
+  function goToPage(nextPage: number) {
+    if (nextPage === page) return;
+    const params = new URLSearchParams(searchParams.toString());
+    if (nextPage === 1) params.delete("page");
+    else params.set("page", String(nextPage));
+    shouldScrollToResultsRef.current = true;
+    const query = params.toString();
+    router.push(`/historias${query ? `?${query}` : ""}`, { scroll: false });
   }
 
   function toggleOption(key: FilterKey, value: string, fromMenu = false) {
     updateUrl((params) => {
-      if (mood) {
+      if (hasMood) {
         params.delete("mood");
         filterKeys.forEach((filterKey) => {
           params.delete(filterKey);
@@ -167,7 +137,7 @@ export function StoriesCatalog({ stories, authorNames }: { stories: Story[]; aut
 
   function removeGroup(key: FilterKey) {
     updateUrl((params) => {
-      if (mood) {
+      if (hasMood) {
         params.delete("mood");
         filterKeys.forEach((filterKey) => {
           params.delete(filterKey);
@@ -188,7 +158,7 @@ export function StoriesCatalog({ stories, authorNames }: { stories: Story[]; aut
   return (
     <>
       <header className="page-heading">
-        <h1>{mood?.label ?? trope ?? "Libros"}</h1>
+        <h1>{moodLabel ?? trope ?? "Libros"}</h1>
         <p>Descubre libros de dark romance con contexto, intensidad y criterio editorial.</p>
       </header>
 
@@ -238,7 +208,7 @@ export function StoriesCatalog({ stories, authorNames }: { stories: Story[]; aut
               ))}
             </div>
             <div className="stories-filter-footer">
-              <p><strong>{filteredStories.length}</strong> {filteredStories.length === 1 ? "libro disponible" : "libros disponibles"} con esta selección</p>
+              <p><strong>{total}</strong> {total === 1 ? "libro disponible" : "libros disponibles"} con esta selección</p>
               <button type="button" onClick={() => {
                 setPanelOpen(false);
                 setOpenFilter(null);
@@ -253,13 +223,25 @@ export function StoriesCatalog({ stories, authorNames }: { stories: Story[]; aut
       </section>
 
       <div className="stories-results-bar" ref={resultsRef}>
-        <p role="status"><strong>{filteredStories.length}</strong> {filteredStories.length === 1 ? "libro encontrado" : "libros encontrados"}</p>
+        <p role="status"><strong>{total}</strong> {total === 1 ? "libro encontrado" : "libros encontrados"}{total > STORIES_PER_PAGE ? ` · Mostrando ${(page - 1) * STORIES_PER_PAGE + 1}–${Math.min(page * STORIES_PER_PAGE, total)}` : ""}</p>
         <label>Ordenar: <select value={sort} onChange={(event) => updateUrl((params) => {
           if (event.target.value === "recommended") params.delete("sort");
           else params.set("sort", event.target.value);
         })}>{Object.entries(sortLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
       </div>
-      {filteredStories.length > 0 ? <StoryGrid stories={filteredStories} authorNames={authorNames} /> : (
+      {total > 0 ? <>
+        <StoryGrid stories={stories} authorNames={authorNames} />
+        {pageCount > 1 ? <nav className="stories-pagination" aria-label="Paginación de libros">
+          <button type="button" onClick={() => goToPage(page - 1)} disabled={page === 1}>← Anterior</button>
+          <div className="stories-pagination-pages">
+            {paginationItems(page, pageCount).map((item, index, items) => <span key={item} className="stories-pagination-item">
+              {index > 0 && item - items[index - 1] > 1 ? <span className="stories-pagination-ellipsis" aria-hidden="true">…</span> : null}
+              <button type="button" onClick={() => goToPage(item)} aria-current={item === page ? "page" : undefined} aria-label={`Página ${item}`}>{item}</button>
+            </span>)}
+          </div>
+          <button type="button" onClick={() => goToPage(page + 1)} disabled={page === pageCount}>Siguiente →</button>
+        </nav> : null}
+      </> : (
         <div className="stories-no-results">
           <h2>No hay libros para esta selección</h2>
           <p>Prueba a quitar algún criterio para ver más lecturas.</p>
