@@ -10,7 +10,7 @@ export type FilterDefinition = { key: FilterKey; label: string; options: string[
 export const filterKeys: FilterKey[] = ["subgenre", "tropes", "relationship", "rhythm", "rating", "dark", "spicy", "toxicity", "violence", "plot"];
 export const ratingOptions = ["3", "3.5", "4", "4.5"];
 export const sortLabels: Record<SortKey, string> = {
-  recommended: "Recomendadas",
+  recommended: "Últimas añadidas",
   rating: "Mejor valoradas",
   dark: "Más oscuras",
   spicy: "Más spicy",
@@ -78,7 +78,13 @@ export function matchesGroup(story: Story, key: FilterKey, values: string[]) {
 }
 
 export function sortStories(stories: Story[], sort: SortKey) {
-  if (sort === "recommended") return stories;
+  if (sort === "recommended") {
+    return [...stories].sort((a, b) =>
+      (b.publishedAt ?? b.createdAt).localeCompare(a.publishedAt ?? a.createdAt)
+      || b.createdAt.localeCompare(a.createdAt)
+      || a.title.localeCompare(b.title, "es"),
+    );
+  }
   return [...stories].sort((a, b) => {
     if (sort === "title") return a.title.localeCompare(b.title, "es");
     const field = sort === "rating" ? "rating" : sort === "dark" ? "darkness" : "spice";

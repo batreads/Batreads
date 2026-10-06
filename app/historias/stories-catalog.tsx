@@ -99,7 +99,7 @@ export function StoriesCatalog({
     update(params);
     params.delete("page");
     const query = params.toString();
-    router.push(`/historias${query ? `?${query}` : ""}`);
+    router.push(`/historias${query ? `?${query}` : ""}`, { scroll: false });
   }
 
   function goToPage(nextPage: number) {
