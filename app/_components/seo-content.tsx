@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Breadcrumbs } from "./breadcrumbs";
 import { EditorialListContent } from "./editorial-list-content";
+import { EditorialImage } from "./editorial-image";
 import { StoryGrid } from "./story-grid";
 import { getEditorialBlocks, getSeoPages, storiesForSeoPage, type Author, type Saga, type SeoPage, type Story } from "@/lib/notion";
 
@@ -44,14 +45,25 @@ export async function SeoContent({
     ...seoPages.map((seoPage) => [seoPage.id, seoPage.path]),
   ].map(([id, path]) => [id.replaceAll("-", "").toLowerCase(), path]));
   const booksLike = page.pageType === "BooksLikeLanding";
+  const covers = !booksLike && page.section === "listas"
+    ? relatedStories.filter((story) => story.coverUrl).slice(0, 4)
+    : [];
 
   return (
     <main className={`catalog-page${page.section === "listas" ? " list-detail-page" : ""}${booksLike ? " books-like-page" : ""}`}>
       <Breadcrumbs items={[{ label: "Listas", href: "/listas" }, { label: page.heading }]} />
-      <header className="page-heading">
-        {booksLike ? (page.topic ? <p className="eyebrow">{page.topic}</p> : null) : <p className="eyebrow">Lista editorial</p>}
-        <h1>{page.heading}</h1>
-        {!booksLike && (page.summary || page.description) ? <p>{page.summary || page.description}</p> : null}
+      <header className={`page-heading${covers.length > 0 ? " list-hero-with-covers" : ""}`}>
+        <div className="list-hero-copy">
+          {booksLike ? (page.topic ? <p className="eyebrow">{page.topic}</p> : null) : <p className="eyebrow">Lista editorial</p>}
+          <h1>{page.heading}</h1>
+          {!booksLike && (page.summary || page.description) ? <p>{page.summary || page.description}</p> : null}
+        </div>
+        {covers.length > 0 ? <div className="list-hero-art" aria-label="Portadas de libros de la lista">
+          <div className={`list-cover-stack list-cover-stack-${covers.length}`}>
+            {covers.map((story) => <EditorialImage key={story.id} src={story.coverUrl!} alt={`Portada de ${story.title}`}
+              width={190} height={280} sizes="(max-width: 600px) 110px, 190px" loading="eager" fetchPriority="high" />)}
+          </div>
+        </div> : null}
       </header>
       {editorialBlocks.length > 0 ? <EditorialListContent blocks={editorialBlocks} stories={relatedStories} authorNames={authorNames} booksLike={booksLike} notionPathsById={notionPathsById} /> : (
         <>

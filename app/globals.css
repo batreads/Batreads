@@ -3491,6 +3491,63 @@ body:has(.story-page) {
   line-height: 1.55;
 }
 
+.list-detail-page .list-hero-with-covers {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, .9fr);
+  align-items: center;
+  gap: 40px;
+}
+
+.list-detail-page .list-hero-copy > p:last-child {
+  max-width: 720px;
+  margin-top: 24px;
+  color: var(--page-muted);
+  font-size: clamp(17px, 1.4vw, 20px);
+  font-weight: 300;
+  line-height: 1.55;
+}
+
+.list-detail-page .list-hero-art {
+  display: grid;
+  min-height: 350px;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #1f4740 0, #11302e 36%, transparent 72%);
+}
+
+.list-detail-page .list-cover-stack {
+  position: relative;
+  width: 100%;
+  height: 310px;
+}
+
+.list-detail-page .list-cover-stack img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(55%, 190px);
+  height: 280px;
+  border-radius: 0 18px 18px 0;
+  object-fit: cover;
+  box-shadow: 0 0 24px rgb(99 230 190 / 12%), 0 16px 32px rgb(0 0 0 / 50%);
+  transform: translate(-50%, -50%);
+}
+
+.list-detail-page .list-cover-stack img:nth-of-type(1) { left: 27%; z-index: 1; }
+.list-detail-page .list-cover-stack img:nth-of-type(2) { left: 50%; z-index: 2; }
+.list-detail-page .list-cover-stack img:nth-of-type(3) { left: 73%; z-index: 3; }
+.list-detail-page .list-cover-stack-1 img { transform: translate(-50%, -50%); }
+
+.list-detail-page .list-cover-stack-4 img {
+  width: min(50%, 175px);
+  height: 258px;
+}
+
+.list-detail-page .list-cover-stack-4 img:nth-of-type(1) { left: 20%; z-index: 1; }
+.list-detail-page .list-cover-stack-4 img:nth-of-type(2) { left: 40%; z-index: 2; }
+.list-detail-page .list-cover-stack-4 img:nth-of-type(3) { left: 60%; z-index: 3; }
+.list-detail-page .list-cover-stack-4 img:nth-of-type(4) { left: 80%; z-index: 4; }
+
 .list-index-page .home-list-card {
   border-color: var(--page-border);
 }
@@ -3799,6 +3856,11 @@ body:has(.story-page) {
 }
 
 @media (max-width: 720px) {
+  .list-detail-page .list-hero-with-covers {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
   .list-index-page .home-lists-grid,
   .list-detail-page .editorial-metrics-section ul {
     grid-template-columns: minmax(0, 1fr);
@@ -3821,6 +3883,10 @@ body:has(.story-page) {
     margin-bottom: 36px;
     padding-bottom: 36px;
   }
+
+  .list-detail-page .list-hero-art { min-height: 230px; }
+  .list-detail-page .list-cover-stack { height: 220px; }
+  .list-detail-page .list-cover-stack img { width: 110px; height: 162px; border-radius: 0 12px 12px 0; }
 
   .list-index-page .page-heading h1,
   .list-detail-page .page-heading h1 {
