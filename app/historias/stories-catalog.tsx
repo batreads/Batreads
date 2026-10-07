@@ -43,6 +43,8 @@ export function StoriesCatalog({
   moodLabel,
   hasMood,
   trope,
+  wattpadAvailable,
+  kindleUnlimitedAvailable,
   sort,
   total,
   page,
@@ -55,6 +57,8 @@ export function StoriesCatalog({
   moodLabel: string | null;
   hasMood: boolean;
   trope: string | null;
+  wattpadAvailable: boolean;
+  kindleUnlimitedAvailable: boolean;
   sort: SortKey;
   total: number;
   page: number;
@@ -70,7 +74,7 @@ export function StoriesCatalog({
   const previousPageRef = useRef(page);
   const shouldScrollToResultsRef = useRef(false);
 
-  const activeCount = filterKeys.reduce((count, key) => count + Number(selected[key].length > 0), 0) + Number(Boolean(trope));
+  const activeCount = filterKeys.reduce((count, key) => count + Number(selected[key].length > 0), 0) + Number(Boolean(trope)) + Number(wattpadAvailable) + Number(kindleUnlimitedAvailable);
   const heading = moodLabel ? moodHeadings[moodLabel] ?? `Libros de dark romance · ${moodLabel}` : trope ? `Libros de dark romance · ${trope}` : "Libros de dark romance en español";
 
   useEffect(() => {
@@ -163,7 +167,14 @@ export function StoriesCatalog({
 
   function clearAll() {
     updateUrl((params) => {
-      [...filterKeys, "mood", "trope"].forEach((key) => params.delete(key));
+      [...filterKeys, "mood", "trope", "wattpad", "kindle-unlimited"].forEach((key) => params.delete(key));
+    });
+  }
+
+  function toggleAvailability(key: "wattpad" | "kindle-unlimited", checked: boolean) {
+    updateUrl((params) => {
+      if (checked) params.set(key, "true");
+      else params.delete(key);
     });
   }
 
@@ -218,6 +229,16 @@ export function StoriesCatalog({
                   ) : null}
                 </div>
               ))}
+            </div>
+            <div className="stories-availability-filters" aria-label="Disponibilidad">
+              <label className="stories-availability-check">
+                <input type="checkbox" checked={wattpadAvailable} onChange={(event) => toggleAvailability("wattpad", event.target.checked)} />
+                <span>Disponible en Wattpad</span>
+              </label>
+              <label className="stories-availability-check">
+                <input type="checkbox" checked={kindleUnlimitedAvailable} onChange={(event) => toggleAvailability("kindle-unlimited", event.target.checked)} />
+                <span>Disponible en Kindle Unlimited</span>
+              </label>
             </div>
             <div className="stories-filter-footer">
               <p><strong>{total}</strong> {total === 1 ? "libro disponible" : "libros disponibles"} con esta selección</p>

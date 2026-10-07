@@ -21,6 +21,10 @@ function normalize(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("es");
 }
 
+function isAvailableOnWattpad(story: Story) {
+  return Boolean(story.officialUrl && /^https?:\/\/(?:www\.)?wattpad\.com(?:\/|$)/i.test(story.officialUrl));
+}
+
 function textOptions(stories: Story[], field: "subgenres" | "tropes" | "relationshipTypes") {
   return [...new Set(stories.flatMap((story) => story[field]).map((value) => value.trim()).filter(Boolean))]
     .sort((a, b) => a.localeCompare(b, "es"));
@@ -103,9 +107,13 @@ export function catalogResults(stories: Story[], searchParams: URLSearchParams) 
   const trope = searchParams.get("trope")?.trim() || null;
   const sortParam = searchParams.get("sort");
   const sort: SortKey = sortParam && sortParam in sortLabels ? sortParam as SortKey : "recommended";
+  const wattpadAvailable = searchParams.get("wattpad") === "true";
+  const kindleUnlimitedAvailable = searchParams.get("kindle-unlimited") === "true";
   const filteredStories = sortStories(stories.filter((story) =>
     (!trope || normalize(trope) === "dark romance" || story.tropes.some((item) => normalize(item).includes(normalize(trope))))
     && filterKeys.every((key) => matchesGroup(story, key, selected[key]))
+    && (!wattpadAvailable || isAvailableOnWattpad(story))
+    && (!kindleUnlimitedAvailable || story.kuSpain)
   ), sort);
   const pageCount = Math.max(1, Math.ceil(filteredStories.length / STORIES_PER_PAGE));
   const requestedPage = Number.parseInt(searchParams.get("page") ?? "1", 10);
@@ -118,6 +126,8 @@ export function catalogResults(stories: Story[], searchParams: URLSearchParams) 
     moodLabel: mood?.label ?? null,
     hasMood: Boolean(mood),
     trope,
+    wattpadAvailable,
+    kindleUnlimitedAvailable,
     sort,
     total: filteredStories.length,
     page,
