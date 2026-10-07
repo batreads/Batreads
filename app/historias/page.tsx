@@ -7,8 +7,8 @@ import { StoriesCatalog } from "./stories-catalog";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "Libros de dark romance que hemos leído | Batreads",
-  description: "Explora nuestras lecturas de dark romance en español. Cada ficha incluye reseña, sinopsis, tropes, nivel de spice y avisos de contenido.",
+  title: "Libros de dark romance en español | Batreads",
+  description: "Filtra libros de dark romance en español por oscuridad, spice, toxicidad y tropes. Compara las historias y consulta sus warnings antes de elegir.",
   alternates: { canonical: "/historias" },
 };
 

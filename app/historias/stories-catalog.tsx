@@ -6,6 +6,17 @@ import { StoryGrid } from "../_components/story-grid";
 import type { Story } from "@/lib/notion";
 import { filterKeys, sortLabels, STORIES_PER_PAGE, type FilterDefinition, type FilterKey, type SortKey } from "@/lib/story-catalog";
 
+const moodHeadings: Record<string, string> = {
+  "Quiero mucho spice": "Libros de dark romance con mucho spice",
+  "Algo muy oscuro": "Libros de dark romance muy oscuros",
+  "Romance + thriller": "Libros de dark romance con thriller",
+  "De enemigos a amantes": "Libros de dark romance de enemigos a amantes",
+  "Reverse harem": "Libros de dark romance reverse harem",
+  "Relaciones tóxicas": "Libros de dark romance con relaciones tóxicas",
+  "Buena trama": "Libros de dark romance con buena trama",
+  "Ritmo rápido": "Libros de dark romance de ritmo rápido",
+};
+
 function selectionLabel(key: FilterKey, values: string[]) {
   if (["dark", "spicy", "toxicity", "violence", "plot"].includes(key)) {
     const levels = values.map(Number).sort((a, b) => a - b);
@@ -60,6 +71,7 @@ export function StoriesCatalog({
   const shouldScrollToResultsRef = useRef(false);
 
   const activeCount = filterKeys.reduce((count, key) => count + Number(selected[key].length > 0), 0) + Number(Boolean(trope));
+  const heading = moodLabel ? moodHeadings[moodLabel] ?? `Libros de dark romance · ${moodLabel}` : trope ? `Libros de dark romance · ${trope}` : "Libros de dark romance en español";
 
   useEffect(() => {
     if (!openFilter) return;
@@ -158,8 +170,8 @@ export function StoriesCatalog({
   return (
     <>
       <header className="page-heading">
-        <h1>{moodLabel ?? trope ?? "Libros"}</h1>
-        <p>Descubre libros de dark romance con contexto, intensidad y criterio editorial.</p>
+        <h1>{heading}</h1>
+        <p>Explora los libros de dark romance en español que hemos leído en Batreads. Filtra el catálogo por tropes, nivel de oscuridad, spice o toxicidad, y ordena los resultados según tus preferencias. Puedes comparar las valoraciones y abrir cada ficha para consultar sus warnings y otros detalles antes de decidir qué historia quieres leer.</p>
       </header>
 
       <section className="stories-filter-shell" aria-label="Filtros de libros">
