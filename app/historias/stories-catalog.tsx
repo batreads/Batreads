@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { StoryGrid } from "../_components/story-grid";
 import type { Story } from "@/lib/notion";
@@ -118,14 +119,12 @@ export function StoriesCatalog({
     router.push(`/historias${query ? `?${query}` : ""}`, { scroll: false });
   }
 
-  function goToPage(nextPage: number) {
-    if (nextPage === page) return;
+  function pageHref(nextPage: number) {
     const params = new URLSearchParams(searchParams.toString());
     if (nextPage === 1) params.delete("page");
     else params.set("page", String(nextPage));
-    shouldScrollToResultsRef.current = true;
     const query = params.toString();
-    router.push(`/historias${query ? `?${query}` : ""}`, { scroll: false });
+    return `/historias${query ? `?${query}` : ""}`;
   }
 
   function toggleOption(key: FilterKey, value: string, fromMenu = false) {
@@ -265,14 +264,18 @@ export function StoriesCatalog({
       {total > 0 ? <>
         <StoryGrid stories={stories} authorNames={authorNames} />
         {pageCount > 1 ? <nav className="stories-pagination" aria-label="Paginación de libros">
-          <button type="button" onClick={() => goToPage(page - 1)} disabled={page === 1}>← Anterior</button>
+          {page > 1
+            ? <Link href={pageHref(page - 1)} scroll={false} onNavigate={() => { shouldScrollToResultsRef.current = true; }}>← Anterior</Link>
+            : <span className="stories-pagination-disabled" aria-disabled="true">← Anterior</span>}
           <div className="stories-pagination-pages">
             {paginationItems(page, pageCount).map((item, index, items) => <span key={item} className="stories-pagination-item">
               {index > 0 && item - items[index - 1] > 1 ? <span className="stories-pagination-ellipsis" aria-hidden="true">…</span> : null}
-              <button type="button" onClick={() => goToPage(item)} aria-current={item === page ? "page" : undefined} aria-label={`Página ${item}`}>{item}</button>
+              <Link href={pageHref(item)} scroll={false} onNavigate={() => { shouldScrollToResultsRef.current = item !== page; }} aria-current={item === page ? "page" : undefined} aria-label={`Página ${item}`}>{item}</Link>
             </span>)}
           </div>
-          <button type="button" onClick={() => goToPage(page + 1)} disabled={page === pageCount}>Siguiente →</button>
+          {page < pageCount
+            ? <Link href={pageHref(page + 1)} scroll={false} onNavigate={() => { shouldScrollToResultsRef.current = true; }}>Siguiente →</Link>
+            : <span className="stories-pagination-disabled" aria-disabled="true">Siguiente →</span>}
         </nav> : null}
       </> : (
         <div className="stories-no-results">

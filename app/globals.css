@@ -2278,7 +2278,10 @@ body:has(.story-page) {
   gap: 6px;
 }
 
-.stories-pagination button {
+.stories-pagination :is(a, .stories-pagination-disabled) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 40px;
   min-height: 40px;
   padding: 8px 11px;
@@ -2289,26 +2292,29 @@ body:has(.story-page) {
   font: inherit;
   font-size: 13px;
   font-weight: 700;
+  text-decoration: none;
+}
+
+.stories-pagination a {
   cursor: pointer;
 }
 
-.stories-pagination button:hover:not(:disabled),
-.stories-pagination button[aria-current="page"] {
+.stories-pagination a:hover,
+.stories-pagination a[aria-current="page"] {
   border-color: var(--page-accent);
   background: #173d39;
   color: #bdffe4;
 }
 
-.stories-pagination button:disabled {
+.stories-pagination-disabled {
   opacity: .45;
-  cursor: not-allowed;
 }
 
 .stories-pagination-ellipsis {
   color: var(--page-muted);
 }
 
-.stories-catalog-page :is(button, select, input):focus-visible {
+.stories-catalog-page :is(button, select, input, a):focus-visible {
   outline: 2px solid var(--page-accent);
   outline-offset: 3px;
 }
