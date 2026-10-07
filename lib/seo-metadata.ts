@@ -1,5 +1,9 @@
 import type { Author, Saga, SeoPage } from "./notion/types";
 
+export function websiteOpenGraph(url: string) {
+  return { url, siteName: "Batreads", type: "website" as const, locale: "es_ES" };
+}
+
 export function brandedTitle(title: string): string {
   const value = title.trim();
   return /\bBatreads\b/i.test(value) ? value : `${value} · Batreads`;

@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 import { SagaCard } from "../_components/saga-card";
 import { getAuthors, getSagas, getStories } from "@/lib/notion";
+import { websiteOpenGraph } from "@/lib/seo-metadata";
 
 export const metadata: Metadata = {
   title: "Sagas de dark romance: orden de lectura | Batreads",
   description: "Descubre las sagas de dark romance presentes en Batreads, sus libros y autoras, y consulta el orden de lectura para saber por dónde empezar.",
   alternates: { canonical: "/sagas" },
+  openGraph: websiteOpenGraph("/sagas"),
 };
 
 export default async function SagasPage() {

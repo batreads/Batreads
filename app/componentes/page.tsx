@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "../_components/breadcrumbs";
+import { AuthorCard } from "../_components/author-card";
 import { FaqList } from "../_components/faq-list";
 import { StoryGrid } from "../_components/story-grid";
 import { getAuthors, getStories } from "@/lib/notion";
@@ -20,6 +21,10 @@ export default async function ComponentsPage() {
       <section className="story-section home-story-cards">
         <h2>Tarjeta de libro</h2>
         <StoryGrid stories={stories.slice(0, 1)} authorNames={authorNames} headingLevel={3} />
+      </section>
+      <section className="story-section">
+        <h2>Tarjeta de autora</h2>
+        {authors[0] ? <div className="entity-grid"><AuthorCard author={authors[0]} storyCount={stories.filter((story) => story.authorId === authors[0].id).length} headingLevel={3} /></div> : null}
       </section>
       <section className="story-section">
         <h2>Preguntas frecuentes</h2>
