@@ -35,7 +35,7 @@ function isPublicCollection(page: SeoPage) {
 
 function featuredCollection(author: Author, pages: SeoPage[]): SeoPage | null {
   const explicit = pages.find((page) => page.id === author.featuredCollectionId);
-  if (explicit && isPublicCollection(explicit)) return explicit;
+  if (explicit && explicit.section === "listas") return explicit;
 
   const specialties = author.specialties.map((value) => value.trim().toLocaleLowerCase("es"));
   const candidates = pages.filter((page) => {
@@ -53,6 +53,17 @@ function featuredCollection(author: Author, pages: SeoPage[]): SeoPage | null {
   const second = ranked[1];
   if (second && first.filter1.value.length === second.filter1.value.length && first.priority === second.priority) return null;
   return first;
+}
+
+function relatedLists(author: Author, pages: SeoPage[]): SeoPage[] {
+  const explicit = pages
+    .filter((page) => page.section === "listas" && page.authorIds.includes(author.id))
+    .sort((a, b) => (b.priority ?? -1) - (a.priority ?? -1) || a.heading.localeCompare(b.heading, "es"));
+  const featured = featuredCollection(author, pages);
+
+  return featured
+    ? [featured, ...explicit.filter((page) => page.id !== featured.id)]
+    : explicit;
 }
 
 export async function generateStaticParams() {
@@ -90,7 +101,7 @@ export default async function AutoraPage({ params }: PageProps) {
   const authorStories = stories.filter((story) => relatedStoryIds.has(story.id));
   const relatedSagaIds = new Set(author.sagaIds);
   const authorSagas = sagas.filter((saga) => relatedSagaIds.has(saga.id));
-  const collection = featuredCollection(author, seoPages);
+  const relatedListsForAuthor = relatedLists(author, seoPages);
   const date = verifiedDate(author.verifiedAt);
   const amazonUrl = externalUrl(author.amazonUrl);
   const socials = [
@@ -178,15 +189,20 @@ export default async function AutoraPage({ params }: PageProps) {
         </section>
       ) : null}
 
-      {collection ? (
+      {relatedListsForAuthor.length > 0 ? (
         <section className="story-section author-discover" aria-labelledby="author-discover-title">
-          <p className="eyebrow">Listas que te recomendamos que leas</p>
-          <Link className="home-list-card author-discover-card" href={collection.path}>
-            <span className="home-list-card-label">Selección editorial</span>
-            <h2 id="author-discover-title">{collection.contentTitle}</h2>
-            {collection.summary ? <p>{collection.summary}</p> : null}
-            <span className="author-discover-action">Explorar colección →</span>
-          </Link>
+          <p className="eyebrow">Sigue explorando</p>
+          <h2 id="author-discover-title">Listas relacionadas con {author.name}</h2>
+          <div className="author-discover-grid">
+            {relatedListsForAuthor.map((page) => (
+              <Link className="home-list-card author-discover-card" href={page.path} key={page.id}>
+                <span className="home-list-card-label">Selección editorial</span>
+                <h3>{page.contentTitle}</h3>
+                {page.summary ? <p>{page.summary}</p> : null}
+                <span className="author-discover-action">Explorar lista →</span>
+              </Link>
+            ))}
+          </div>
         </section>
       ) : null}
     </main>

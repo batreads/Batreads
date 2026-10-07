@@ -4554,12 +4554,19 @@ body:has(.story-page) {
 .author-discover-card {
   --home-border: var(--page-border);
   --home-surface: var(--page-surface);
-  width: min(100%, 580px);
+  width: 100%;
   min-height: 190px;
   padding: 24px;
 }
 
-.author-page .author-discover-card h2 {
+.author-discover-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+}
+
+.author-page .author-discover-card h3 {
   margin: 12px 0 0;
   color: var(--page-text);
   font-size: 28px;
@@ -4611,6 +4618,10 @@ body:has(.story-page) {
   .author-section-actions {
     align-items: flex-start;
     margin-top: 16px;
+  }
+
+  .author-discover-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
 }
