@@ -1862,7 +1862,7 @@ body:has(.story-page) {
 .stories-catalog-page .page-heading h1 {
   margin: 0 0 12px;
   font-family: var(--font-display);
-  font-size: clamp(54px, 5vw, 76px);
+  font-size: clamp(50px, 4.5vw, 68px);
   font-weight: 700;
   letter-spacing: -.04em;
   line-height: 1.05;
@@ -1871,7 +1871,7 @@ body:has(.story-page) {
 .stories-catalog-page .page-heading > p:last-child {
   max-width: 650px;
   color: var(--page-muted);
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .stories-filter-shell {
@@ -1886,6 +1886,7 @@ body:has(.story-page) {
 .stories-filter-head {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 22px;
   min-height: 108px;
@@ -1899,7 +1900,7 @@ body:has(.story-page) {
   align-items: flex-start;
   flex-direction: column;
   gap: 14px;
-  min-width: 0;
+  min-width: min(100%, 250px);
 }
 
 .stories-filter-intro {
@@ -2028,6 +2029,30 @@ body:has(.story-page) {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
+}
+
+.stories-availability-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 18px;
+}
+
+.stories-availability-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--page-text);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.stories-availability-check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--page-accent);
 }
 
 .stories-filter-group {
@@ -2201,10 +2226,11 @@ body:has(.story-page) {
 
 .stories-results-bar select {
   margin-left: 5px;
-  padding: 8px 28px 8px 9px;
+  padding: 8px 40px 8px 9px;
   border: 1px solid var(--page-border);
   border-radius: 8px;
-  background: var(--page-surface);
+  appearance: none;
+  background: var(--page-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23d8e6e3' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 14px center / 12px 8px;
   color: var(--page-text);
   font: inherit;
 }
@@ -2446,13 +2472,13 @@ body:has(.story-page) {
   }
 
   .stories-filter-head {
-    align-items: stretch;
-    flex-direction: column;
+    align-items: center;
     gap: 18px;
     padding: 20px;
   }
 
   .stories-filter-actions {
+    margin-left: auto;
     justify-content: space-between;
     gap: 12px;
   }
@@ -2505,11 +2531,11 @@ body:has(.story-page) {
   }
 
   .stories-catalog-page .page-heading h1 {
-    font-size: clamp(45px, 12vw, 58px);
+    font-size: clamp(42px, 11vw, 54px);
   }
 
   .stories-catalog-page .page-heading > p:last-child {
-    font-size: 16px;
+    font-size: 15px;
   }
 }
 
