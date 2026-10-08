@@ -1,0 +1,67 @@
+.sagas-catalog-page {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 48px 32px 112px;
+}
+
+.sagas-catalog-page .page-heading {
+  margin-bottom: 36px;
+}
+
+.sagas-catalog-page .page-heading h1 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: clamp(50px, 4.5vw, 68px);
+  font-weight: 700;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+}
+
+.sagas-catalog-page .page-heading > p:last-child {
+  max-width: 650px;
+  color: var(--page-muted);
+  font-size: 16px;
+}
+
+.sagas-related-lists {
+  margin-top: 64px;
+}
+
+.sagas-related-lists > h2 {
+  margin: 8px 0 24px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 36px);
+  line-height: 1.12;
+}
+
+.sagas-related-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 20px;
+}
+
+.sagas-related-lists .author-discover-card {
+  min-height: 220px;
+}
+
+@media (max-width: 600px) {
+  .sagas-related-lists-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sagas-catalog-page {
+    padding: 34px 20px 80px;
+  }
+
+  .sagas-catalog-page .page-heading {
+    margin-bottom: 30px;
+  }
+
+  .sagas-catalog-page .page-heading h1 {
+    font-size: clamp(42px, 11vw, 54px);
+  }
+
+  .sagas-catalog-page .page-heading > p:last-child {
+    font-size: 15px;
+  }
+}
