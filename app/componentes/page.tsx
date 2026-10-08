@@ -24,7 +24,7 @@ export default async function ComponentsPage() {
       </section>
       <section className="story-section">
         <h2>Tarjeta de autora</h2>
-        {authors[0] ? <div className="entity-grid"><AuthorCard author={authors[0]} storyCount={stories.filter((story) => story.authorId === authors[0].id).length} headingLevel={3} /></div> : null}
+        {authors[0] ? <div className="author-grid"><AuthorCard author={authors[0]} recommendedStory={stories.filter((story) => story.authorId === authors[0].id && story.rating !== null).sort((a, b) => b.rating! - a.rating!)[0]} headingLevel={3} /></div> : null}
       </section>
       <section className="story-section">
         <h2>Preguntas frecuentes</h2>

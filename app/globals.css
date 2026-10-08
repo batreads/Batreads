@@ -3184,40 +3184,125 @@ body:has(.story-page) {
   margin: 0;
 }
 
-.entity-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
-  gap: 1.25rem;
+.authors-catalog-page {
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 48px 32px 112px;
 }
 
-.entity-card {
-  display: block;
-  padding: 1.5rem;
-  border: 1px solid var(--page-border);
-  border-radius: 1rem;
+.authors-catalog-page .page-heading {
+  margin-bottom: 36px;
+}
+
+.authors-catalog-page .page-heading h1 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: clamp(50px, 4.5vw, 68px);
+  font-weight: 700;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+}
+
+.authors-catalog-page .page-heading > p:last-child {
+  max-width: 650px;
+  color: var(--page-muted);
+  font-size: 16px;
+}
+
+.author-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.author-card {
+  --card-muted: #a2b2b1;
+  --card-subtle: #173235;
+  --card-border: #2a5050;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr);
+  border-radius: 16px;
   background: var(--page-surface);
+  box-shadow: none;
+}
+
+.author-card:focus-within {
+  border-color: #63e6be;
+}
+
+.author-card .story-card-body {
+  min-height: 0;
+}
+
+.author-card :is(h2, h3) {
+  overflow: visible;
+  font-size: 25px;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+.author-card :is(h2, h3) a {
   color: inherit;
   text-decoration: none;
 }
 
-.entity-card:hover,
-.entity-card:focus-visible {
-  border-color: var(--page-accent);
+.author-card :is(h2, h3) a:hover,
+.author-card :is(h2, h3) a:focus-visible,
+.author-card-recommendation a:hover,
+.author-card-recommendation a:focus-visible {
+  text-decoration: underline;
 }
 
-.entity-card h2 {
-  margin: 0 0 .75rem;
-  font-size: 1.5rem;
+.author-card .story-card-description {
+  display: block;
+  overflow: visible;
+  margin-top: 8px;
+  line-height: 1.45;
 }
 
-.entity-card p {
-  margin-bottom: 1rem;
-  color: var(--page-muted);
-  font-size: 1rem;
+.author-card .story-card-taxonomy {
+  margin-top: auto;
+  font-size: 12px;
 }
 
-.entity-card span {
-  color: var(--page-accent);
+.author-card-recommendation {
+  display: grid;
+  justify-items: start;
+  gap: 5px;
+  padding-top: 12px;
+  border-top: 1px solid var(--card-border);
+  font-size: 13px;
+}
+
+.author-card-recommendation > span:first-child {
+  color: var(--card-muted);
+}
+
+.author-card-recommendation a {
+  color: #63e6be;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.authors-related-lists {
+  margin-top: 64px;
+}
+
+.authors-related-lists > h2 {
+  margin: 8px 0 24px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 36px);
+  line-height: 1.12;
+}
+
+.authors-related-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 20px;
+}
+
+.authors-related-lists .author-discover-card {
+  min-height: 220px;
 }
 
 .link-list {
@@ -3259,6 +3344,41 @@ body:has(.story-page) {
 
   .story-hero-info {
     padding-top: 0;
+  }
+}
+
+@media (max-width: 820px) {
+  .author-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+}
+
+@media (max-width: 600px) {
+  .authors-catalog-page {
+    padding: 34px 20px 80px;
+  }
+
+  .authors-catalog-page .page-heading {
+    margin-bottom: 30px;
+  }
+
+  .authors-catalog-page .page-heading h1 {
+    font-size: clamp(42px, 11vw, 54px);
+  }
+
+  .authors-catalog-page .page-heading > p:last-child {
+    font-size: 15px;
+  }
+
+  .authors-related-lists-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .story-card.author-card {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
