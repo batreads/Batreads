@@ -56,7 +56,7 @@ export default async function HistoriasPage({ searchParams }: HistoriasPageProps
   return (
     <main className="catalog-page stories-catalog-page">
       <div className="stories-catalog-inner">
-        <Breadcrumbs items={[{ label: "Libros" }]} />
+        <Breadcrumbs items={[{ label: "Libros" }]} structuredDataPath="/historias" />
         <Suspense fallback={<p>Preparando el catálogo…</p>}>
           <StoriesCatalog {...results} authorNames={authorNames} />
         </Suspense>

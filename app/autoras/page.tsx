@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthorCard } from "../_components/author-card";
-import { Breadcrumbs } from "../_components/breadcrumbs";
+import { Breadcrumbs, createBreadcrumbList } from "../_components/breadcrumbs";
 import { getAuthors, getSagas, getSeoPages, getStories, storiesForSeoPage } from "@/lib/notion";
 import type { Story } from "@/lib/notion";
 import { websiteOpenGraph } from "@/lib/seo-metadata";
@@ -48,25 +48,18 @@ export default async function AutorasPage() {
     .slice(0, 3)
     .map(({ page }) => page);
   const authorsUrl = new URL("/autoras", siteUrl).toString();
-  const breadcrumbId = `${authorsUrl}#breadcrumb`;
+  const breadcrumb = createBreadcrumbList([{ label: "Autoras" }], "/autoras");
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "@id": breadcrumbId,
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Inicio", item: siteUrl.toString() },
-          { "@type": "ListItem", position: 2, name: "Autoras", item: authorsUrl },
-        ],
-      },
+      breadcrumb,
       {
         "@type": "CollectionPage",
         "@id": `${authorsUrl}#webpage`,
         url: authorsUrl,
         name: heading,
         description: intro,
-        breadcrumb: { "@id": breadcrumbId },
+        breadcrumb: { "@id": breadcrumb["@id"] },
         mainEntity: {
           "@type": "ItemList",
           "@id": `${authorsUrl}#authors`,

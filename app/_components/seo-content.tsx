@@ -51,7 +51,7 @@ export async function SeoContent({
 
   return (
     <main className={`catalog-page${page.section === "listas" ? " list-detail-page" : ""}${booksLike ? " books-like-page" : ""}`}>
-      <Breadcrumbs items={[{ label: "Listas", href: "/listas" }, { label: page.heading }]} />
+      <Breadcrumbs items={[{ label: "Listas", href: "/listas" }, { label: page.heading }]} structuredDataPath={page.path} />
       <header className={`page-heading${covers.length > 0 ? " list-hero-with-covers" : ""}`}>
         <div className="list-hero-copy">
           {booksLike ? (page.topic ? <p className="eyebrow">{page.topic}</p> : null) : <p className="eyebrow">Lista editorial</p>}

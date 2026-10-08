@@ -16,7 +16,7 @@ export default async function SagasPage() {
   const authorNames = new Map(authors.map((author) => [author.id, author.name]));
   return (
     <main className="catalog-page">
-      <Breadcrumbs items={[{ label: "Sagas" }]} />
+      <Breadcrumbs items={[{ label: "Sagas" }]} structuredDataPath="/sagas" />
       <header className="page-heading"><p className="eyebrow">Universos para explorar</p><h1>Sagas</h1></header>
       {sagas.length === 0 ? <p>Todavía no hay sagas con historias publicadas.</p> : (
         <div className="saga-card-grid">{sagas.map((saga) => (

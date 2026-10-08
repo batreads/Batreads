@@ -119,7 +119,7 @@ export default async function AutoraPage({ params }: PageProps) {
 
   return (
     <main className="catalog-page author-page">
-      <Breadcrumbs items={[{ label: "Autoras", href: "/autoras" }, { label: author.name }]} />
+      <Breadcrumbs items={[{ label: "Autoras", href: "/autoras" }, { label: author.name }]} structuredDataPath={`/autoras/${author.slug}`} />
 
       <header className={`author-hero${author.photoUrl ? " author-hero-with-photo" : ""}`}>
         <div className="author-hero-copy">

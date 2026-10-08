@@ -13,7 +13,7 @@ export default async function ListasPage() {
   const pages = (await getSeoPages()).filter((page) => page.section === "listas");
   return (
     <main className="catalog-page list-index-page">
-      <Breadcrumbs items={[{ label: "Listas" }]} />
+      <Breadcrumbs items={[{ label: "Listas" }]} structuredDataPath="/listas" />
       <header className="page-heading">
         <p className="eyebrow">Selecciones editoriales</p>
         <h1>Listas <em>Batreads</em></h1>

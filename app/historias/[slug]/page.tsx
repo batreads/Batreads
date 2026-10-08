@@ -120,7 +120,7 @@ export default async function HistoriaPage({
 
   return (
     <main className={`story-page${story.coverUrl ? "" : " story-page-no-cover"}`}>
-      <Breadcrumbs items={[{ label: "Libros", href: "/historias" }, { label: story.title }]} />
+      <Breadcrumbs items={[{ label: "Libros", href: "/historias" }, { label: story.title }]} structuredDataPath={`/historias/${story.slug}`} />
       <aside className="story-sidebar" aria-label="Portada y opciones de lectura">
         {story.coverUrl ? (
           <div className="story-hero-media">

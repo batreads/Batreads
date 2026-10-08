@@ -99,7 +99,7 @@ export default async function SagaPage({ params }: PageProps) {
 
   return (
     <main className="catalog-page saga-page">
-      <Breadcrumbs items={[{ label: "Sagas", href: "/sagas" }, { label: saga.name }]} />
+      <Breadcrumbs items={[{ label: "Sagas", href: "/sagas" }, { label: saga.name }]} structuredDataPath={`/sagas/${saga.slug}`} />
 
       <header className="saga-hero">
         <div className="saga-hero-copy">
