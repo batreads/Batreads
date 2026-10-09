@@ -108,6 +108,10 @@
 .saga-card-covers img:nth-of-type(3) { transform: translateX(-5%) rotate(13deg); }
 .saga-card-covers-1 img { transform: translateX(-50%); }
 
+.saga-card-covers-3 img:first-of-type { transform: translateX(-50%) rotate(-5deg); }
+.saga-card-covers-3 img:nth-of-type(2) { transform: translateX(-8%) rotate(7deg); }
+.saga-card-covers-3 img:nth-of-type(3) { transform: translateX(-95%) rotate(-12deg); }
+
 .saga-card-monogram {
   color: #94d9c6;
   font-family: var(--font-display);

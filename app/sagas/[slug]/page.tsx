@@ -3,8 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { StoryCardRating } from "../../_components/story-card-rating";
-import { getAuthors, getSagaBySlug, getSagas, getSeoPages, getStories, type Story } from "@/lib/notion";
+import { SagaFaqItem } from "../../_components/saga-faq-item";
+import { getAuthors, getSagaBySlug, getSagas, getSeoPages, getStories, storiesForSeoPage, type Story } from "@/lib/notion";
 import { sagaDescription, websiteOpenGraph } from "@/lib/seo-metadata";
+import { sagaDarkIndex } from "@/lib/saga-dark-index";
+import { siteUrl } from "@/lib/site-url";
 import "./saga.css";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -77,7 +80,8 @@ function SagaBook({ story, number, title }: { story: Story | null; number: numbe
 
 export default async function SagaPage({ params }: PageProps) {
   const { slug } = await params;
-  const [saga, stories, authors, seoPages] = await Promise.all([getSagaBySlug(slug), getStories(), getAuthors(), getSeoPages()]);
+  const [sagas, stories, authors, seoPages] = await Promise.all([getSagas(), getStories(), getAuthors(), getSeoPages()]);
+  const saga = sagas.find((entry) => entry.slug === slug);
   if (!saga) notFound();
 
   const sagaStories = stories.filter((story) => story.sagaId === saga.id)
@@ -87,24 +91,56 @@ export default async function SagaPage({ params }: PageProps) {
     ? Number((ratedStories.reduce((sum, story) => sum + story.rating!, 0) / ratedStories.length).toFixed(1))
     : null;
   const sagaAuthors = authors.filter((author) => saga.authorIds.includes(author.id) || sagaStories.some((story) => story.authorId === author.id));
-  const sagaPages = seoPages.filter((page) => page.sagaIds.includes(saga.id));
+  const authorIds = new Set(sagaAuthors.map((author) => author.id));
+  const relatedSagas = sagas.filter((entry) => entry.id !== saga.id && (
+    entry.authorIds.some((id) => authorIds.has(id))
+    || sagaAuthors.some((author) => author.sagaIds.includes(entry.id))
+    || stories.some((story) => story.sagaId === entry.id && story.authorId !== null && authorIds.has(story.authorId))
+  )).slice(0, 3);
+  const sagaStoryIds = new Set(sagaStories.map((story) => story.id));
+  const relatedLists = seoPages.filter((page) => page.section === "listas" && page.indexable)
+    .filter((page) => storiesForSeoPage(page, stories, authors, sagas).some((story) => sagaStoryIds.has(story.id)))
+    .sort((a, b) => a.path.localeCompare(b.path, "es"))
+    .map((page) => ({ page }))
+    .slice(0, 3);
   const firstBook = sagaStories[0];
   const total = Math.max(saga.bookCount ?? 0, saga.bookTitles.length, sagaStories.length);
   const hasProgress = total > 0 && sagaStories.length > 0 && sagaStories.length <= total;
   const covers = sagaStories.filter((story) => story.coverUrl).slice(0, 3);
+  const darkIndex = sagaDarkIndex(sagaStories);
   const numberedStories = new Map(sagaStories.filter((story) => story.sagaNumber !== null).map((story) => [story.sagaNumber, story]));
   const unnumberedStories = sagaStories.filter((story) => story.sagaNumber === null);
   const slotCount = Math.max(total, ...sagaStories.map((story) => story.sagaNumber ?? 0));
   const bookSlots = Array.from({ length: slotCount }, (_, index) => numberedStories.get(index + 1) ?? unnumberedStories.shift() ?? null);
+  const readingOrderItems = bookSlots.flatMap((story, index) => story ? [{
+    "@type": "ListItem",
+    position: index + 1,
+    name: story.title,
+    url: new URL(`/historias/${story.slug}`, siteUrl).toString(),
+  }] : []);
+  const readingOrderJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": new URL(`/sagas/${saga.slug}#orden`, siteUrl).toString(),
+    name: `Libros de ${saga.name} en orden`,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    numberOfItems: readingOrderItems.length,
+    itemListElement: readingOrderItems,
+  };
 
   return (
     <main className="catalog-page saga-page">
+      {readingOrderItems.length > 0 ? <script type="application/ld+json" dangerouslySetInnerHTML={{
+        __html: JSON.stringify(readingOrderJsonLd).replace(/</g, "\\u003c"),
+      }} /> : null}
       <Breadcrumbs items={[{ label: "Sagas", href: "/sagas" }, { label: saga.name }]} structuredDataPath={`/sagas/${saga.slug}`} />
 
       <header className="saga-hero">
-        <div className="saga-hero-copy">
+        <div className="saga-hero-heading">
           <p className="saga-kicker">{saga.sagaType || "Saga"}{sagaAuthors.length > 0 ? ` · ${sagaAuthors.map((author) => author.name).join(", ")}` : ""}</p>
-          <h1>{saga.name}</h1>
+          <h1>{saga.h1 || saga.name}</h1>
+        </div>
+        <div className="saga-hero-copy">
           {saga.intro ? <div className="saga-hero-intro">{paragraphs(saga.intro).map((part) => <p key={part}>{part}</p>)}</div> : null}
           <ul className="story-hero-tropes saga-tags">
             {saga.readingOrder ? <li><img src="/icons/hero-ku.svg" alt="" width="14" height="14" />Orden {saga.readingOrder.toLowerCase()}</li> : null}
@@ -132,13 +168,32 @@ export default async function SagaPage({ params }: PageProps) {
         {saga.standalone ? <div><dt>¿Autoconclusivos?</dt><dd>{saga.standalone}</dd></div> : null}
       </dl>
 
-      {saga.description ? (
-        <section className="saga-section saga-intro-section">
+      {saga.description || sagaStories.length > 0 ? (
+        <div className="saga-section saga-about-grid">
+        {saga.description ? <>
+        <header className="saga-about-heading">
           <p className="saga-kicker">La historia detrás de los libros</p>
           <h2>Sobre {saga.name}</h2>
+        </header>
+        <section className="saga-intro-section">
           {paragraphs(saga.description).map((part) => <p key={part}>{part}</p>)}
           {sagaAuthors.length > 0 ? <div className="saga-inline-links">{sagaAuthors.map((author) => <Link key={author.id} href={`/autoras/${author.slug}`}>Conoce a {author.name} <span aria-hidden="true">→</span></Link>)}</div> : null}
         </section>
+        </> : null}
+        {sagaStories.length > 0 ? <section className="saga-dark-index" aria-label="Dark Index de la saga">
+          <p className="saga-dark-index-intro">Valoración media de los libros según los indicadores de Batreads. Se calcula en base a la media de todos los libros de la saga que hemos leído.</p>
+          <div className="story-hero-metrics" aria-label="Dark Index medio de la saga">
+            {darkIndex.map(({ key, label, icon, average, count }) => (
+              <div className="story-hero-metric" key={key}>
+                <div className="story-hero-metric-heading"><span aria-hidden="true">{icon}</span><strong>{average === null ? "—" : average.toLocaleString("es", { maximumFractionDigits: 1 })}<em>/5</em></strong></div>
+                <span className="story-hero-metric-label">{label}</span>
+                <span className="story-hero-metric-track" aria-hidden="true"><span style={{ width: `${average === null ? 0 : average * 20}%` }} /></span>
+                <span className="saga-metric-count">{count > 0 ? `${count} ${count === 1 ? "libro" : "libros"}` : "Sin valorar"}</span>
+              </div>
+            ))}
+          </div>
+        </section> : null}
+        </div>
       ) : null}
 
       {bookSlots.length > 0 ? (
@@ -150,9 +205,25 @@ export default async function SagaPage({ params }: PageProps) {
           </section>
       ) : null}
 
-      {saga.faqs.length > 0 ? <section className="saga-section"><p className="saga-kicker">Resolvemos tus dudas</p><h2>Preguntas frecuentes</h2><div className="saga-faq">{saga.faqs.map(({ question, answer }) => <div className="saga-faq-item" key={question}><h3>{question}</h3><p>{answer}</p></div>)}</div></section> : null}
+      {saga.faqs.length > 0 ? <section className="saga-section"><p className="saga-kicker">Resolvemos tus dudas</p><h2>Preguntas frecuentes</h2><div className="saga-faq">{saga.faqs.map(({ question, answer }) => <SagaFaqItem key={question} question={question} answer={answer} />)}</div></section> : null}
 
-      {sagaPages.length > 0 ? <section className="saga-section"><p className="saga-kicker">Sigue explorando</p><h2>Listas de lectura</h2><div className="saga-inline-links">{sagaPages.map((page) => <Link key={page.id} href={page.path}>{page.heading} <span aria-hidden="true">→</span></Link>)}</div></section> : null}
+      {relatedSagas.length > 0 || relatedLists.length > 0 ? <section className="saga-section saga-related">
+        <p className="saga-kicker">Sigue explorando</p><h2>Qué leer después de {saga.name}</h2>
+        <div className="saga-related-grid">
+          {relatedSagas.map((entry) => <Link className="home-list-card author-discover-card saga-related-card" href={`/sagas/${entry.slug}`} key={entry.id}>
+              <span className="home-list-card-label">De la misma autora</span>
+              <h3>{entry.name}</h3>
+              {entry.summary || entry.intro || entry.description ? <p>{paragraphs(entry.summary || entry.intro || entry.description)[0]}</p> : null}
+              <span className="saga-related-action">Explorar saga <span aria-hidden="true">→</span></span>
+            </Link>)}
+          {relatedLists.map(({ page }) => <Link className="home-list-card author-discover-card saga-related-card" href={page.path} key={page.id}>
+            <span className="home-list-card-label">Lista de recomendaciones</span>
+            <h3>{page.heading}</h3>
+            {page.summary || page.description ? <p>{paragraphs(page.summary || page.description)[0]}</p> : null}
+            <span className="saga-related-action">Explorar lista <span aria-hidden="true">→</span></span>
+          </Link>)}
+        </div>
+      </section> : null}
     </main>
   );
 }

@@ -32,6 +32,8 @@ export function mapSaga(page: NotionPage, storiesBySaga: Map<string, string[]>):
     id: page.id,
     slug,
     name,
+    h1: text(page, "H1"),
+    summary: text(page, "Resumen / entradilla"),
     updatedAt: page.last_edited_time ?? null,
     description: text(page, "Descripción"),
     intro: text(page, "SEO intro"),

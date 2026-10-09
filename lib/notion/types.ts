@@ -111,6 +111,8 @@ export type Saga = {
   id: string;
   slug: string;
   name: string;
+  h1: string;
+  summary: string;
   updatedAt: string | null;
   description: string;
   intro: string;

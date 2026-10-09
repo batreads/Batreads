@@ -3,7 +3,8 @@
 .saga-page a:focus-visible { outline: 2px solid var(--page-accent); outline-offset: 4px; }
 .saga-kicker { margin: 0; color: var(--page-accent); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
 .saga-hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, .7fr); align-items: center; gap: 44px; min-height: 380px; }
-.saga-hero h1 { max-width: 710px; margin: 10px 0 18px; font-size: clamp(42px, 5.5vw, 72px); font-weight: 600; letter-spacing: -.045em; line-height: .99; }
+.saga-hero-heading { grid-column: 1 / -1; }
+.saga-hero h1 { margin: 10px 0 0; font-size: clamp(42px, 5.5vw, 72px); font-weight: 600; letter-spacing: -.045em; line-height: .99; }
 .saga-hero-intro { max-width: 710px; color: #d6e8e3; font-size: 16px; line-height: 1.7; }
 .saga-hero-intro p { margin: 0 0 10px; }
 .saga-tags { margin-top: 22px; }
@@ -33,6 +34,14 @@
 .saga-inline-links { margin-top: 20px; }
 .saga-inline-links a { color: #a6efd4; font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
 .saga-inline-links a:hover { color: #e2fff2; }
+.saga-about-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; column-gap: 40px; }
+.saga-about-heading { grid-column: 1 / -1; }
+.saga-about-grid > :only-child { grid-column: 1 / -1; }
+.saga-dark-index-intro { margin: 0; color: var(--page-muted); font-size: 14px; line-height: 1.6; }
+.saga-dark-index .story-hero-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 20px; }
+.saga-metric-count { color: var(--page-muted); font-size: 11px; }
+@media (max-width: 820px) { .saga-about-grid { grid-template-columns: minmax(0, 1fr); } .saga-intro-section + .saga-dark-index { margin-top: 32px; } }
+@media (max-width: 400px) { .saga-dark-index .story-hero-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .saga-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
 .saga-heading-note { margin-bottom: 23px; color: #9cb3ac; font-size: 13px; text-align: right; }
 .saga-progress { display: flex; align-items: baseline; gap: 12px; margin: 22px 0 20px; color: #b6cec3; font-size: 13px; }
@@ -66,6 +75,13 @@
 .saga-faq-item:first-child { border-top: 1px solid var(--page-border); }
 .saga-faq-item h3 { margin: 0 0 9px; font-family: var(--font-body); font-size: 16px; font-weight: 750; }
 .saga-faq-item p { max-width: 850px; margin: 0; color: #c3d6cd; font-size: 14px; line-height: 1.7; }
+.saga-faq-answer-concealed { filter: blur(6px); user-select: none; pointer-events: none; }
+.saga-faq-spoiler-toggle { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; margin-top: 6px; padding: 8px 0; border: 0; background: transparent; color: var(--page-accent); font: inherit; font-size: 14px; font-weight: 400; cursor: pointer; }
+.saga-faq-spoiler-toggle:hover { color: var(--page-text); }
+.saga-faq-spoiler-toggle:focus-visible { outline: 2px solid var(--page-accent); outline-offset: 4px; }
+.saga-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 20px; }
+.saga-related-card { min-height: 220px; box-shadow: none; }
+.saga-related-action { margin-top: auto; padding-top: 20px; color: var(--page-accent); font-size: 13px; font-weight: 700; }
 @media (min-width: 851px) {
   .saga-hero { grid-template-columns: minmax(0, 1.25fr) minmax(360px, .95fr); gap: 32px; }
   .saga-hero-art { min-height: 420px; }
