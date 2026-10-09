@@ -1,0 +1,107 @@
+.catalog:global(.list-index-page) :global(.breadcrumbs) {
+  margin-bottom: 48px;
+}
+
+.catalog:global(.list-index-page) :global(.page-heading) {
+  margin-bottom: 36px;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.catalog:global(.list-index-page) :global(.eyebrow) {
+  color: var(--page-accent);
+  font-size: .8rem;
+}
+
+.catalog:global(.list-index-page) :global(.page-heading) h1 {
+  margin: 0 0 12px;
+  font-size: clamp(50px, 4.5vw, 68px);
+  letter-spacing: -.04em;
+  line-height: 1.05;
+}
+
+.catalog:global(.list-index-page) :global(.page-heading) > p:last-child {
+  max-width: 650px;
+  margin-top: 1em;
+  font-size: 16px;
+  line-height: inherit;
+}
+
+.catalog:global(.list-index-page) :global(.home-list-card) {
+  min-height: 220px;
+  padding: 24px;
+  box-shadow: none;
+}
+
+.catalog:global(.list-index-page) :global(.home-list-card) h2 {
+  margin: 12px 0 0;
+  font-size: 25px;
+  letter-spacing: -.025em;
+  line-height: 1.12;
+}
+
+.catalog:global(.list-index-page) :global(.list-card-link) {
+  padding-top: 20px;
+  color: var(--page-accent);
+  font-size: 13px;
+}
+
+.exploration {
+  margin-top: 64px;
+}
+
+.exploration > h2 {
+  margin: 8px 0 16px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 36px);
+  line-height: 1.12;
+}
+
+.explorationIntro {
+  max-width: 650px;
+  margin: 0 0 24px;
+  color: var(--page-muted);
+  font-size: 16px;
+}
+
+.explorationGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.explorationGrid :global(.home-mood-card-title) {
+  margin: 0;
+}
+
+@media (max-width: 820px) {
+  .explorationGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .catalog :global(.home-lists-grid) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .explorationGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .catalog:global(.list-index-page) {
+    padding: 34px 20px 80px;
+  }
+
+  .catalog:global(.list-index-page) :global(.page-heading) {
+    margin-bottom: 30px;
+  }
+
+  .catalog:global(.list-index-page) :global(.page-heading) h1 {
+    font-size: clamp(42px, 11vw, 54px);
+  }
+
+  .catalog:global(.list-index-page) :global(.page-heading) > p:last-child {
+    font-size: 15px;
+  }
+}
