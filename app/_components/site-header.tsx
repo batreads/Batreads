@@ -20,6 +20,20 @@ export function SiteHeader() {
     setMenuOpen(false);
   }, [pathname]);
 
+  return <SiteHeaderContent pathname={pathname} menuOpen={menuOpen}
+    onToggleMenu={() => setMenuOpen((open) => !open)} onCloseMenu={() => setMenuOpen(false)} />;
+}
+
+export function SiteHeaderFallback() {
+  return <SiteHeaderContent pathname="" menuOpen={false} />;
+}
+
+function SiteHeaderContent({ pathname, menuOpen, onToggleMenu, onCloseMenu }: {
+  pathname: string;
+  menuOpen: boolean;
+  onToggleMenu?: () => void;
+  onCloseMenu?: () => void;
+}) {
   return (
     <header className="site-header">
       <div className="site-header-primary">
@@ -49,7 +63,8 @@ export function SiteHeader() {
           type="button"
           aria-controls="site-header-mobile-menu"
           aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((open) => !open)}
+          onClick={onToggleMenu}
+          disabled={!onToggleMenu}
         >
           {menuOpen ? "Cerrar" : "Menú"}
         </button>
@@ -70,7 +85,7 @@ export function SiteHeader() {
             {sections.map(({ label, href }) => {
               const active = pathname === href || pathname.startsWith(`${href}/`);
               return (
-                <Link className={active ? "site-header-mobile-link is-active" : "site-header-mobile-link"} href={href} aria-current={active ? "page" : undefined} key={href} onClick={() => setMenuOpen(false)}>
+                <Link className={active ? "site-header-mobile-link is-active" : "site-header-mobile-link"} href={href} aria-current={active ? "page" : undefined} key={href} onClick={onCloseMenu}>
                   <span><i aria-hidden="true" />{label}</span>
                   <span aria-hidden="true">→</span>
                 </Link>
@@ -82,11 +97,11 @@ export function SiteHeader() {
               <span>Proyecto independiente</span>
               <small>Ayúdanos a seguir leyendo</small>
             </div>
-            <Link className="site-header-support-button" href="/apoya" aria-current={pathname === "/apoya" ? "page" : undefined} onClick={() => setMenuOpen(false)}>
+            <Link className="site-header-support-button" href="/apoya" aria-current={pathname === "/apoya" ? "page" : undefined} onClick={onCloseMenu}>
               Apoya Batreads
             </Link>
           </div>
-          <Link className="site-header-mobile-latest" href="/listas/ultima" onClick={() => setMenuOpen(false)}>
+          <Link className="site-header-mobile-latest" href="/listas/ultima" onClick={onCloseMenu}>
             <span className="site-header-status-dot" aria-hidden="true" />
             <span>Explora nuestras listas de lectura</span>
             <span className="site-header-arrow" aria-hidden="true">→</span>
