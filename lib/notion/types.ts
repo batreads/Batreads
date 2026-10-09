@@ -36,6 +36,8 @@ export type Story = {
   slug: string;
   notionSlug: string;
   title: string;
+  seoTitle: string;
+  metaDescription: string;
   publishedAt: string | null;
   updatedAt: string | null;
   createdAt: string;

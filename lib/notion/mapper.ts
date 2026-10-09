@@ -61,6 +61,8 @@ export function mapNotionPageToStory(page: NotionPage): Story {
     slug: webSlugByNotionSlug[notionSlug] ?? notionSlug,
     notionSlug,
     title,
+    seoTitle: text(page, "SEO title"),
+    metaDescription: text(page, "SEO Metadescription"),
     publishedAt: page.properties["Fecha publicación"]?.date?.start ?? null,
     updatedAt: page.properties["Última actualización"]?.date?.start ?? null,
     createdAt: page.created_time ?? "",

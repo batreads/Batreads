@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
   if (!story) return { title: "Historia no encontrada · Batreads" };
 
-  const title = `${story.title} · Batreads`;
-  const description = story.hook || story.synopsis || `Descubre ${story.title} en Batreads y encuentra tu próxima lectura.`;
+  const title = story.seoTitle || `${story.title} · Batreads`;
+  const description = story.metaDescription || story.hook || story.synopsis || `Descubre ${story.title} en Batreads y encuentra tu próxima lectura.`;
   const url = `/historias/${story.slug}`;
 
   return {
@@ -80,7 +80,10 @@ export default async function HistoriaPage({
   const relatedStories = stories.filter((item) => item.id !== story.id && story.relatedStoryIds.includes(item.id));
   const authorNames = Object.fromEntries(authors.map((item) => [item.id, item.name]));
   const sagaAuthorNames = saga?.authorIds.map((id) => authorNames[id]).filter(Boolean).join(", ") || undefined;
-  const relatedPages = seoPages.filter((page) => storiesForSeoPage(page, stories, authors, sagas).some((item) => item.id === story.id));
+  const relatedPages = seoPages.filter((page) =>
+    page.mainStoryIds.includes(story.id)
+    || storiesForSeoPage(page, stories, authors, sagas).some((item) => item.id === story.id)
+  );
   const wattpadUrl = story.officialUrl && /^https?:\/\/(?:www\.)?wattpad\.com(?:\/|$)/i.test(story.officialUrl)
     ? story.officialUrl : null;
   const heroActions = (story.amazonUrl || wattpadUrl) ? (
