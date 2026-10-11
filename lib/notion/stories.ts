@@ -1,10 +1,13 @@
 import { isNotionPage, notionRequest } from "./client";
 import {
+  filterValues,
   isPublishedStoryPage,
   mapNotionPageToStory,
   notionSlugForWebSlug,
 } from "./mapper";
 import { getNotionPageTitle, validSlug } from "./properties";
+import { relationIds, select } from "./properties";
+import type { SagaStorySignal } from "../saga-list-recommendations";
 import { queryPages } from "./query";
 import type { Story } from "./types";
 
@@ -14,6 +17,17 @@ const publicationFilter = {
     { property: "Estado ficha", select: { equals: "Publicada" } },
   ],
 };
+
+// Classification signals only: unpublished stories never expose a public URL.
+export async function getSagaStorySignals(sagaId: string): Promise<SagaStorySignal[]> {
+  const pages = await queryPages("HISTORIAS", { property: "Saga", relation: { contains: sagaId } });
+  return pages.filter((page) => !page.archived && !page.in_trash && select(page, "Estado ficha") !== "Descartada")
+    .map((page) => ({
+      id: page.id,
+      authorId: relationIds(page, "Autora")[0] ?? null,
+      filterValues: filterValues(page),
+    }));
+}
 
 export async function getStories(): Promise<Story[]> {
   const [pages, authors, sagas] = await Promise.all([

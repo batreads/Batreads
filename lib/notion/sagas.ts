@@ -2,16 +2,11 @@ import { imageUrl, number, relationIds, select, text, validSlug } from "./proper
 import { queryPages } from "./query";
 import { getStories } from "./stories";
 import type { NotionPage, Saga } from "./types";
+import { parseBookTitles } from "../saga-reading-order";
 
 const verifiedBookTitles: Record<string, string[]> = {
   "universidad-spine-ridge": ["Sick Boys", "Evil Boys", "Vile Boys", "Boys Who Hunt", "Boys Who Taint", "Boys Who Crave"],
 };
-
-function bookTitles(value: string): string[] {
-  return value.split(/\r?\n|<br\s*\/?>/i)
-    .map((line) => line.trim().replace(/^\d+[.)]\s*/, ""))
-    .filter(Boolean);
-}
 
 function parseFaqs(value: string): Saga["faqs"] {
   return value.split(/<br\s*\/?>(?:\s*<br\s*\/?>)+|\n\s*\n/i)
@@ -27,7 +22,11 @@ export function mapSaga(page: NotionPage, storiesBySaga: Map<string, string[]>):
   const name = text(page, "Nombre");
   const slug = text(page, "Slug");
   if (!name || !validSlug(slug)) throw new Error(`Saga ${page.id} sin nombre o slug válido.`);
-  const configuredTitles = bookTitles(text(page, "Títulos en orden"));
+  const configuredTitles = parseBookTitles(text(page, "Títulos en orden"));
+  const verifiedTitles = verifiedBookTitles[slug] ?? [];
+  // Complete an existing verified sequence only when Notion contains its matching prefix.
+  const bookTitles = configuredTitles.every((title, index) => title === verifiedTitles[index])
+    ? verifiedTitles : configuredTitles;
   return {
     id: page.id,
     slug,
@@ -44,7 +43,7 @@ export function mapSaga(page: NotionPage, storiesBySaga: Map<string, string[]>):
     sagaType: select(page, "Tipo de saga"),
     status: select(page, "Estado saga"),
     bookCount: number(page, "N.º libros"),
-    bookTitles: configuredTitles.length > 0 ? configuredTitles : verifiedBookTitles[slug] ?? [],
+    bookTitles,
     spanishAvailability: select(page, "Disponible en español"),
     kindleUnlimited: select(page, "Kindle Unlimited"),
     standalone: select(page, "¿Autoconclusivos?"),

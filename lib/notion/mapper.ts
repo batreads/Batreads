@@ -15,7 +15,7 @@ function coverUrl(page: NotionPage): string | null {
   return imageSource(url(page, "Portada URL"));
 }
 
-function filterValues(page: NotionPage): Record<string, string[]> {
+export function filterValues(page: NotionPage): Record<string, string[]> {
   const fields = [
     "Subgénero", "Tropes", "KU España", "Relación", "Ritmo", "Arquetipo LI",
     "Dinámicas de relación", "Popularidad", "Plataforma", "Autora", "Saga",
