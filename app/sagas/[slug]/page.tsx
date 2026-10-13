@@ -102,8 +102,8 @@ export default async function SagaPage({ params }: PageProps) {
   const signals = await getSagaStorySignals(saga.id);
   const listRecommendations = sagaListRecommendations(seoPages, signals, saga, authors);
   const relatedLists = listRecommendations.pages.slice(0, Math.max(0, 3 - relatedSagas.length));
-  const firstBook = sagaStories[0];
   const bookSlots = sagaReadingOrder(saga, sagaStories);
+  const firstBook = bookSlots[0]?.story;
   const total = bookSlots.length;
   const hasProgress = total > 0 && sagaStories.length > 0 && sagaStories.length <= total;
   const covers = sagaStories.filter((story) => story.coverUrl).slice(0, 3);
@@ -144,7 +144,7 @@ export default async function SagaPage({ params }: PageProps) {
             {saga.bookRelationship ? <li><img src="/icons/hero-ku.svg" alt="" width="14" height="14" />{saga.bookRelationship}</li> : null}
           </ul>
           <div className="saga-actions">
-            {firstBook ? <Link className="saga-button saga-button-primary" href={`/historias/${firstBook.slug}`}>Empezar la saga <span aria-hidden="true">→</span></Link> : null}
+            {firstBook?.amazonUrl ? <a className="saga-button saga-button-primary" href={firstBook.amazonUrl} target="_blank" rel="noopener noreferrer" aria-label={`Ver en Amazon: ${firstBook.title} (abre en una pestaña nueva)`}>Ver en Amazon <span aria-hidden="true">↗</span></a> : null}
             {bookSlots.length > 0 ? <a className="saga-button" href="#orden">Ver orden de lectura <span aria-hidden="true">↓</span></a> : null}
           </div>
         </div>
@@ -194,7 +194,7 @@ export default async function SagaPage({ params }: PageProps) {
 
       {bookSlots.length > 0 ? (
           <section className="saga-section" id="orden">
-            <div className="saga-section-heading"><div><p className="saga-kicker">Tu ruta por la saga</p><h2>Libros de {saga.name} en orden</h2></div>{saga.readingOrder ? <span className="saga-heading-note">Orden de lectura: {saga.readingOrder.toLowerCase()}</span> : null}</div>
+            <div className="saga-section-heading"><div><p className="saga-kicker">Tu ruta por la saga</p><h2>Libros de {saga.name} en orden</h2></div></div>
             {saga.whyReadInOrder ? <div className="saga-order-explainer">{paragraphs(saga.whyReadInOrder).map((part) => <p key={part}>{part}</p>)}</div> : null}
             {hasProgress ? <div className="saga-progress" aria-label={`${sagaStories.length} de ${total} fichas disponibles en Batreads`}><strong>{sagaStories.length}<span> / {total}</span></strong><span>fichas disponibles en Batreads</span><div className="saga-progress-track"><span style={{ width: `${Math.min(100, sagaStories.length / total * 100)}%` }} /></div></div> : null}
             <div className="saga-books" id="libros">{bookSlots.map(({ story, title, position }) => <SagaBook key={position} story={story} number={position} title={title ?? undefined} />)}</div>
