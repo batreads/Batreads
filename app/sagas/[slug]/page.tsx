@@ -209,7 +209,7 @@ export default async function SagaPage({ params }: PageProps) {
           {relatedSagas.map((entry) => <Link className="home-list-card author-discover-card saga-related-card" href={`/sagas/${entry.slug}`} key={entry.id}>
               <span className="home-list-card-label">De la misma autora</span>
               <h3>{entry.name}</h3>
-              {entry.summary || entry.intro || entry.description ? <p>{paragraphs(entry.summary || entry.intro || entry.description)[0]}</p> : null}
+              {entry.summaryCards ? <p>{paragraphs(entry.summaryCards)[0]}</p> : null}
               <span className="saga-related-action">Explorar saga <span aria-hidden="true">→</span></span>
             </Link>)}
           {relatedLists.map((page) => <Link className="home-list-card author-discover-card saga-related-card" href={page.path} key={page.id}>
