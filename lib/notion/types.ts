@@ -114,7 +114,7 @@ export type Saga = {
   slug: string;
   name: string;
   h1: string;
-  summary: string;
+  summaryCards: string;
   updatedAt: string | null;
   description: string;
   intro: string;

@@ -26,8 +26,7 @@ export function SagaCard({ saga, stories, authorName, authors = [], showDiscover
   const byline = authorName || [...new Set(stories.map((story) => story.authorName).filter(Boolean))].join(", ");
   const genre = stories.flatMap((story) => story.subgenres)
     .find((value) => value.trim().toLocaleLowerCase("es") !== "dark romance") ?? saga.sagaType;
-  const sourceDescription = (saga.intro || saga.description).replace(/<br\s*\/?>/gi, " ").trim();
-  const description = sourceDescription;
+  const description = saga.summaryCards.replace(/<br\s*\/?>/gi, " ").trim();
   const sagaAuthors = authors.filter((author) => saga.authorIds.includes(author.id) || stories.some((story) => story.authorId === author.id));
   const linkedAuthorNames = new Set(sagaAuthors.map((author) => author.name));
   const otherAuthorNames = [...new Set(stories.map((story) => story.authorName).filter((name): name is string => Boolean(name) && !linkedAuthorNames.has(name!)))];
