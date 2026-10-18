@@ -1,5 +1,5 @@
 .catalog:global(.list-index-page) :global(.breadcrumbs) {
-  margin-bottom: 48px;
+  margin-bottom: 24px;
 }
 
 .catalog:global(.list-index-page) :global(.page-heading) {
@@ -15,7 +15,7 @@
 
 .catalog:global(.list-index-page) :global(.page-heading) h1 {
   margin: 0 0 12px;
-  font-size: clamp(50px, 4.5vw, 68px);
+  font-size: clamp(40px, 4.5vw, 48px);
   letter-spacing: -.04em;
   line-height: 1.05;
 }
@@ -98,7 +98,7 @@
   }
 
   .catalog:global(.list-index-page) :global(.page-heading) h1 {
-    font-size: clamp(42px, 11vw, 54px);
+    font-size: clamp(32px, 9vw, 36px);
   }
 
   .catalog:global(.list-index-page) :global(.page-heading) > p:last-child {

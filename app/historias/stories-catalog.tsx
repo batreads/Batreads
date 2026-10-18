@@ -181,17 +181,21 @@ export function StoriesCatalog({
     <>
       <header className="page-heading">
         <h1>{heading}</h1>
-        <p>Explora los libros de dark romance en español que hemos leído en Batreads. Filtra el catálogo por tropes, nivel de oscuridad, spice o toxicidad, y ordena los resultados según tus preferencias. Puedes comparar las valoraciones y abrir cada ficha para consultar sus warnings y otros detalles antes de decidir qué historia quieres leer.</p>
+        <p>Encuentra tu próxima lectura por oscuridad, spice y tropes. Consulta las valoraciones y los warnings de cada libro.</p>
       </header>
 
       <section className="stories-filter-shell" aria-label="Filtros de libros">
-        <div className="stories-filter-head">
-          <div className="stories-filter-summary" aria-label="Filtros aplicados">
-            <div className="stories-filter-intro">
-              <span className="stories-filter-kicker">Encuentra tu próxima lectura</span>
-              <span className="stories-filter-title">{activeCount === 0 ? "Explora a tu manera" : "Tu selección"}</span>
-            </div>
-            {activeCount > 0 ? <div className="stories-filter-chips">
+        <div className="stories-results-bar stories-catalog-toolbar">
+          <p role="status">{total} {total === 1 ? "libro" : "libros"}{activeCount > 0 || hasMood ? (total === 1 ? " encontrado" : " encontrados") : " para explorar"}</p>
+        <label><select aria-label="Ordenar libros" value={sort} onChange={(event) => updateUrl((params) => {
+          if (event.target.value === "recommended") params.delete("sort");
+          else params.set("sort", event.target.value);
+        })}>{Object.entries(sortLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
+            <button className="stories-filter-toggle" type="button" aria-expanded={panelOpen} aria-controls="stories-filter-panel" onClick={() => { setPanelOpen(!panelOpen); setOpenFilter(null); }}>
+              <span aria-hidden="true">☷</span> Filtros {activeCount > 0 ? <span className="stories-filter-count">{activeCount}</span> : null}<span className="stories-filter-chevron" aria-hidden="true">⌄</span>
+            </button>
+        </div>
+            {activeCount > 0 ? <div className="stories-filter-chips" aria-label="Filtros aplicados">
               {trope ? <span className="stories-filter-chip">Trope: <strong>{trope}</strong><button type="button" onClick={() => removeContext("trope")} aria-label={`Quitar trope ${trope}`}>×</button></span> : null}
               {definitions.filter(({ key }) => selected[key].length > 0).map(({ key, label }) => (
                 <span className="stories-filter-chip" key={key}>
@@ -199,15 +203,11 @@ export function StoriesCatalog({
                   <button type="button" onClick={() => removeGroup(key)} aria-label={`Quitar filtro ${label}`}>×</button>
                 </span>
               ))}
+              {wattpadAvailable ? <span className="stories-filter-chip">Wattpad<button type="button" onClick={() => toggleAvailability("wattpad", false)} aria-label="Quitar filtro Wattpad">×</button></span> : null}
+              {kindleUnlimitedAvailable ? <span className="stories-filter-chip">Kindle Unlimited<button type="button" onClick={() => toggleAvailability("kindle-unlimited", false)} aria-label="Quitar filtro Kindle Unlimited">×</button></span> : null}
+              <button className="stories-filter-clear" type="button" onClick={clearAll}>Limpiar todo</button>
             </div> : null}
-          </div>
-          <div className="stories-filter-actions">
-            {activeCount > 0 ? <button className="stories-filter-clear" type="button" onClick={clearAll}>Limpiar todo</button> : null}
-            <button className="stories-filter-toggle" type="button" aria-expanded={panelOpen} aria-controls="stories-filter-panel" onClick={() => { setPanelOpen(!panelOpen); setOpenFilter(null); }}>
-              <span aria-hidden="true">☷</span> Filtros {activeCount > 0 ? <span className="stories-filter-count">{activeCount}</span> : null}<span className="stories-filter-chevron" aria-hidden="true">⌄</span>
-            </button>
-          </div>
-        </div>
+
         {panelOpen ? (
           <div className="stories-filter-panel" id="stories-filter-panel" ref={filterAreaRef}>
             <div className="stories-filter-grid">
@@ -254,16 +254,12 @@ export function StoriesCatalog({
         ) : null}
       </section>
 
-      <div className="stories-results-bar" ref={resultsRef}>
-        <p role="status"><strong>{total}</strong> {total === 1 ? "libro encontrado" : "libros encontrados"}{total > STORIES_PER_PAGE ? ` · Mostrando ${(page - 1) * STORIES_PER_PAGE + 1}–${Math.min(page * STORIES_PER_PAGE, total)}` : ""}</p>
-        <label>Ordenar: <select value={sort} onChange={(event) => updateUrl((params) => {
-          if (event.target.value === "recommended") params.delete("sort");
-          else params.set("sort", event.target.value);
-        })}>{Object.entries(sortLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
-      </div>
+      <div ref={resultsRef} className="stories-results-anchor" />
       {total > 0 ? <>
         <StoryGrid stories={stories} authorNames={authorNames} />
-        {pageCount > 1 ? <nav className="stories-pagination" aria-label="Paginación de libros">
+        {pageCount > 1 ? <>
+        <p className="stories-results-range">Mostrando {(page - 1) * STORIES_PER_PAGE + 1}–{Math.min(page * STORIES_PER_PAGE, total)} de {total}</p>
+        <nav className="stories-pagination" aria-label="Paginación de libros">
           {page > 1
             ? <Link href={pageHref(page - 1)} scroll={false} onNavigate={() => { shouldScrollToResultsRef.current = true; }}>← Anterior</Link>
             : <span className="stories-pagination-disabled" aria-disabled="true">← Anterior</span>}
@@ -276,7 +272,8 @@ export function StoriesCatalog({
           {page < pageCount
             ? <Link href={pageHref(page + 1)} scroll={false} onNavigate={() => { shouldScrollToResultsRef.current = true; }}>Siguiente →</Link>
             : <span className="stories-pagination-disabled" aria-disabled="true">Siguiente →</span>}
-        </nav> : null}
+        </nav>
+        </> : null}
       </> : (
         <div className="stories-no-results">
           <h2>No hay libros para esta selección</h2>

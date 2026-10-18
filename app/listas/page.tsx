@@ -84,7 +84,6 @@ export default async function ListasPage() {
       }} />
       <Breadcrumbs items={[{ label: "Listas" }]} />
       <header className="page-heading">
-        <p className="eyebrow">Selecciones editoriales</p>
         <h1>{heading}</h1>
         <p>{intro}</p>
       </header>

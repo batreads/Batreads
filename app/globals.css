@@ -1558,6 +1558,10 @@ body:has(.story-page) {
   line-height: 1.5;
 }
 
+main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list-index-page) .breadcrumbs {
+  margin-bottom: 24px;
+}
+
 .breadcrumbs ol {
   display: flex;
   flex-wrap: wrap;
@@ -1862,7 +1866,7 @@ body:has(.story-page) {
 .stories-catalog-page .page-heading h1 {
   margin: 0 0 12px;
   font-family: var(--font-display);
-  font-size: clamp(50px, 4.5vw, 68px);
+  font-size: clamp(40px, 4.5vw, 48px);
   font-weight: 700;
   letter-spacing: -.04em;
   line-height: 1.05;
@@ -1875,12 +1879,8 @@ body:has(.story-page) {
 }
 
 .stories-filter-shell {
-  margin-bottom: 26px;
+  margin-bottom: 20px;
   overflow: visible;
-  border: 1px solid #285653;
-  border-radius: 22px;
-  background: linear-gradient(125deg, rgb(99 230 190 / 7%), transparent 42%), #0d2022;
-  box-shadow: 0 20px 42px rgb(0 0 0 / 16%);
 }
 
 .stories-filter-head {
@@ -1926,6 +1926,7 @@ body:has(.story-page) {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  margin-top: 12px;
 }
 
 .stories-filter-clear,
@@ -1990,15 +1991,13 @@ body:has(.story-page) {
   flex: none;
   align-items: center;
   gap: 8px;
-  min-height: 50px;
-  padding: 12px 17px;
-  border: 1px solid #87eac6;
-  border-radius: 13px;
-  background: linear-gradient(#b9f6e2, #93e8cb);
-  box-shadow: 0 6px 20px rgb(0 0 0 / 18%);
-  color: #08201d;
-  font-size: 14px;
-  font-weight: 800;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--page-border);
+  border-radius: 8px;
+  background: var(--page-surface);
+  color: var(--page-text);
+  font: inherit;
   cursor: pointer;
 }
 
@@ -2019,9 +2018,10 @@ body:has(.story-page) {
 }
 
 .stories-filter-panel {
+  margin-top: 16px;
   padding: 22px 26px 26px;
-  border-top: 1px solid #28504a;
-  border-radius: 0 0 22px 22px;
+  border: 1px solid #28504a;
+  border-radius: 16px;
   background: rgb(3 18 19 / 30%);
 }
 
@@ -2218,6 +2218,60 @@ body:has(.story-page) {
 
 .stories-results-bar p {
   margin: 0;
+}
+
+.stories-results-bar.stories-catalog-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.stories-catalog-toolbar > label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stories-catalog-toolbar select {
+  min-height: 44px;
+}
+
+.stories-results-anchor {
+  scroll-margin-top: 24px;
+}
+
+.stories-results-range {
+  margin: 24px 0 0;
+  color: var(--page-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.stories-catalog-toolbar > label > select {
+  margin-left: 0;
+}
+
+@media (max-width: 600px) {
+  .stories-results-bar.stories-catalog-toolbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+  }
+
+  .stories-catalog-toolbar > label {
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .stories-catalog-toolbar > p {
+    grid-column: 1 / -1;
+  }
+
+  .stories-catalog-toolbar select {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .stories-results-bar strong {
@@ -2537,7 +2591,7 @@ body:has(.story-page) {
   }
 
   .stories-catalog-page .page-heading h1 {
-    font-size: clamp(42px, 11vw, 54px);
+    font-size: clamp(32px, 9vw, 36px);
   }
 
   .stories-catalog-page .page-heading > p:last-child {
@@ -3197,7 +3251,7 @@ body:has(.story-page) {
 .authors-catalog-page .page-heading h1 {
   margin: 0 0 12px;
   font-family: var(--font-display);
-  font-size: clamp(50px, 4.5vw, 68px);
+  font-size: clamp(40px, 4.5vw, 48px);
   font-weight: 700;
   letter-spacing: -.04em;
   line-height: 1.05;
@@ -3364,7 +3418,7 @@ body:has(.story-page) {
   }
 
   .authors-catalog-page .page-heading h1 {
-    font-size: clamp(42px, 11vw, 54px);
+    font-size: clamp(32px, 9vw, 36px);
   }
 
   .authors-catalog-page .page-heading > p:last-child {

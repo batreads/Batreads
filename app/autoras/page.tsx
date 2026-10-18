@@ -82,7 +82,6 @@ export default async function AutorasPage() {
       }} />
       <Breadcrumbs items={[{ label: "Autoras" }]} />
       <header className="page-heading">
-        <p className="eyebrow">Nombres detrás de las historias</p>
         <h1>{heading}</h1>
         <p>{intro}</p>
       </header>

@@ -33,7 +33,6 @@ export default async function SagasPage() {
     <main className="catalog-page sagas-catalog-page">
       <Breadcrumbs items={[{ label: "Sagas" }]} structuredDataPath="/sagas" />
       <header className="page-heading">
-        <p className="eyebrow">Universos para explorar</p>
         <h1>Sagas de dark romance y su orden de lectura</h1>
         <p>Encuentra tu próxima saga de dark romance. Descubre sus libros y autoras, consulta por dónde empezar y conoce cómo se conectan sus historias: desde romances autoconclusivos en un mismo universo hasta series que siguen a la misma pareja.</p>
       </header>
