@@ -39,6 +39,7 @@ export type Story = {
   seoTitle: string;
   metaDescription: string;
   publishedAt: string | null;
+  batreadsPublishedAt: string | null;
   updatedAt: string | null;
   createdAt: string;
   authorId: string | null;

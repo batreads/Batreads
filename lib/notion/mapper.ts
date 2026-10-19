@@ -64,6 +64,7 @@ export function mapNotionPageToStory(page: NotionPage): Story {
     seoTitle: text(page, "SEO title"),
     metaDescription: text(page, "SEO Metadescription"),
     publishedAt: page.properties["Fecha publicación"]?.date?.start ?? null,
+    batreadsPublishedAt: page.properties["Fecha publicación en Batreads"]?.date?.start ?? null,
     updatedAt: page.properties["Última actualización"]?.date?.start ?? null,
     createdAt: page.created_time ?? "",
     authorId: relationIds(page, "Autora")[0] ?? null,

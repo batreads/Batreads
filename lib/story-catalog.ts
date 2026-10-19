@@ -1,4 +1,5 @@
 import { getMood, moodFilters } from "@/lib/moods";
+import { compareBatreadsPublication } from "@/lib/notion/recent-stories";
 import type { Story } from "@/lib/notion";
 
 export const STORIES_PER_PAGE = 10;
@@ -83,11 +84,7 @@ export function matchesGroup(story: Story, key: FilterKey, values: string[]) {
 
 export function sortStories(stories: Story[], sort: SortKey) {
   if (sort === "recommended") {
-    return [...stories].sort((a, b) =>
-      (b.publishedAt ?? b.createdAt).localeCompare(a.publishedAt ?? a.createdAt)
-      || b.createdAt.localeCompare(a.createdAt)
-      || a.title.localeCompare(b.title, "es"),
-    );
+    return [...stories].sort(compareBatreadsPublication);
   }
   return [...stories].sort((a, b) => {
     if (sort === "title") return a.title.localeCompare(b.title, "es");
