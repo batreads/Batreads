@@ -12,7 +12,7 @@ export const moods = [
 ] as const;
 
 export type Mood = (typeof moods)[number];
-export type MoodFilterKey = "subgenre" | "tropes" | "relationship" | "rhythm" | "rating" | "dark" | "spicy" | "toxicity" | "violence" | "plot";
+export type MoodFilterKey = "subgenre" | "tropes" | "relationship" | "rhythm" | "dark" | "spicy" | "toxicity" | "violence" | "plot";
 
 export const moodFilters: Record<Mood["slug"], Partial<Record<MoodFilterKey, string[]>>> = {
   spice: { spicy: ["4", "5"] },
@@ -38,7 +38,6 @@ export function matchesMood(story: Story, mood: Mood): boolean {
       case "toxicity": return story.toxicity !== null && values.includes(String(story.toxicity));
       case "violence": return story.violence !== null && values.includes(String(story.violence));
       case "plot": return story.plot !== null && values.includes(String(story.plot));
-      case "rating": return story.rating !== null && values.some((value) => story.rating! >= Number(value));
     }
   });
 }

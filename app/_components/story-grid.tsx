@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Story } from "@/lib/notion";
-import { StoryCardRating } from "./story-card-rating";
 import { EditorialImage } from "./editorial-image";
 
 export function StoryGrid({
@@ -40,7 +39,6 @@ export function StoryGrid({
               <div className="story-card-copy">
                 <Heading>{story.title}</Heading>
                 {author ? <p className="story-card-author">{author}</p> : null}
-                {story.rating !== null ? <StoryCardRating rating={story.rating} /> : null}
                 {description ? <p className="story-card-description">{description}</p> : null}
               </div>
               {subgenre || trope ? (

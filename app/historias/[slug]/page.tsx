@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { notFound } from "next/navigation";
 import { StoryGrid } from "../../_components/story-grid";
-import { StoryCardRating } from "../../_components/story-card-rating";
 import { SagaCard } from "../../_components/saga-card";
 import { getAuthors, getSagas, getSeoPages, getStories, getStoryBySlug, storiesForSeoPage, type Story } from "@/lib/notion";
 import { EditorialImage } from "../../_components/editorial-image";
@@ -106,18 +105,9 @@ export default async function HistoriaPage({
       Disponible en Kindle Unlimited
     </p>
   ) : null;
-  const heroTopline = (story.rating !== null || isHiddenGem) ? (
+  const heroTopline = isHiddenGem ? (
     <div className="story-hero-topline">
-      {story.rating !== null ? (
-        <div className="story-hero-rating">
-          <strong className="story-hero-rating-value" aria-hidden="true">{score(story.rating)}</strong>
-          <div className="story-hero-rating-detail">
-            <span className="story-hero-rating-label">Puntuación de Batreads</span>
-            <StoryCardRating rating={story.rating} />
-          </div>
-        </div>
-      ) : null}
-      {isHiddenGem ? <span className="story-hero-gem"><img src="/icons/gem.svg" alt="" width="16" height="16" />Hidden Gem</span> : null}
+      <span className="story-hero-gem"><img src="/icons/gem.svg" alt="" width="16" height="16" />Hidden Gem</span>
     </div>
   ) : null;
 
@@ -233,7 +223,6 @@ export default async function HistoriaPage({
         slug: story.slug,
         title: story.title,
         authorName: author?.name || story.authorName,
-        rating: story.rating,
         spice: story.spice,
         tropes: story.tropes,
         subgenres: story.subgenres,

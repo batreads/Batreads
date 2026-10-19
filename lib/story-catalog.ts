@@ -4,12 +4,11 @@ import type { Story } from "@/lib/notion";
 
 export const STORIES_PER_PAGE = 10;
 
-export type FilterKey = "subgenre" | "tropes" | "relationship" | "rhythm" | "rating" | "dark" | "spicy" | "toxicity" | "violence" | "plot";
+export type FilterKey = "subgenre" | "tropes" | "relationship" | "rhythm" | "dark" | "spicy" | "toxicity" | "violence" | "plot";
 export type SortKey = "recommended" | "rating" | "dark" | "spicy" | "title";
 export type FilterDefinition = { key: FilterKey; label: string; options: string[] };
 
-export const filterKeys: FilterKey[] = ["subgenre", "tropes", "relationship", "rhythm", "rating", "dark", "spicy", "toxicity", "violence", "plot"];
-export const ratingOptions = ["3", "3.5", "4", "4.5"];
+export const filterKeys: FilterKey[] = ["subgenre", "tropes", "relationship", "rhythm", "dark", "spicy", "toxicity", "violence", "plot"];
 export const sortLabels: Record<SortKey, string> = {
   recommended: "Últimas añadidas",
   rating: "Mejor valoradas",
@@ -49,7 +48,6 @@ export function getFilterDefinitions(stories: Story[]): FilterDefinition[] {
     { key: "tropes", label: "Tropes", options: textOptions(stories, "tropes") },
     { key: "relationship", label: "Relación", options: textOptions(stories, "relationshipTypes") },
     { key: "rhythm", label: "Ritmo", options: rhythmOptions(stories) },
-    { key: "rating", label: "Valoración", options: ratingOptions },
     { key: "dark", label: "Dark", options: levelOptions(stories, "darkness") },
     { key: "spicy", label: "Spicy", options: levelOptions(stories, "spice") },
     { key: "toxicity", label: "Toxicidad", options: levelOptions(stories, "toxicity") },
@@ -73,7 +71,6 @@ export function matchesGroup(story: Story, key: FilterKey, values: string[]) {
     case "tropes": return values.some((value) => story.tropes.includes(value));
     case "relationship": return values.some((value) => story.relationshipTypes.includes(value));
     case "rhythm": return values.some((value) => (story.filterValues["Ritmo"] ?? []).includes(value));
-    case "rating": return story.rating !== null && values.some((value) => story.rating! >= Number(value));
     case "dark": return story.darkness !== null && values.some((value) => story.darkness === Number(value));
     case "spicy": return story.spice !== null && values.some((value) => story.spice === Number(value));
     case "toxicity": return story.toxicity !== null && values.some((value) => story.toxicity === Number(value));

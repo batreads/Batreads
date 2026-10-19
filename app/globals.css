@@ -1775,48 +1775,6 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   line-height: 1.2;
 }
 
-.story-card-rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 6px;
-  color: #63e6be;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.story-card-rating-stars {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.story-card-rating-star {
-  width: 17px;
-  height: 17px;
-  fill: none;
-  stroke: #61867e;
-  stroke-linejoin: round;
-  stroke-width: 1.5;
-}
-
-.story-card-rating-star.is-filled {
-  fill: #63e6be;
-  stroke: #63e6be;
-}
-
-.story-card-rating-score {
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0;
-}
-
-.story-card-rating-score span {
-  color: var(--card-muted);
-  font-size: 12px;
-  font-weight: 400;
-}
-
 .story-card-taxonomy {
   display: flex;
   max-width: 100%;
@@ -2649,56 +2607,6 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   gap: 12px;
 }
 
-.story-hero-rating {
-  display: flex;
-  min-height: 86px;
-  align-items: center;
-  gap: 16px;
-  padding: 10px 18px;
-  border: 1px solid var(--page-border);
-  border-radius: 12px;
-  background: var(--page-surface);
-}
-
-.story-hero-rating-value {
-  color: #a4ead6;
-  font-family: var(--font-display);
-  font-size: 3.35rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.story-hero-rating-detail {
-  display: flex;
-  min-height: 56px;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-  padding-left: 16px;
-  border-left: 1px solid #476b67;
-}
-
-.story-hero-rating-label {
-  color: #d3e3dc;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.story-hero-rating .story-card-rating {
-  margin: 0;
-}
-
-.story-hero-rating .story-card-rating-star {
-  width: 22px;
-  height: 22px;
-}
-
-.story-hero-rating .story-card-rating-score {
-  display: none;
-}
-
 .story-hero-gem {
   display: inline-flex;
   align-items: center;
@@ -3468,10 +3376,6 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
     margin-top: 0;
   }
 
-  .story-cover-topline .story-hero-rating {
-    background: rgb(12 34 36 / 93%);
-  }
-
   .story-page:not(.story-page-no-cover) .story-hero-info > .story-hero-topline {
     display: none;
   }
@@ -3526,15 +3430,6 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
     order: 3;
     align-items: center;
     margin-top: 20px;
-  }
-
-  .story-hero-rating {
-    min-height: 70px;
-    padding: 8px 14px;
-  }
-
-  .story-hero-rating-value {
-    font-size: 2.8rem;
   }
 
   .story-hero-hook {

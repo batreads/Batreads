@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "../../_components/breadcrumbs";
-import { StoryCardRating } from "../../_components/story-card-rating";
 import { SagaFaqItem } from "../../_components/saga-faq-item";
 import { getAuthors, getSagaBySlug, getSagas, getSeoPages, getStories, type Story } from "@/lib/notion";
 import { getSagaStorySignals } from "@/lib/notion/stories";
@@ -63,7 +62,6 @@ function SagaBook({ story, number, title }: { story: Story | null; number: numbe
       <div className="saga-book-copy">
         <p className="saga-kicker">Libro {number}</p>
         <h3><Link href={`/historias/${story.slug}`}>{story.title}</Link></h3>
-        {story.rating !== null ? <StoryCardRating rating={story.rating} /> : null}
         {story.hook ? <p className="saga-book-hook">{story.hook}</p> : null}
         {story.subgenres[0] || story.tropes[0] ? (
           <div className="story-card-taxonomy saga-book-tags">
@@ -88,10 +86,6 @@ export default async function SagaPage({ params }: PageProps) {
 
   const sagaStories = stories.filter((story) => story.sagaId === saga.id)
     .sort((a, b) => (a.sagaNumber ?? Number.MAX_SAFE_INTEGER) - (b.sagaNumber ?? Number.MAX_SAFE_INTEGER) || a.title.localeCompare(b.title, "es"));
-  const ratedStories = sagaStories.filter((story) => story.rating !== null && Number.isFinite(story.rating));
-  const averageRating = ratedStories.length > 0
-    ? Number((ratedStories.reduce((sum, story) => sum + story.rating!, 0) / ratedStories.length).toFixed(1))
-    : null;
   const sagaAuthors = authors.filter((author) => saga.authorIds.includes(author.id) || sagaStories.some((story) => story.authorId === author.id));
   const authorIds = new Set(sagaAuthors.map((author) => author.id));
   const relatedSagas = sagas.filter((entry) => entry.id !== saga.id && (
@@ -160,7 +154,6 @@ export default async function SagaPage({ params }: PageProps) {
       <dl className="saga-facts">
         {saga.status ? <div><dt>Estado</dt><dd>{saga.status}</dd></div> : null}
         {total > 0 ? <div><dt>Libros</dt><dd>{total} {total === 1 ? "libro" : "libros"}</dd></div> : null}
-        <div><dt>Valoración media</dt><dd>{averageRating !== null ? <StoryCardRating rating={averageRating} /> : "Sin valorar"}</dd></div>
         {saga.standalone ? <div><dt>¿Autoconclusivos?</dt><dd>{saga.standalone}</dd></div> : null}
       </dl>
 

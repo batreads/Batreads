@@ -26,7 +26,6 @@ function selectionLabel(key: FilterKey, values: string[]) {
     }
     return levels.map((level) => `${level}/5`).join(", ");
   }
-  if (key === "rating") return values.map((value) => `${value}★ o más`).join(", ");
   return values.join(" o ");
 }
 
@@ -221,7 +220,7 @@ export function StoriesCatalog({
                       {options.length ? options.map((value) => (
                         <label className="stories-filter-option" key={value}>
                           <input type="checkbox" checked={selected[key].includes(value)} onChange={() => toggleOption(key, value, true)} />
-                          <span>{key === "rating" ? `${value}★ o más` : ["dark", "spicy", "toxicity", "violence", "plot"].includes(key) ? `${value}/5` : value}</span>
+                          <span>{["dark", "spicy", "toxicity", "violence", "plot"].includes(key) ? `${value}/5` : value}</span>
                         </label>
                       )) : <p className="stories-filter-no-options">Sin opciones disponibles</p>}
                     </div>
