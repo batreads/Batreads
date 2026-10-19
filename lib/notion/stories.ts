@@ -31,7 +31,9 @@ export async function getSagaStorySignals(sagaId: string): Promise<SagaStorySign
 
 export async function getStories(): Promise<Story[]> {
   const [pages, authors, sagas] = await Promise.all([
-    queryPages("HISTORIAS", publicationFilter),
+    queryPages("HISTORIAS", publicationFilter, [
+      { property: "Fecha publicación en Batreads", direction: "descending" },
+    ]),
     queryPages("AUTORAS"),
     queryPages("SAGAS"),
   ]);

@@ -20,6 +20,7 @@ export function dataSourceId(name: "HISTORIAS" | "AUTORAS" | "SAGAS" | "SEO"): s
 export async function queryPages(
   source: "HISTORIAS" | "AUTORAS" | "SAGAS" | "SEO",
   filter?: Record<string, unknown>,
+  sorts?: { property: string; direction: "ascending" | "descending" }[],
 ): Promise<NotionPage[]> {
   const pages: NotionPage[] = [];
   let cursor: string | null = null;
@@ -29,7 +30,7 @@ export async function queryPages(
       `/data_sources/${dataSourceId(source)}/query`,
       {
         method: "POST",
-        body: { page_size: 100, ...(filter ? { filter } : {}), ...(cursor ? { start_cursor: cursor } : {}) },
+        body: { page_size: 100, ...(filter ? { filter } : {}), ...(sorts ? { sorts } : {}), ...(cursor ? { start_cursor: cursor } : {}) },
       },
     );
     if (response.object !== "list" || !Array.isArray(response.results)) {
