@@ -1,3 +1,4 @@
+import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -198,20 +199,15 @@ export default async function SagaPage({ params }: PageProps) {
 
       {relatedSagas.length > 0 || relatedLists.length > 0 ? <section className="saga-section saga-related">
         <p className="saga-kicker">Sigue explorando</p><h2>{relatedSagas.length > 0 ? `Qué leer después de ${saga.name}` : listRecommendations.fallback ? "Últimas listas de Batreads" : "Listas relacionadas"}</h2>
-        <div className="saga-related-grid">
+        <ListCardGrid>
           {relatedSagas.map((entry) => <Link className="home-list-card author-discover-card saga-related-card" href={`/sagas/${entry.slug}`} key={entry.id}>
               <span className="home-list-card-label">De la misma autora</span>
               <h3>{entry.name}</h3>
               {entry.summaryCards ? <p>{paragraphs(entry.summaryCards)[0]}</p> : null}
               <span className="saga-related-action">Explorar saga <span aria-hidden="true">→</span></span>
             </Link>)}
-          {relatedLists.map((page) => <Link className="home-list-card author-discover-card saga-related-card" href={page.path} key={page.id}>
-            <span className="home-list-card-label">{listRecommendations.fallback ? "Últimas listas de Batreads" : "Lista relacionada"}</span>
-            <h3>{page.heading}</h3>
-            {page.summary || page.description ? <p>{paragraphs(page.summary || page.description)[0]}</p> : null}
-            <span className="saga-related-action">Explorar lista <span aria-hidden="true">→</span></span>
-          </Link>)}
-        </div>
+          {relatedLists.map((page) => <ListCard page={page} stories={stories} key={page.id} />)}
+        </ListCardGrid>
       </section> : null}
     </main>
   );

@@ -1,9 +1,11 @@
+import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import Image from "next/image";
 import Link from "next/link";
-import { getSeoPages } from "@/lib/notion";
+import { getSeoPages, getStories } from "@/lib/notion";
 
 export default async function NotFound() {
-  const lists = (await getSeoPages())
+  const [seoPages, stories] = await Promise.all([getSeoPages(), getStories()]);
+  const lists = seoPages
     .filter((page) => page.section === "listas")
     .sort((a, b) => (b.publishedAt ?? b.createdAt).localeCompare(a.publishedAt ?? a.createdAt))
     .slice(0, 3);
@@ -46,15 +48,11 @@ export default async function NotFound() {
             <Link className="home-section-more" href="/listas">Todas las listas <span aria-hidden="true">→</span></Link>
           </div>
           {lists.length > 0 ? (
-            <div className="home-lists-grid">
+            <ListCardGrid>
               {lists.map((list) => (
-                <Link className="home-list-card" href={list.path} key={list.id}>
-                  <span className="home-list-card-label">Selección editorial</span>
-                  <h3>{list.heading}</h3>
-                  {list.description ? <p>{list.description}</p> : null}
-                </Link>
+                <ListCard page={list} stories={stories} key={list.id} />
               ))}
-            </div>
+            </ListCardGrid>
           ) : <p className="not-found-no-lists">Todavía no hay listas publicadas.</p>}
         </div>
       </section>

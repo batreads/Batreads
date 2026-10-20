@@ -1,8 +1,9 @@
+import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Breadcrumbs, createBreadcrumbList } from "../_components/breadcrumbs";
-import { getSeoPages } from "@/lib/notion";
+import { getSeoPages, getStories } from "@/lib/notion";
 import { websiteOpenGraph } from "@/lib/seo-metadata";
 import { siteUrl } from "@/lib/site-url";
 import styles from "./catalog.module.css";
@@ -44,7 +45,8 @@ const heading = "Listas de dark romance para encontrar tu próxima lectura";
 const intro = "Descubre qué leer según el tipo de historia que buscas. Explora nuestras selecciones de dark romance y libros parecidos a tus favoritos, con recomendaciones que explican sus tropes, oscuridad, spice y avisos de contenido.";
 
 export default async function ListasPage() {
-  const pages = (await getSeoPages())
+  const [seoPages, stories] = await Promise.all([getSeoPages(), getStories()]);
+  const pages = seoPages
     .filter((page) => page.section === "listas")
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt)
       || a.path.localeCompare(b.path, "es")
@@ -88,17 +90,9 @@ export default async function ListasPage() {
         <p>{intro}</p>
       </header>
       {pages.length === 0 ? <p>Todavía no hay listas publicadas.</p> : (
-        <div className="home-lists-grid">{pages.map((page) => {
-          const summary = page.summary.trim() || page.description;
-          return (
-          <Link className="home-list-card author-discover-card" href={page.path} key={page.id}>
-            <span className="home-list-card-label">Selección editorial</span>
-            <h2>{page.heading}</h2>
-            {summary ? <p>{summary}</p> : null}
-            <span className="list-card-link">Explorar lista <span aria-hidden="true">→</span></span>
-          </Link>
-          );
-        })}</div>
+        <ListCardGrid>{pages.map((page) => (
+          <ListCard page={page} stories={stories} headingLevel={2} key={page.id} />
+        ))}</ListCardGrid>
       )}
       <section className={styles.exploration} aria-labelledby="lists-exploration-title">
         <p className="eyebrow">Sigue explorando</p>

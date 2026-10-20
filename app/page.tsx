@@ -1,3 +1,4 @@
+import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import type { Metadata } from "next";
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
@@ -93,15 +94,11 @@ export default async function Home() {
               Todas las listas <Image src="/icons/hero-arrow-secondary.svg" alt="" width={20} height={20} />
             </Link>
           </div>
-          <div className="home-lists-grid">
+          <ListCardGrid>
             {lists.map((page) => (
-              <Link className="home-list-card" href={page.path} key={page.id}>
-                <span className="home-list-card-label">Selección editorial</span>
-                <h3>{page.heading}</h3>
-                {page.description ? <p>{page.description}</p> : null}
-              </Link>
+              <ListCard page={page} stories={stories} key={page.id} />
             ))}
-          </div>
+          </ListCardGrid>
         </div>
       </section>
     </main>

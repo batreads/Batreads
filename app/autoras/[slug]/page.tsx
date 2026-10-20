@@ -1,3 +1,4 @@
+import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -193,16 +194,11 @@ export default async function AutoraPage({ params }: PageProps) {
         <section className="story-section author-discover" aria-labelledby="author-discover-title">
           <p className="eyebrow">Sigue explorando</p>
           <h2 id="author-discover-title">Listas relacionadas con {author.name}</h2>
-          <div className="author-discover-grid">
+          <ListCardGrid>
             {relatedListsForAuthor.map((page) => (
-              <Link className="home-list-card author-discover-card" href={page.path} key={page.id}>
-                <span className="home-list-card-label">Selección editorial</span>
-                <h3>{page.contentTitle}</h3>
-                {page.summary ? <p>{page.summary}</p> : null}
-                <span className="author-discover-action">Explorar lista →</span>
-              </Link>
+              <ListCard page={page} stories={stories} key={page.id} />
             ))}
-          </div>
+          </ListCardGrid>
         </section>
       ) : null}
     </main>

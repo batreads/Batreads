@@ -1,5 +1,5 @@
+import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { AuthorCard } from "../_components/author-card";
 import { Breadcrumbs, createBreadcrumbList } from "../_components/breadcrumbs";
 import { getAuthors, getSagas, getSeoPages, getStories, storiesForSeoPage } from "@/lib/notion";
@@ -94,16 +94,11 @@ export default async function AutorasPage() {
         <section className="authors-related-lists" aria-labelledby="authors-related-lists-title">
           <p className="eyebrow">Sigue explorando</p>
           <h2 id="authors-related-lists-title">Encuentra tu próxima lectura</h2>
-          <div className="authors-related-lists-grid">
+          <ListCardGrid>
             {relatedLists.map((page) => (
-              <Link className="home-list-card author-discover-card" href={page.path} key={page.id}>
-                <span className="home-list-card-label">Lista editorial</span>
-                <h3>{page.heading}</h3>
-                {page.summary ? <p>{page.summary}</p> : null}
-                <span className="author-discover-action">Explorar lista →</span>
-              </Link>
+              <ListCard page={page} stories={stories} key={page.id} />
             ))}
-          </div>
+          </ListCardGrid>
         </section>
       ) : null}
     </main>

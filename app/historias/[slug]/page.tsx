@@ -1,3 +1,4 @@
+import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "../../_components/breadcrumbs";
@@ -203,7 +204,7 @@ export default async function HistoriaPage({
           ) : null}
         </section>
       ) : null}
-      {relatedPages.length > 0 ? <section className="story-section"><h2>Listas relacionadas</h2><ul className="link-list">{relatedPages.map((page) => <li key={page.id}><Link href={page.path}>{page.heading} →</Link></li>)}</ul></section> : null}
+      {relatedPages.length > 0 ? <section className="story-section"><h2>Listas relacionadas</h2><ListCardGrid>{relatedPages.map((page) => <ListCard page={page} stories={stories} key={page.id} />)}</ListCardGrid></section> : null}
 
       <section className="story-section">
         <h2>Datos del libro</h2>

@@ -1,5 +1,5 @@
+import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 import { SagaCard } from "../_components/saga-card";
 import { getAuthors, getSagas, getSeoPages, getStories, storiesForSeoPage } from "@/lib/notion";
@@ -51,14 +51,9 @@ export default async function SagasPage() {
       {relatedLists.length > 0 ? <section className="sagas-related-lists" aria-labelledby="sagas-related-lists-title">
         <p className="eyebrow">Sigue explorando</p>
         <h2 id="sagas-related-lists-title">Listas para encontrar tu próxima saga</h2>
-        <div className="sagas-related-lists-grid">
-          {relatedLists.map((page) => <Link className="home-list-card author-discover-card" href={page.path} key={page.id}>
-            <span className="home-list-card-label">Lista editorial</span>
-            <h3>{page.heading}</h3>
-            {page.summary ? <p>{page.summary}</p> : null}
-            <span className="author-discover-action">Explorar lista →</span>
-          </Link>)}
-        </div>
+        <ListCardGrid>
+          {relatedLists.map((page) => <ListCard page={page} stories={stories} key={page.id} />)}
+        </ListCardGrid>
       </section> : null}
     </main>
   );
