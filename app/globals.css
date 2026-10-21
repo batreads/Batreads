@@ -4420,6 +4420,52 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   line-height: 1.7;
 }
 
+.books-like-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.books-like-hero-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 10px 18px;
+  border: 1px solid #6edcb4;
+  border-radius: 8px;
+  color: #6edcb4;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.books-like-hero-actions .books-like-amazon {
+  background: #6edcb4;
+  color: #0b0f19;
+}
+
+.books-like-hero-actions a:hover {
+  box-shadow: 0 0 0 3px rgb(110 220 180 / 20%);
+}
+
+.books-like-hero-actions a:focus-visible {
+  outline: 2px solid #6edcb4;
+  outline-offset: 3px;
+}
+
+.books-like-page .story-card-actions {
+  margin-top: 10px;
+}
+
+.books-like-page .story-card-actions a {
+  min-height: 42px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
 .books-like-page .editorial-table-wrap a {
   color: var(--page-accent);
   text-decoration: underline;

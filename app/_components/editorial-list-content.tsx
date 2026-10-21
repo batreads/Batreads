@@ -128,7 +128,7 @@ export function EditorialListContent({ blocks, stories, authorNames, booksLike =
             {booksLike && section.title?.startsWith("Preguntas frecuentes")
               ? <FaqList items={faqItemsFromBlocks(section.blocks, notionPathsById)} />
               : renderBlocks(section.blocks, notionPathsById, Object.fromEntries(stories.map((story) => [`/historias/${story.slug}`, story.title])))}
-            {sectionStory ? <div className="editorial-inline-story home-story-cards"><StoryGrid stories={[sectionStory]} authorNames={authorNames} headingLevel={3} /></div> : null}
+            {sectionStory ? <div className="editorial-inline-story home-story-cards"><StoryGrid stories={[sectionStory]} authorNames={authorNames} headingLevel={3} showActions /></div> : null}
           </section>
           {index === gridAfter ? books : null}
         </div>;

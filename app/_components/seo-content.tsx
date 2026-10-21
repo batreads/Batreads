@@ -46,7 +46,7 @@ export async function SeoContent({
   ].map(([id, path]) => [id.replaceAll("-", "").toLowerCase(), path]));
   const booksLike = page.pageType === "BooksLikeLanding";
   const mainStory = booksLike
-    ? page.mainStoryIds.map((id) => stories.find((story) => story.id === id && story.coverUrl)).find(Boolean)
+    ? page.mainStoryIds.map((id) => stories.find((story) => story.id === id)).find(Boolean)
     : undefined;
   const covers = !booksLike && page.section === "listas"
     ? relatedStories.filter((story) => story.coverUrl).slice(0, 4)
@@ -59,15 +59,20 @@ export async function SeoContent({
   return (
     <main className={`catalog-page${page.section === "listas" ? " list-detail-page" : ""}${booksLike ? " books-like-page" : ""}`}>
       <Breadcrumbs items={[{ label: "Listas", href: "/listas" }, { label: page.heading }]} structuredDataPath={page.path} />
-      <header className={`page-heading${covers.length > 0 ? " list-hero-with-covers" : ""}${mainStory ? " books-like-hero" : ""}`}>
+      <header className={`page-heading${covers.length > 0 ? " list-hero-with-covers" : ""}${mainStory?.coverUrl ? " books-like-hero" : ""}`}>
         <div className="list-hero-copy">
           {booksLike ? (page.topic ? <p className="eyebrow">{page.topic}</p> : null) : <p className="eyebrow">Lista editorial</p>}
           <h1>{page.heading}</h1>
           {!booksLike && (page.summary || page.description) ? <p>{page.summary || page.description}</p> : null}
           {heroBlocks.length > 0 ? <EditorialListContent blocks={heroBlocks} stories={relatedStories} authorNames={authorNames} booksLike notionPathsById={notionPathsById} />
             : booksLike && page.intro ? <div className="books-like-hero-intro">{paragraphs(page.intro)}</div> : null}
+          {mainStory ? <nav className="books-like-hero-actions" aria-label={`Explorar ${mainStory.title}`}>
+            <Link href={`/historias/${mainStory.slug}`}>Ver ficha del libro</Link>
+            {mainStory.amazonUrl ? <a className="books-like-amazon" href={mainStory.amazonUrl}
+              target="_blank" rel="sponsored noopener noreferrer">Ver en Amazon <span aria-hidden="true">↗</span></a> : null}
+          </nav> : null}
         </div>
-        {mainStory ? <Link className="books-like-hero-cover" href={`/historias/${mainStory.slug}`}>
+        {mainStory?.coverUrl ? <Link className="books-like-hero-cover" href={`/historias/${mainStory.slug}`}>
           <EditorialImage src={mainStory.coverUrl!} alt={`Portada de ${mainStory.title}`}
             width={240} height={354} sizes="(max-width: 600px) 180px, 240px" loading="eager" fetchPriority="high" />
         </Link> : null}
@@ -81,7 +86,7 @@ export async function SeoContent({
       {editorialBlocks.length > 0 ? <EditorialListContent blocks={contentBlocks} stories={relatedStories} authorNames={authorNames} booksLike={booksLike} notionPathsById={notionPathsById} /> : (
         <>
           {!booksLike && page.intro ? <section className="story-section seo-intro-section"><h2>Introducción</h2>{paragraphs(page.intro)}</section> : null}
-          {relatedStories.length > 0 ? <section className="story-section seo-books-section home-story-cards"><h2>Libros recomendados</h2><StoryGrid stories={relatedStories} authorNames={authorNames} headingLevel={3} /></section> : null}
+          {relatedStories.length > 0 ? <section className="story-section seo-books-section home-story-cards"><h2>Libros recomendados</h2><StoryGrid stories={relatedStories} authorNames={authorNames} headingLevel={3} showActions={booksLike} /></section> : null}
         </>
       )}
       {relatedAuthors.length > 0 ? <section className="story-section"><h2>Autoras relacionadas</h2><ul className="link-list">{relatedAuthors.map((author) => <li key={author.id}><Link href={`/autoras/${author.slug}`}>{author.name} →</Link></li>)}</ul></section> : null}

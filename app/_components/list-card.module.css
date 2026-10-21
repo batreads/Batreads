@@ -4,6 +4,10 @@
   gap: 24px;
 }
 
+:global(.story-page) .listsGrid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .listCard {
   display: grid;
   grid-template-columns: 150px minmax(0, 1fr);

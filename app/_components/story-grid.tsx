@@ -6,10 +6,12 @@ export function StoryGrid({
   stories,
   authorNames = {},
   headingLevel = 2,
+  showActions = false,
 }: {
   stories: Story[];
   authorNames?: Record<string, string>;
   headingLevel?: 2 | 3;
+  showActions?: boolean;
 }) {
   if (stories.length === 0) return <p>Todavía no hay historias publicadas.</p>;
   const Heading = headingLevel === 2 ? "h2" : "h3";
@@ -23,8 +25,8 @@ export function StoryGrid({
         const subgenre = story.subgenres.find((value) => value.trim().toLocaleLowerCase("es") !== "dark romance") ?? story.subgenres[0];
         const trope = story.tropes[0];
 
-        return (
-          <Link className={isHiddenGem ? "story-card story-card-hidden-gem" : "story-card"} href={`/historias/${story.slug}`} key={story.id}>
+        const content = (
+          <>
             <div className="story-card-cover">
               {story.coverUrl ? <EditorialImage src={story.coverUrl} alt="" width={116} height={177}
                 sizes="(max-width: 600px) 86px, 116px" loading="lazy" /> : null}
@@ -59,9 +61,18 @@ export function StoryGrid({
                   </div>
                 </div>
               ) : null}
+              {showActions ? <nav className="books-like-hero-actions story-card-actions" aria-label={`Explorar ${story.title}`}>
+                <Link href={`/historias/${story.slug}`}>Ver ficha del libro</Link>
+                {story.amazonUrl ? <a className="books-like-amazon" href={story.amazonUrl}
+                  target="_blank" rel="sponsored noopener noreferrer">Ver en Amazon <span aria-hidden="true">↗</span></a> : null}
+              </nav> : null}
             </div>
-          </Link>
+          </>
         );
+        const className = isHiddenGem ? "story-card story-card-hidden-gem" : "story-card";
+        return showActions
+          ? <article className={className} key={story.id}>{content}</article>
+          : <Link className={className} href={`/historias/${story.slug}`} key={story.id}>{content}</Link>;
       })}
     </div>
   );
