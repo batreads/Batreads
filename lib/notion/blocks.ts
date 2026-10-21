@@ -22,9 +22,20 @@ type BlockList = {
   next_cursor: string | null;
 };
 
+type EditorialText = { text: string; href: string | null; bold: boolean; italic: boolean };
+
+function mapRichText(parts: NotionRichText[]): EditorialText[] {
+  return parts.map((part) => ({
+    text: part.plain_text ?? part.text?.content ?? "",
+    href: part.href ?? part.text?.link?.url ?? null,
+    bold: part.annotations?.bold ?? false,
+    italic: part.annotations?.italic ?? false,
+  }));
+}
+
 export type EditorialBlock =
-  | { id: string; type: "paragraph" | "callout" | "heading_2" | "heading_3" | "bulleted_list_item" | "numbered_list_item"; text: string; richText: { text: string; href: string | null; bold: boolean; italic: boolean }[] }
-  | { id: string; type: "table"; rows: string[][]; hasHeader: boolean }
+  | { id: string; type: "paragraph" | "callout" | "heading_2" | "heading_3" | "bulleted_list_item" | "numbered_list_item"; text: string; richText: EditorialText[] }
+  | { id: string; type: "table"; rows: string[][]; richRows: EditorialText[][][]; hasHeader: boolean }
   | { id: string; type: "divider" };
 
 async function blockChildren(id: string): Promise<RawBlock[]> {
@@ -52,10 +63,11 @@ export async function getEditorialBlocks(pageId: string): Promise<EditorialBlock
   const mapped = await Promise.all(blocks.map(async (block): Promise<EditorialBlock | null> => {
     if (block.type === "divider") return { id: block.id, type: "divider" };
     if (block.type === "table") {
-      const rows = (await blockChildren(block.id))
+      const cells = (await blockChildren(block.id))
         .filter((row) => row.type === "table_row")
-        .map((row) => (row.table_row?.cells ?? []).map(joinText));
-      return { id: block.id, type: "table", rows, hasHeader: block.table?.has_column_header ?? false };
+        .map((row) => row.table_row?.cells ?? []);
+      return { id: block.id, type: "table", rows: cells.map((row) => row.map(joinText)),
+        richRows: cells.map((row) => row.map(mapRichText)), hasHeader: block.table?.has_column_header ?? false };
     }
     if (
       block.type === "paragraph" || block.type === "callout" || block.type === "heading_2" ||
@@ -67,12 +79,7 @@ export async function getEditorialBlocks(pageId: string): Promise<EditorialBlock
         id: block.id,
         type: block.type,
         text,
-        richText: parts.map((part) => ({
-          text: part.plain_text ?? part.text?.content ?? "",
-          href: part.href ?? part.text?.link?.url ?? null,
-          bold: part.annotations?.bold ?? false,
-          italic: part.annotations?.italic ?? false,
-        })),
+        richText: mapRichText(parts),
       } : null;
     }
     return null;

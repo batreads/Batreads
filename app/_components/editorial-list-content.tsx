@@ -22,12 +22,12 @@ function publicHref(href: string | null, notionPathsById: Record<string, string>
   }
 }
 
-function renderText(block: TextBlock, notionPathsById: Record<string, string>): ReactNode {
+function renderText(block: Pick<TextBlock, "richText">, notionPathsById: Record<string, string>, titlesByPath: Record<string, string> = {}): ReactNode {
   return block.richText.map((part, index) => {
-    let content: ReactNode = part.text;
+    const href = publicHref(part.href, notionPathsById);
+    let content: ReactNode = href && part.text.trim() === "Untitled" ? titlesByPath[href] ?? part.text : part.text;
     if (part.bold) content = <strong>{content}</strong>;
     if (part.italic) content = <em>{content}</em>;
-    const href = publicHref(part.href, notionPathsById);
     return href ? <a href={href} key={index}>{content}</a> : <span key={index}>{content}</span>;
   });
 }
@@ -46,7 +46,7 @@ function sectionsFromBlocks(blocks: EditorialBlock[]): EditorialSection[] {
   return sections.filter((section) => section.blocks.length > 0);
 }
 
-function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, string>): ReactNode[] {
+function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, string>, titlesByPath: Record<string, string>): ReactNode[] {
   const result: ReactNode[] = [];
   let index = 0;
 
@@ -78,9 +78,9 @@ function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, 
         <div className="editorial-table-wrap" key={block.id}>
           <p className="editorial-table-hint">Desliza para ver la tabla →</p>
           <table>
-            {block.hasHeader ? <thead><tr>{firstRow.map((cell, cellIndex) => <th scope="col" key={cellIndex}>{cell}</th>)}</tr></thead> : null}
+            {block.hasHeader ? <thead><tr>{firstRow.map((cell, cellIndex) => <th scope="col" key={cellIndex}>{renderText({ richText: block.richRows[0][cellIndex] }, notionPathsById, titlesByPath)}</th>)}</tr></thead> : null}
             <tbody>{(block.hasHeader ? remainingRows : block.rows).map((row, rowIndex) => (
-              <tr key={rowIndex}>{row.map((cell, cellIndex) => <td key={cellIndex}>{cell}</td>)}</tr>
+              <tr key={rowIndex}>{row.map((cell, cellIndex) => <td key={cellIndex}>{renderText({ richText: block.richRows[rowIndex + (block.hasHeader ? 1 : 0)][cellIndex] }, notionPathsById, titlesByPath)}</td>)}</tr>
             ))}</tbody>
           </table>
         </div>,
@@ -127,7 +127,7 @@ export function EditorialListContent({ blocks, stories, authorNames, booksLike =
             {section.title || !booksLike ? <h2>{section.title ?? "Introducción"}</h2> : null}
             {booksLike && section.title?.startsWith("Preguntas frecuentes")
               ? <FaqList items={faqItemsFromBlocks(section.blocks, notionPathsById)} />
-              : renderBlocks(section.blocks, notionPathsById)}
+              : renderBlocks(section.blocks, notionPathsById, Object.fromEntries(stories.map((story) => [`/historias/${story.slug}`, story.title])))}
             {sectionStory ? <div className="editorial-inline-story home-story-cards"><StoryGrid stories={[sectionStory]} authorNames={authorNames} headingLevel={3} /></div> : null}
           </section>
           {index === gridAfter ? books : null}

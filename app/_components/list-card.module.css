@@ -7,7 +7,7 @@
 .listCard {
   display: grid;
   grid-template-columns: 150px minmax(0, 1fr);
-  align-items: center;
+  align-items: start;
   gap: 24px;
   min-width: 0;
   padding: 32px 24px;
@@ -31,6 +31,34 @@
 
 .withoutCovers {
   grid-template-columns: minmax(0, 1fr);
+}
+
+.booksLike {
+  background: linear-gradient(120deg, color-mix(in srgb, var(--page-accent) 8%, transparent), transparent 70%), var(--page-surface);
+}
+
+.cardMedia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+}
+
+.withoutCovers .cardMedia {
+  align-items: start;
+}
+
+.cardLabel {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--page-accent) 35%, transparent);
+  border-radius: 999px;
+  color: var(--page-accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
 }
 
 .coverStack {
@@ -68,6 +96,14 @@
 .cover:only-of-type {
   left: 20px;
   transform: rotate(-6deg);
+}
+
+.referenceCover .cover {
+  top: 0;
+  left: 15px;
+  width: 120px;
+  height: 180px;
+  transform: none;
 }
 
 .cardCopy {
@@ -123,5 +159,6 @@
   .listCard { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 24px; }
   .coverStack { height: 164px; margin: 0 auto; }
   .cover { width: 100px; height: 150px; }
+  .referenceCover .cover { top: 0; left: 25px; width: 100px; height: 150px; }
   .cardCopy .cardTitle { font-size: 28px; }
 }
