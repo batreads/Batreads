@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { StoryGrid } from "../../_components/story-grid";
 import { SagaCard } from "../../_components/saga-card";
-import { getAuthorBySlug, getAuthors, getSagas, getSeoPages, getStories } from "@/lib/notion";
+import { EditorialContent } from "../../_components/editorial-list-content";
+import { getAuthorBySlug, getAuthors, getEditorialBlocks, getSagas, getSeoPages, getStories } from "@/lib/notion";
 import type { Author, SeoPage } from "@/lib/notion";
 import { authorDescription } from "@/lib/seo-metadata";
 
@@ -93,6 +94,13 @@ export default async function AutoraPage({ params }: PageProps) {
   const [author, stories, sagas, seoPages] = await Promise.all([getAuthorBySlug(slug), getStories(), getSagas(), getSeoPages()]);
   if (!author) notFound();
 
+  const editorialBlocks = await getEditorialBlocks(author.id);
+  const notionPathsById = Object.fromEntries([
+    [author.id.replaceAll("-", ""), `/autoras/${author.slug}`],
+    ...stories.map((story) => [story.id.replaceAll("-", ""), `/historias/${story.slug}`]),
+    ...sagas.map((saga) => [saga.id.replaceAll("-", ""), `/sagas/${saga.slug}`]),
+    ...seoPages.map((page) => [page.id.replaceAll("-", ""), page.path]),
+  ]);
   const relatedStoryIds = new Set(author.storyIds);
   const authorStories = stories.filter((story) => relatedStoryIds.has(story.id));
   const relatedSagaIds = new Set(author.sagaIds);
@@ -167,6 +175,12 @@ export default async function AutoraPage({ params }: PageProps) {
               return <SagaCard key={saga.id} saga={saga} stories={stories.filter((story) => sagaStoryIds.has(story.id))} showAuthor={false} showDiscovery showLink={false} showRelationshipTags={false} headingLevel={3} />;
             })}
           </div>
+        </section>
+      ) : null}
+
+      {editorialBlocks.length > 0 ? (
+        <section className="story-section author-editorial" aria-label={`Guía de lectura de ${author.name}`}>
+          <EditorialContent blocks={editorialBlocks} notionPathsById={notionPathsById} />
         </section>
       ) : null}
 

@@ -23,7 +23,7 @@ export async function notionRequest<T>(
     throw new Error("Falta NOTION_TOKEN para consultar Notion.");
   }
 
-  const response = await fetch(`${NOTION_API}${path}`, {
+  const requestOptions = {
     method: options.method ?? "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -32,7 +32,15 @@ export async function notionRequest<T>(
     },
     body: options.body === undefined ? undefined : JSON.stringify(options.body),
     next: { revalidate: 3600 },
-  });
+  };
+  let response = await fetch(`${NOTION_API}${path}`, requestOptions);
+  for (let retry = 0; response.status === 429 && retry < 4; retry += 1) {
+    const retryAfter = response.headers.get("Retry-After");
+    const seconds = retryAfter === null ? NaN : Number(retryAfter);
+    const delay = Number.isFinite(seconds) && seconds >= 0 ? seconds * 1000 : 1000 * 2 ** retry;
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    response = await fetch(`${NOTION_API}${path}`, requestOptions);
+  }
 
   if (!response.ok) {
     throw new Error(`La API de Notion respondió ${response.status}.`);

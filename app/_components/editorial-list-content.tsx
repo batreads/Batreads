@@ -8,6 +8,10 @@ type TextBlock = Extract<EditorialBlock, { text: string }>;
 
 function publicHref(href: string | null, notionPathsById: Record<string, string>): string | null {
   if (!href) return null;
+  if (/^\/p\/[a-f0-9]{32}(?:[?#]|$)/i.test(href)) {
+    const id = href.slice(3, 35).toLowerCase();
+    return notionPathsById[id] ?? null;
+  }
   if (href.startsWith("/")) return href;
   try {
     const url = new URL(href);
@@ -70,6 +74,7 @@ function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, 
     }
     if (block.type === "paragraph") result.push(<p key={block.id}>{renderText(block, notionPathsById)}</p>);
     if (block.type === "callout") result.push(<aside className="editorial-callout" key={block.id}>{renderText(block, notionPathsById)}</aside>);
+    if (block.type === "heading_2") result.push(<h2 key={block.id}>{renderText(block, notionPathsById)}</h2>);
     if (block.type === "heading_3") result.push(<h3 key={block.id}>{renderText(block, notionPathsById)}</h3>);
     if (block.type === "divider") result.push(<hr key={block.id} />);
     if (block.type === "table" && block.rows.length > 0) {
@@ -89,6 +94,10 @@ function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, 
     index += 1;
   }
   return result;
+}
+
+export function EditorialContent({ blocks, notionPathsById = {} }: { blocks: EditorialBlock[]; notionPathsById?: Record<string, string> }) {
+  return <>{renderBlocks(blocks, notionPathsById, {})}</>;
 }
 
 function faqItemsFromBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, string>): FaqItem[] {
