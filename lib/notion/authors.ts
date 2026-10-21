@@ -1,6 +1,7 @@
 import { imageUrl, number, relationIds, select, tags, text, url, validSlug } from "./properties";
 import { queryPages } from "./query";
 import type { Author, NotionPage } from "./types";
+import { parseFaqs } from "../faqs";
 
 // These exact author records were public before publication became opt-in.
 const previouslyPublishedAuthorIds = new Set([
@@ -26,6 +27,7 @@ function mapAuthor(page: NotionPage): Author {
     seoTitle: text(page, "SEO title").replace(/\\+\|/g, "|"),
     metaDescription: text(page, "Meta description"),
     bio: text(page, "Bio corta"),
+    faqs: parseFaqs(text(page, "Preguntas Frecuentes") || text(page, "Preguntas frecuentes")),
     intro: text(page, "SEO intro"),
     country: select(page, "País autora") ? [select(page, "País autora")!] : tags(page, "País autora"),
     specialties: tags(page, "Especialidades"),

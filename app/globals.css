@@ -4720,6 +4720,10 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   padding-block: 48px 0;
 }
 
+.author-page :is(.author-sagas, .author-faqs) {
+  border-top: 0;
+}
+
 .author-page .story-section h2 {
   margin-bottom: 18px;
   font-size: clamp(28px, 3.2vw, 36px);
@@ -4731,6 +4735,15 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   align-items: end;
   gap: 20px 32px;
   margin-bottom: 24px;
+}
+
+.author-stories .story-card-body {
+  min-height: 0;
+  align-self: center;
+}
+
+.author-stories .story-card-cover {
+  border-radius: 0 12px 12px 0;
 }
 
 .author-page .author-catalog-note {
@@ -4765,6 +4778,35 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   color: #c9dcd5;
   font-size: 17px;
   line-height: 1.7;
+}
+
+.author-faq-list {
+  display: grid;
+}
+
+.author-faq-item {
+  padding: 20px 0 22px;
+  border-bottom: 1px solid var(--page-border);
+}
+
+.author-faq-item:first-child {
+  border-top: 1px solid var(--page-border);
+}
+
+.author-faq-item h3 {
+  margin: 0 0 9px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 750;
+}
+
+.author-faq-item p {
+  max-width: 850px;
+  margin: 0;
+  color: #c9dcd5;
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 
 .author-facts {

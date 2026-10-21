@@ -3,20 +3,11 @@ import { queryPages } from "./query";
 import { getStories } from "./stories";
 import type { NotionPage, Saga } from "./types";
 import { parseBookTitles } from "../saga-reading-order";
+import { parseFaqs } from "../faqs";
 
 const verifiedBookTitles: Record<string, string[]> = {
   "universidad-spine-ridge": ["Sick Boys", "Evil Boys", "Vile Boys", "Boys Who Hunt", "Boys Who Taint", "Boys Who Crave"],
 };
-
-function parseFaqs(value: string): Saga["faqs"] {
-  return value.split(/<br\s*\/?>(?:\s*<br\s*\/?>)+|\n\s*\n/i)
-    .map((entry) => entry.replace(/<br\s*\/?>/gi, "\n").trim())
-    .map((entry) => {
-      const [question, ...answer] = entry.split("\n");
-      return { question: question?.trim() ?? "", answer: answer.join(" ").trim() };
-    })
-    .filter(({ question, answer }) => Boolean(question && answer));
-}
 
 export function mapSaga(page: NotionPage, storiesBySaga: Map<string, string[]>): Saga {
   const name = text(page, "Nombre");

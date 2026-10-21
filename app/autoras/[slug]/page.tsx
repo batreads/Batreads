@@ -1,6 +1,5 @@
 import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { StoryGrid } from "../../_components/story-grid";
@@ -10,10 +9,6 @@ import type { Author, SeoPage } from "@/lib/notion";
 import { authorDescription } from "@/lib/seo-metadata";
 
 type PageProps = { params: Promise<{ slug: string }> };
-
-function countLabel(count: number, singular: string, plural: string) {
-  return `${count} ${count === 1 ? singular : plural}`;
-}
 
 function verifiedDate(value: string | null) {
   if (!value || !/^\d{4}-\d{2}-\d{2}/.test(value)) return null;
@@ -109,7 +104,10 @@ export default async function AutoraPage({ params }: PageProps) {
     ["Instagram", author.instagram], ["TikTok", author.tiktok], ["Wattpad", author.wattpad],
     ["Goodreads", author.goodreads], ["Web", author.website],
   ] as const;
-  const heroTags = [...author.specialties, ...author.publicationTypes];
+  const heroTags = [...new Map(
+    [...author.specialties, ...authorStories.flatMap((story) => story.subgenres)]
+      .map((value) => [value.trim().toLocaleLowerCase("es"), value.trim()]),
+  ).values()].filter(Boolean);
   const facts = [
     ["País", author.country.join(", ")],
     ["Especialidades", author.specialties.join(", ")],
@@ -137,11 +135,6 @@ export default async function AutoraPage({ params }: PageProps) {
             </div>
           ) : null}
           {author.intro ? <p className="author-intro">{author.intro}</p> : null}
-          <div className="author-hero-meta">
-            <span>{countLabel(author.storyCount ?? authorStories.length, "historia", "historias")} en Batreads</span>
-            {authorSagas.length > 0 ? <span>{countLabel(authorSagas.length, "saga", "sagas")}</span> : null}
-            {date ? <span>Datos verificados · {date}</span> : null}
-          </div>
           {socials.some(([, url]) => externalUrl(url)) || amazonUrl ? (
             <nav className="author-socials" aria-label={`Enlaces de ${author.name}`}>
               {amazonUrl ? <a className="author-amazon-cta" href={amazonUrl} target="_blank" rel="noopener noreferrer" aria-label={`Buscar libros de ${author.name} en Amazon (abre en otra pestaña)`}>Amazon</a> : null}
@@ -171,8 +164,22 @@ export default async function AutoraPage({ params }: PageProps) {
           <div className="saga-card-grid">
             {authorSagas.map((saga) => {
               const sagaStoryIds = new Set(saga.storyIds);
-              return <SagaCard key={saga.id} saga={saga} stories={stories.filter((story) => sagaStoryIds.has(story.id))} authorName={author.name} headingLevel={3} />;
+              return <SagaCard key={saga.id} saga={saga} stories={stories.filter((story) => sagaStoryIds.has(story.id))} showAuthor={false} showDiscovery showLink={false} showRelationshipTags={false} headingLevel={3} />;
             })}
+          </div>
+        </section>
+      ) : null}
+
+      {author.faqs.length > 0 ? (
+        <section className="story-section author-faqs" aria-labelledby="author-faqs-title">
+          <h2 id="author-faqs-title">Preguntas frecuentes sobre {author.name}</h2>
+          <div className="author-faq-list">
+            {author.faqs.map(({ question, answer }, index) => (
+              <div className="author-faq-item" key={`${index}-${question}`}>
+                <h3>{question}</h3>
+                <p>{answer}</p>
+              </div>
+            ))}
           </div>
         </section>
       ) : null}

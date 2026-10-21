@@ -91,6 +91,7 @@ export type Author = {
   seoTitle: string;
   metaDescription: string;
   bio: string;
+  faqs: { question: string; answer: string }[];
   intro: string;
   country: string[];
   specialties: string[];
