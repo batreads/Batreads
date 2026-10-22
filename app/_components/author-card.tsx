@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { EditorialImage } from "./editorial-image";
 import type { Author, Story } from "@/lib/notion";
 
 export function AuthorCard({ author, recommendedStory, headingLevel = 2 }: {
   author: Pick<Author, "slug" | "name" | "intro" | "bio" | "specialties">;
-  recommendedStory?: Pick<Story, "slug" | "title">;
+  recommendedStory?: Pick<Story, "slug" | "title" | "coverUrl">;
   headingLevel?: 2 | 3;
 }) {
   const Heading = headingLevel === 2 ? "h2" : "h3";
@@ -19,7 +20,7 @@ export function AuthorCard({ author, recommendedStory, headingLevel = 2 }: {
     <article className="story-card author-card">
       <div className="story-card-body">
         <div className="story-card-copy">
-          <Heading><Link href={`/autoras/${author.slug}`}>{author.name}</Link></Heading>
+          <Heading><Link className="author-card-primary-link" href={`/autoras/${author.slug}`}>{author.name}</Link></Heading>
           {description ? <p className="story-card-description">{description}</p> : null}
         </div>
         {author.specialties.length > 0 ? (
@@ -34,8 +35,15 @@ export function AuthorCard({ author, recommendedStory, headingLevel = 2 }: {
         ) : null}
         {recommendedStory ? (
           <div className="author-card-recommendation">
-            <span>Una obra para empezar</span>
-            <Link href={`/historias/${recommendedStory.slug}`}>{recommendedStory.title} →</Link>
+            <Link href={`/historias/${recommendedStory.slug}`}>
+              {recommendedStory.coverUrl ? <span className="author-card-book-art" aria-hidden="true">
+                <EditorialImage className="author-card-book-cover" src={recommendedStory.coverUrl} alt="" width={36} height={54} sizes="36px" />
+              </span> : null}
+              <span className="author-card-book-copy">
+                <span>Una obra para empezar</span>
+                <span>{recommendedStory.title} →</span>
+              </span>
+            </Link>
           </div>
         ) : null}
       </div>

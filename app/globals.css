@@ -3178,6 +3178,8 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
 }
 
 .author-card {
+  position: relative;
+  isolation: isolate;
   --card-muted: #a2b2b1;
   --card-subtle: #173235;
   --card-border: #2a5050;
@@ -3188,8 +3190,22 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   box-shadow: none;
 }
 
+.author-card:hover,
 .author-card:focus-within {
   border-color: #63e6be;
+}
+
+.author-card-primary-link::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  cursor: pointer;
+}
+
+.author-card a:focus-visible {
+  outline: 2px solid #63e6be;
+  outline-offset: 4px;
 }
 
 .author-card .story-card-body {
@@ -3236,14 +3252,52 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   font-size: 13px;
 }
 
-.author-card-recommendation > span:first-child {
+.author-card-book-copy > span:first-child {
   color: var(--card-muted);
+  font-weight: 400;
 }
 
 .author-card-recommendation a {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   color: #63e6be;
   font-weight: 700;
   text-decoration: none;
+}
+
+.author-card-book-copy {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.author-card-book-art {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 54px;
+  isolation: isolate;
+}
+
+.author-card-book-art::before {
+  position: absolute;
+  z-index: -1;
+  inset: -12px -16px;
+  background: radial-gradient(ellipse, rgb(164 234 214 / 45%) 0%, rgb(99 230 190 / 16%) 40%, transparent 72%);
+  content: "";
+  pointer-events: none;
+}
+
+.author-card-book-cover {
+  width: 36px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 3px;
+  transform: rotate(-7deg);
+  box-shadow: 0 4px 10px rgb(0 0 0 / 35%);
 }
 
 .authors-related-lists {

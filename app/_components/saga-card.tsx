@@ -7,12 +7,13 @@ function LinkChevron() {
   return <svg className="saga-card-chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false"><path d="m6 3 5 5-5 5" /></svg>;
 }
 
-export function SagaCard({ saga, stories, authorName, authors = [], showAuthor = true, showDiscovery = false, headingLevel = 2, showArt = true, showGenre = true, showRelationshipTags = true, showLink = true }: {
+export function SagaCard({ saga, stories, authorName, authors = [], showAuthor = true, linkAuthors = true, showDiscovery = false, headingLevel = 2, showArt = true, showGenre = true, showRelationshipTags = true, showLink = true }: {
   saga: Saga;
   stories: Story[];
   authorName?: string;
   authors?: Author[];
   showAuthor?: boolean;
+  linkAuthors?: boolean;
   showDiscovery?: boolean;
   headingLevel?: 2 | 3;
   showArt?: boolean;
@@ -57,7 +58,7 @@ export function SagaCard({ saga, stories, authorName, authors = [], showAuthor =
       <div className="saga-card-body">
         <Heading><Link className="saga-card-primary-link" href={sagaPath}>{saga.name}</Link></Heading>
         {showAuthor && sagaAuthors.length > 0 ? <p className="saga-card-author">
-          {sagaAuthors.map((author, index) => <span key={author.id}>{index > 0 ? ", " : ""}<Link href={`/autoras/${author.slug}`}>{author.name}</Link></span>)}
+          {sagaAuthors.map((author, index) => <span key={author.id}>{index > 0 ? ", " : ""}{linkAuthors ? <Link href={`/autoras/${author.slug}`}>{author.name}</Link> : author.name}</span>)}
           {otherAuthorNames.length > 0 ? `, ${otherAuthorNames.join(", ")}` : null}
         </p> : showAuthor && byline ? <p className="saga-card-author">{byline}</p> : null}
         {description ? <p className="saga-card-description">{description}</p> : null}

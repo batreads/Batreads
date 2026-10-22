@@ -8,6 +8,14 @@
   margin-bottom: 36px;
 }
 
+.sagas-catalog-page .saga-card-body {
+  min-height: 0;
+}
+
+.sagas-catalog-page .saga-card-actions {
+  padding-top: 16px;
+}
+
 .sagas-catalog-page .page-heading h1 {
   margin: 0 0 12px;
   font-family: var(--font-display);

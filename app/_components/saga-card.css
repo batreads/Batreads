@@ -159,9 +159,10 @@
 
 .saga-card-author {
   margin: 4px 0 0;
-  color: #d7e5dc;
-  font-family: var(--font-display);
-  font-size: 18px;
+  color: #c3d3ca;
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.25;
 }
 
 .saga-card-description {
