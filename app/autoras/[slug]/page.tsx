@@ -1,13 +1,15 @@
-import { ListCard, ListCardGrid } from "@/app/_components/list-card";
+import { ListCard } from "@/app/_components/list-card";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { StoryGrid } from "../../_components/story-grid";
 import { SagaCard } from "../../_components/saga-card";
 import { EditorialContent } from "../../_components/editorial-list-content";
+import { AuthorIndex } from "../../_components/author-index";
 import { getAuthorBySlug, getAuthors, getEditorialBlocks, getSagas, getSeoPages, getStories } from "@/lib/notion";
 import type { Author, SeoPage } from "@/lib/notion";
 import { authorDescription } from "@/lib/seo-metadata";
+import { sortByReadingGuide } from "@/lib/author-reading-order";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -91,10 +93,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function AutoraPage({ params }: PageProps) {
   const { slug } = await params;
-  const [author, stories, sagas, seoPages] = await Promise.all([getAuthorBySlug(slug), getStories(), getSagas(), getSeoPages()]);
+  const authorPromise = getAuthorBySlug(slug);
+  const editorialPromise = authorPromise.then(author => author ? getEditorialBlocks(author.id) : []);
+  const [author, stories, sagas, seoPages, editorialBlocks] = await Promise.all([
+    authorPromise, getStories(), getSagas(), getSeoPages(), editorialPromise,
+  ]);
   if (!author) notFound();
 
-  const editorialBlocks = await getEditorialBlocks(author.id);
   const notionPathsById = Object.fromEntries([
     [author.id.replaceAll("-", ""), `/autoras/${author.slug}`],
     ...stories.map((story) => [story.id.replaceAll("-", ""), `/historias/${story.slug}`]),
@@ -102,11 +107,10 @@ export default async function AutoraPage({ params }: PageProps) {
     ...seoPages.map((page) => [page.id.replaceAll("-", ""), page.path]),
   ]);
   const relatedStoryIds = new Set(author.storyIds);
-  const authorStories = stories.filter((story) => relatedStoryIds.has(story.id));
+  const authorStories = sortByReadingGuide(stories.filter((story) => relatedStoryIds.has(story.id)), editorialBlocks);
   const relatedSagaIds = new Set(author.sagaIds);
   const authorSagas = sagas.filter((saga) => relatedSagaIds.has(saga.id));
   const relatedListsForAuthor = relatedLists(author, seoPages);
-  const date = verifiedDate(author.verifiedAt);
   const amazonUrl = externalUrl(author.amazonUrl);
   const socials = [
     ["Instagram", author.instagram], ["TikTok", author.tiktok], ["Wattpad", author.wattpad],
@@ -121,8 +125,14 @@ export default async function AutoraPage({ params }: PageProps) {
     ["Especialidades", author.specialties.join(", ")],
     ["Publicación", author.publicationTypes.join(", ")],
     ["Sagas", authorSagas.map((saga) => saga.name).join(", ")],
-    ["Datos verificados", date],
   ].filter(([, value]) => Boolean(value));
+  const indexItems = [
+    ...(editorialBlocks.length ? [{ id: "orden-de-lectura", title: "Orden de lectura" }] : []),
+    { id: "author-stories-title", title: "Libros" },
+    ...(authorSagas.length || relatedListsForAuthor.length ? [{ id: "author-sagas-title", title: authorSagas.length && relatedListsForAuthor.length ? "Sagas y listas" : authorSagas.length ? "Sagas" : "Listas relacionadas" }] : []),
+    ...(author.faqs.length ? [{ id: "author-faqs-title", title: "Preguntas frecuentes" }] : []),
+    ...(author.bio || socials.some(([, url]) => externalUrl(url)) ? [{ id: "author-about-title", title: "Biografía" }] : []),
+  ];
 
   return (
     <main className="catalog-page author-page">
@@ -130,8 +140,9 @@ export default async function AutoraPage({ params }: PageProps) {
 
       <header className={`author-hero${author.photoUrl ? " author-hero-with-photo" : ""}`}>
         <div className="author-hero-copy">
-          <p className="eyebrow">Autora</p>
           <h1>{author.name}</h1>
+          {author.intro ? <p className="author-intro">{author.intro}</p> : null}
+          <div className="author-hero-toolbar">
           {heroTags.length > 0 ? (
             <div className="author-chips">
               {heroTags.map((value) => (
@@ -142,45 +153,47 @@ export default async function AutoraPage({ params }: PageProps) {
               ))}
             </div>
           ) : null}
-          {author.intro ? <p className="author-intro">{author.intro}</p> : null}
-          {socials.some(([, url]) => externalUrl(url)) || amazonUrl ? (
+          {amazonUrl ? (
             <nav className="author-socials" aria-label={`Enlaces de ${author.name}`}>
-              {amazonUrl ? <a className="author-amazon-cta" href={amazonUrl} target="_blank" rel="noopener noreferrer" aria-label={`Buscar libros de ${author.name} en Amazon (abre en otra pestaña)`}>Amazon</a> : null}
-              {socials.map(([label, url]) => externalUrl(url) ? <a key={label} href={url!} target="_blank" rel="noopener noreferrer" aria-label={`${label} de ${author.name} (abre en otra pestaña)`}>{label} ↗</a> : null)}
+              <a className="author-amazon-cta" href={amazonUrl} target="_blank" rel="noopener noreferrer" aria-label={`Ver libros de ${author.name} en Amazon (abre en otra pestaña)`}>Ver libros en Amazon</a>
             </nav>
           ) : null}
+          </div>
         </div>
         {author.photoUrl ? <img className="author-portrait" src={author.photoUrl} alt={`Retrato de ${author.name}`} /> : null}
       </header>
 
+      <AuthorIndex name={author.name} items={indexItems}>
+      {editorialBlocks.length > 0 ? (
+        <section id="orden-de-lectura" className="story-section author-editorial" aria-label={`Guía de lectura de ${author.name}`}>
+          <EditorialContent blocks={editorialBlocks} notionPathsById={notionPathsById} stories={authorStories} authorReading />
+        </section>
+      ) : null}
       <section className="story-section home-story-cards author-stories" id="historias" aria-labelledby="author-stories-title">
         <div className="author-section-heading">
           <div>
-            <h2 id="author-stories-title">Historias de {author.name} en Batreads</h2>
-            <p className="author-catalog-note">En Batreads solo mostramos las historias que hemos añadido y clasificado. La autora puede tener más obras publicadas.</p>
+            <h2 id="author-stories-title">Libros de {author.name}</h2>
           </div>
           <div className="author-section-actions">
-            {amazonUrl ? <a href={amazonUrl} target="_blank" rel="noopener noreferrer">Buscar libros de {author.name} en Amazon ↗</a> : null}
+            {amazonUrl ? <a href={amazonUrl} target="_blank" rel="noopener noreferrer">Ver libros en Amazon ↗</a> : null}
           </div>
         </div>
         <StoryGrid stories={authorStories} authorNames={{ [author.id]: author.name }} headingLevel={3} />
       </section>
 
-      {authorSagas.length > 0 ? (
+      {authorSagas.length > 0 || relatedListsForAuthor.length > 0 ? (
         <section className="story-section author-sagas" aria-labelledby="author-sagas-title">
-          <h2 id="author-sagas-title">Sagas</h2>
-          <div className="saga-card-grid">
+          <div className="author-section-heading">
+            <h2 id="author-sagas-title">{authorSagas.length && relatedListsForAuthor.length ? "Sagas y listas relacionadas" : authorSagas.length ? "Sagas" : "Listas relacionadas"}</h2>
+            {amazonUrl ? <div className="author-section-actions"><a href={amazonUrl} target="_blank" rel="noopener noreferrer">Ver libros en Amazon ↗</a></div> : null}
+          </div>
+          <div className="author-related-grid">
             {authorSagas.map((saga) => {
               const sagaStoryIds = new Set(saga.storyIds);
-              return <SagaCard key={saga.id} saga={saga} stories={stories.filter((story) => sagaStoryIds.has(story.id))} showAuthor={false} showDiscovery showLink={false} showRelationshipTags={false} headingLevel={3} />;
+              return <SagaCard key={saga.id} saga={saga} stories={stories.filter((story) => sagaStoryIds.has(story.id))} showAuthor={false} showGenre={false} showDiscovery={false} showLink={false} showRelationshipTags={false} headingLevel={3} />;
             })}
+            {relatedListsForAuthor.map((page) => <ListCard page={page} stories={stories} key={page.id} />)}
           </div>
-        </section>
-      ) : null}
-
-      {editorialBlocks.length > 0 ? (
-        <section className="story-section author-editorial" aria-label={`Guía de lectura de ${author.name}`}>
-          <EditorialContent blocks={editorialBlocks} notionPathsById={notionPathsById} />
         </section>
       ) : null}
 
@@ -197,31 +210,27 @@ export default async function AutoraPage({ params }: PageProps) {
           </div>
         </section>
       ) : null}
-
-      {author.bio ? (
+      {author.bio || socials.some(([, url]) => externalUrl(url)) ? (
         <section className="story-section author-about" aria-labelledby="author-about-title">
           <h2 id="author-about-title">Sobre {author.name}</h2>
-          <p className="author-bio">{author.bio}</p>
-          {facts.length > 0 || amazonUrl ? (
+          {amazonUrl ? <div className="author-about-cta author-socials"><a className="author-amazon-cta" href={amazonUrl} target="_blank" rel="noopener noreferrer">Ver libros en Amazon ↗</a></div> : null}
+          <div className="author-biography">
+            {author.bio ? <p className="author-bio">{author.bio}</p> : null}
+
+          </div>
+          {facts.length > 0 || amazonUrl || socials.some(([, url]) => externalUrl(url)) ? (
             <aside className="author-facts" aria-label={`Ficha de ${author.name}`}>
               {facts.map(([label, value]) => <div className="author-fact" key={label}><span>{label}</span><strong>{value}</strong></div>)}
-              {amazonUrl ? <a href={amazonUrl} target="_blank" rel="noopener noreferrer">Buscar libros en Amazon ↗</a> : null}
+            {socials.some(([, url]) => externalUrl(url)) ? <nav className="author-profile-links" aria-label={`Redes y web de ${author.name}`}>
+              <p className="author-profile-links-title">Web y redes sociales</p>
+              {socials.map(([label, url]) => externalUrl(url) ? <a key={label} href={url!} target="_blank" rel="noopener noreferrer" aria-label={`${label} de ${author.name} (abre en otra pestaña)`}>{label} ↗</a> : null)}
+            </nav> : null}
             </aside>
           ) : null}
         </section>
       ) : null}
 
-      {relatedListsForAuthor.length > 0 ? (
-        <section className="story-section author-discover" aria-labelledby="author-discover-title">
-          <p className="eyebrow">Sigue explorando</p>
-          <h2 id="author-discover-title">Listas relacionadas con {author.name}</h2>
-          <ListCardGrid>
-            {relatedListsForAuthor.map((page) => (
-              <ListCard page={page} stories={stories} key={page.id} />
-            ))}
-          </ListCardGrid>
-        </section>
-      ) : null}
+      </AuthorIndex>
     </main>
   );
 }

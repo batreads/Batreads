@@ -1,5 +1,6 @@
 import { isNotionPage, notionRequest } from "./client";
 import type { NotionPage } from "./types";
+import { cache } from "react";
 
 type QueryResponse = {
   object: "list";
@@ -17,11 +18,22 @@ export function dataSourceId(name: "HISTORIAS" | "AUTORAS" | "SAGAS" | "SEO"): s
   return id;
 }
 
-export async function queryPages(
+export function queryPages(
   source: "HISTORIAS" | "AUTORAS" | "SAGAS" | "SEO",
   filter?: Record<string, unknown>,
   sorts?: { property: string; direction: "ascending" | "descending" }[],
 ): Promise<NotionPage[]> {
+  // Primitive keys deduplicate equivalent calls, even with freshly created filters.
+  return queryPagesForRender(source, JSON.stringify(filter ?? null), JSON.stringify(sorts ?? null));
+}
+
+const queryPagesForRender = cache(async (
+  source: "HISTORIAS" | "AUTORAS" | "SAGAS" | "SEO",
+  filterKey: string,
+  sortsKey: string,
+): Promise<NotionPage[]> => {
+  const filter = JSON.parse(filterKey) as Record<string, unknown> | null;
+  const sorts = JSON.parse(sortsKey) as { property: string; direction: "ascending" | "descending" }[] | null;
   const pages: NotionPage[] = [];
   let cursor: string | null = null;
 
@@ -44,4 +56,4 @@ export async function queryPages(
   } while (cursor);
 
   return pages;
-}
+});

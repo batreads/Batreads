@@ -132,3 +132,43 @@
   .saga-art-monogram { display: grid; height: 100%; place-items: center; }
 }
 @media (max-width: 600px) { .saga-progress strong { flex: none; white-space: nowrap; } .saga-progress-track { width: 72px; flex: none; } }
+
+/* Match the reading hierarchy used on author detail pages. */
+.saga-page .saga-hero h1 {
+  font-size: clamp(2.75rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -.035em;
+  line-height: 1.1;
+}
+.saga-page .saga-section h2 {
+  font-size: clamp(26px, 3vw, 32px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.saga-page .saga-hero-intro p,
+.saga-page .saga-intro-section > p:not(.saga-kicker),
+.saga-page .saga-order-explainer p,
+.saga-page .saga-faq-item p,
+.saga-page .saga-book-hook,
+.saga-page .saga-related-card > p {
+  max-width: 68ch;
+  color: #d5e8e1;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.75;
+}
+.saga-page .saga-hero-intro p,
+.saga-page .saga-intro-section > p:not(.saga-kicker),
+.saga-page .saga-order-explainer p { margin-bottom: 20px; }
+.saga-page .saga-faq-item h3 {
+  max-width: 68ch;
+  margin-bottom: 12px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.saga-page .saga-hero-intro strong,
+.saga-page .saga-intro-section strong,
+.saga-page .saga-order-explainer strong,
+.saga-page .saga-faq-item p strong { font-weight: 600; }

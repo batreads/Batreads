@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { FaqList, type FaqItem } from "./faq-list";
 import { StoryGrid } from "./story-grid";
+import { AuthorReadingTable } from "./author-reading-table";
 import type { EditorialBlock, Story } from "@/lib/notion";
 
 type EditorialSection = { id: string; title: string | null; blocks: EditorialBlock[] };
@@ -50,7 +51,7 @@ function sectionsFromBlocks(blocks: EditorialBlock[]): EditorialSection[] {
   return sections.filter((section) => section.blocks.length > 0);
 }
 
-function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, string>, titlesByPath: Record<string, string>): ReactNode[] {
+function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, string>, titlesByPath: Record<string, string>, stories: Story[] = [], authorReading = false): ReactNode[] {
   const result: ReactNode[] = [];
   let index = 0;
 
@@ -80,14 +81,24 @@ function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, 
     if (block.type === "table" && block.rows.length > 0) {
       const [firstRow, ...remainingRows] = block.rows;
       result.push(
-        <div className="editorial-table-wrap" key={block.id}>
+        <div className={authorReading ? "author-reading-table" : undefined} key={block.id}>
+        {authorReading ? <AuthorReadingTable block={block} stories={stories} /> : null}
+        <div className="editorial-table-wrap">
           <p className="editorial-table-hint">Desliza para ver la tabla →</p>
           <table>
             {block.hasHeader ? <thead><tr>{firstRow.map((cell, cellIndex) => <th scope="col" key={cellIndex}>{renderText({ richText: block.richRows[0][cellIndex] }, notionPathsById, titlesByPath)}</th>)}</tr></thead> : null}
             <tbody>{(block.hasHeader ? remainingRows : block.rows).map((row, rowIndex) => (
-              <tr key={rowIndex}>{row.map((cell, cellIndex) => <td key={cellIndex}>{renderText({ richText: block.richRows[rowIndex + (block.hasHeader ? 1 : 0)][cellIndex] }, notionPathsById, titlesByPath)}</td>)}</tr>
+              <tr key={rowIndex}>{row.map((cell, cellIndex) => {
+                const richText = block.richRows[rowIndex + (block.hasHeader ? 1 : 0)][cellIndex];
+                const story = stories.find(story => richText.some(part => publicHref(part.href, notionPathsById) === `/historias/${story.slug}`));
+                return <td key={cellIndex}>{story?.coverUrl ? <div className="editorial-table-book">
+                  <a href={`/historias/${story.slug}`} tabIndex={-1} aria-hidden="true"><img src={story.coverUrl} alt="" width={44} height={66} loading="lazy" /></a>
+                  <span>{renderText({ richText }, notionPathsById, titlesByPath)}</span>
+                </div> : renderText({ richText }, notionPathsById, titlesByPath)}</td>;
+              })}</tr>
             ))}</tbody>
           </table>
+        </div>
         </div>,
       );
     }
@@ -96,8 +107,8 @@ function renderBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, 
   return result;
 }
 
-export function EditorialContent({ blocks, notionPathsById = {} }: { blocks: EditorialBlock[]; notionPathsById?: Record<string, string> }) {
-  return <>{renderBlocks(blocks, notionPathsById, {})}</>;
+export function EditorialContent({ blocks, notionPathsById = {}, stories = [], authorReading = false }: { blocks: EditorialBlock[]; notionPathsById?: Record<string, string>; stories?: Story[]; authorReading?: boolean }) {
+  return <>{renderBlocks(blocks, notionPathsById, {}, stories, authorReading)}</>;
 }
 
 function faqItemsFromBlocks(blocks: EditorialBlock[], notionPathsById: Record<string, string>): FaqItem[] {
@@ -115,9 +126,20 @@ function faqItemsFromBlocks(blocks: EditorialBlock[], notionPathsById: Record<st
   return items;
 }
 
+function visibleEditorialSections(blocks: EditorialBlock[], booksLike: boolean) {
+  return sectionsFromBlocks(booksLike
+    ? blocks.filter((block) => block.type !== "callout" || !block.text.startsWith("Cómo elegimos estos libros."))
+    : blocks);
+}
+
+export function editorialIndex(blocks: EditorialBlock[]) {
+  return visibleEditorialSections(blocks, true)
+    .filter((section): section is EditorialSection & { title: string } => Boolean(section.title))
+    .map((section) => ({ id: `seccion-${section.id}`, title: section.title }));
+}
+
 export function EditorialListContent({ blocks, stories, authorNames, booksLike = false, notionPathsById = {} }: { blocks: EditorialBlock[]; stories: Story[]; authorNames: Record<string, string>; booksLike?: boolean; notionPathsById?: Record<string, string> }) {
-  const visibleBlocks = booksLike ? blocks.filter((block) => block.type !== "callout" || !block.text.startsWith("Cómo elegimos estos libros.")) : blocks;
-  const sections = sectionsFromBlocks(visibleBlocks);
+  const sections = visibleEditorialSections(blocks, booksLike);
   const chooserIndex = sections.findIndex((section) => section.title?.startsWith("Encuentra el "));
   const gridAfter = chooserIndex >= 0 ? chooserIndex : 0;
   const books = !booksLike && stories.length > 0 ? (
@@ -133,7 +155,7 @@ export function EditorialListContent({ blocks, stories, authorNames, booksLike =
         const sectionStory = booksLike ? stories.find((story) => section.title?.startsWith(`${story.title}:`)) : undefined;
         return <div key={section.id}>
           <section className={`story-section editorial-section${section.title ? "" : " seo-intro-section"}${section.title?.startsWith("Preguntas frecuentes") ? " editorial-faq-section" : ""}${index === chooserIndex ? " editorial-choice-section" : ""}${section.title?.startsWith("Libros de mafia romance") ? " editorial-metrics-section" : ""}`}>
-            {section.title || !booksLike ? <h2>{section.title ?? "Introducción"}</h2> : null}
+            {section.title || !booksLike ? <h2 id={booksLike && section.title ? `seccion-${section.id}` : undefined}>{section.title ?? "Introducción"}</h2> : null}
             {booksLike && section.title?.startsWith("Preguntas frecuentes")
               ? <FaqList items={faqItemsFromBlocks(section.blocks, notionPathsById)} />
               : renderBlocks(section.blocks, notionPathsById, Object.fromEntries(stories.map((story) => [`/historias/${story.slug}`, story.title])))}

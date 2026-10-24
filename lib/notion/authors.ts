@@ -2,6 +2,7 @@ import { imageUrl, number, relationIds, select, tags, text, url, validSlug } fro
 import { queryPages } from "./query";
 import type { Author, NotionPage } from "./types";
 import { parseFaqs } from "../faqs";
+import { cache } from "react";
 
 // These exact author records were public before publication became opt-in.
 const previouslyPublishedAuthorIds = new Set([
@@ -26,9 +27,10 @@ function mapAuthor(page: NotionPage): Author {
     name,
     seoTitle: text(page, "SEO title").replace(/\\+\|/g, "|"),
     metaDescription: text(page, "Meta description"),
-    bio: text(page, "Bio corta"),
+    bio: text(page, "Biografía") || text(page, "Bio corta"),
     faqs: parseFaqs(text(page, "Preguntas Frecuentes") || text(page, "Preguntas frecuentes")),
-    intro: text(page, "SEO intro"),
+    intro: (text(page, "Intro") || text(page, "SEO intro"))
+      .replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, ""),
     country: select(page, "País autora") ? [select(page, "País autora")!] : tags(page, "País autora"),
     specialties: tags(page, "Especialidades"),
     website: url(page, "Web"),
@@ -48,7 +50,7 @@ function mapAuthor(page: NotionPage): Author {
   };
 }
 
-export async function getAuthors(): Promise<Author[]> {
+export const getAuthors = cache(async (): Promise<Author[]> => {
   const pages = await queryPages("AUTORAS");
 
   return pages
@@ -60,7 +62,7 @@ export async function getAuthors(): Promise<Author[]> {
     })
     .map(mapAuthor)
     .sort((a, b) => a.name.localeCompare(b.name, "es"));
-}
+});
 
 export async function getAuthorBySlug(slug: string): Promise<Author | null> {
   if (!validSlug(slug)) return null;
