@@ -4894,7 +4894,7 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   white-space: pre-line;
 }
 
-.author-editorial th {
+.author-page .author-editorial table th {
   border-bottom: 0;
   background: #163532;
   color: #e9f8f1;
@@ -4904,7 +4904,7 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   text-transform: uppercase;
 }
 
-.author-editorial th strong {
+.author-page .author-editorial table th strong {
   font-weight: inherit;
 }
 
