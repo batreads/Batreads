@@ -93,6 +93,7 @@ export type Author = {
   bio: string;
   faqs: { question: string; answer: string }[];
   intro: string;
+  introCard: string;
   country: string[];
   specialties: string[];
   website: string | null;

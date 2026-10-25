@@ -31,6 +31,8 @@ function mapAuthor(page: NotionPage): Author {
     faqs: parseFaqs(text(page, "Preguntas Frecuentes") || text(page, "Preguntas frecuentes")),
     intro: (text(page, "Intro") || text(page, "SEO intro"))
       .replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, ""),
+    introCard: text(page, "Intro-card")
+      .replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]*>/g, ""),
     country: select(page, "País autora") ? [select(page, "País autora")!] : tags(page, "País autora"),
     specialties: tags(page, "Especialidades"),
     website: url(page, "Web"),

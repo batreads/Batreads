@@ -153,11 +153,6 @@ export default async function AutoraPage({ params }: PageProps) {
               ))}
             </div>
           ) : null}
-          {amazonUrl ? (
-            <nav className="author-socials" aria-label={`Enlaces de ${author.name}`}>
-              <a className="author-amazon-cta" href={amazonUrl} target="_blank" rel="noopener noreferrer" aria-label={`Ver libros de ${author.name} en Amazon (abre en otra pestaña)`}>Ver libros en Amazon</a>
-            </nav>
-          ) : null}
           </div>
         </div>
         {author.photoUrl ? <img className="author-portrait" src={author.photoUrl} alt={`Retrato de ${author.name}`} /> : null}

@@ -4788,7 +4788,7 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
   padding-block: 48px 0;
 }
 
-.author-page :is(.author-sagas, .author-faqs) {
+.author-page :is(.author-sagas, .author-faqs, .author-about) {
   border-top: 0;
 }
 
@@ -4873,7 +4873,7 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
 .author-editorial .editorial-table-wrap {
   margin-top: 24px;
   overflow-x: auto;
-  border: 1px solid var(--page-border);
+  border: 0;
   border-radius: 16px;
 }
 
@@ -4888,15 +4888,24 @@ main:is(.stories-catalog-page, .authors-catalog-page, .sagas-catalog-page, .list
 
 .author-editorial :is(th, td) {
   padding: 16px 18px;
-  border-bottom: 1px solid var(--page-border);
+  border-bottom: 1px solid rgb(201 220 213 / 12%);
   text-align: left;
   vertical-align: top;
   white-space: pre-line;
 }
 
 .author-editorial th {
+  border-bottom: 0;
   background: #163532;
   color: #e9f8f1;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.author-editorial th strong {
+  font-weight: inherit;
 }
 
 .author-editorial td:first-child {

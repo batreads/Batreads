@@ -3,7 +3,7 @@ import { EditorialImage } from "./editorial-image";
 import type { Author, Story } from "@/lib/notion";
 
 export function AuthorCard({ author, recommendedStory, headingLevel = 2 }: {
-  author: Pick<Author, "slug" | "name" | "intro" | "bio" | "specialties">;
+  author: Pick<Author, "slug" | "name" | "intro" | "introCard" | "bio" | "specialties">;
   recommendedStory?: Pick<Story, "slug" | "title" | "coverUrl">;
   headingLevel?: 2 | 3;
 }) {
@@ -14,7 +14,7 @@ export function AuthorCard({ author, recommendedStory, headingLevel = 2 }: {
   const shortBio = firstSentence
     ? firstSentence.length < 80 && secondSentence ? `${firstSentence} ${secondSentence}` : firstSentence
     : bio;
-  const description = author.intro.trim() || shortBio;
+  const description = author.introCard.trim() || author.intro.trim() || shortBio;
 
   return (
     <article className="story-card author-card">
