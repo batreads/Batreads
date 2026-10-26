@@ -1,5 +1,5 @@
 import Link from "next/link";
-import "./books-like-index.css";
+import { AuthorIndex } from "./author-index";
 import { Breadcrumbs } from "./breadcrumbs";
 import { EditorialListContent, editorialIndex } from "./editorial-list-content";
 import { EditorialImage } from "./editorial-image";
@@ -57,14 +57,15 @@ export async function SeoContent({
   const heroBlocks = booksLike ? editorialBlocks.slice(0, introEnd) : [];
   const contentBlocks = booksLike ? editorialBlocks.slice(introEnd) : editorialBlocks;
 
-  const indexItems = booksLike ? [
-    ...editorialIndex(contentBlocks),
+  const indexItems = [
+    ...(editorialBlocks.length > 0 ? editorialIndex(contentBlocks, booksLike, relatedStories.length > 0) : []),
+    ...(editorialBlocks.length === 0 && !booksLike && page.intro ? [{ id: "introduccion", title: "Introducción" }] : []),
     ...(editorialBlocks.length === 0 && relatedStories.length > 0 ? [{ id: "libros-recomendados", title: "Libros recomendados" }] : []),
     ...(relatedAuthors.length > 0 ? [{ id: "autoras-relacionadas", title: "Autoras relacionadas" }] : []),
     ...(relatedSagas.length > 0 ? [{ id: "sagas-relacionadas", title: "Sagas relacionadas" }] : []),
     ...(editorialBlocks.length === 0 && page.faqs ? [{ id: "preguntas-frecuentes", title: "Preguntas frecuentes" }] : []),
     ...(editorialBlocks.length === 0 && page.conclusion ? [{ id: "para-terminar", title: "Para terminar" }] : []),
-  ] : [];
+  ];
 
   return (
     <main className={`catalog-page${page.section === "listas" ? " list-detail-page" : ""}${booksLike ? " books-like-page" : ""}`}>
@@ -93,27 +94,21 @@ export async function SeoContent({
           </div>
         </div> : null}
       </header>
-      <div className={indexItems.length > 0 ? "books-like-layout" : undefined}>
-        {indexItems.length > 0 ? <aside className="books-like-index">
-          <nav aria-label="Índice de la página">
-            <p className="books-like-index-label">En esta página</p>
-            <ol>{indexItems.map((item) => <li key={item.id}><a href={`#${item.id}`}>{item.title}</a></li>)}</ol>
-          </nav>
-        </aside> : null}
+      <AuthorIndex name={page.title} items={indexItems}>
         <div className="list-detail-content">
       {editorialBlocks.length > 0 ? <EditorialListContent blocks={contentBlocks} stories={relatedStories} authorNames={authorNames} booksLike={booksLike} notionPathsById={notionPathsById} /> : (
         <>
-          {!booksLike && page.intro ? <section className="story-section seo-intro-section"><h2>Introducción</h2>{paragraphs(page.intro)}</section> : null}
-          {relatedStories.length > 0 ? <section className="story-section seo-books-section home-story-cards"><h2 id={booksLike ? "libros-recomendados" : undefined}>Libros recomendados</h2><StoryGrid stories={relatedStories} authorNames={authorNames} headingLevel={3} showActions={booksLike} /></section> : null}
+          {!booksLike && page.intro ? <section className="story-section seo-intro-section"><h2 id="introduccion">Introducción</h2>{paragraphs(page.intro)}</section> : null}
+          {relatedStories.length > 0 ? <section className="story-section seo-books-section home-story-cards"><h2 id="libros-recomendados">Libros recomendados</h2><StoryGrid stories={relatedStories} authorNames={authorNames} headingLevel={3} showActions={booksLike} /></section> : null}
         </>
       )}
-      {relatedAuthors.length > 0 ? <section className="story-section"><h2 id={booksLike ? "autoras-relacionadas" : undefined}>Autoras relacionadas</h2><ul className="link-list">{relatedAuthors.map((author) => <li key={author.id}><Link href={`/autoras/${author.slug}`}>{author.name} →</Link></li>)}</ul></section> : null}
-      {relatedSagas.length > 0 ? <section className="story-section"><h2 id={booksLike ? "sagas-relacionadas" : undefined}>Sagas relacionadas</h2><ul className="link-list">{relatedSagas.map((saga) => <li key={saga.id}><Link href={`/sagas/${saga.slug}`}>{saga.name} →</Link></li>)}</ul></section> : null}
-      {editorialBlocks.length === 0 && page.faqs ? <section className="story-section faq-section"><h2 id={booksLike ? "preguntas-frecuentes" : undefined}>Preguntas frecuentes</h2>{faqParagraphs(page.faqs)}</section> : null}
-      {editorialBlocks.length === 0 && page.conclusion ? <section className="story-section"><h2 id={booksLike ? "para-terminar" : undefined}>Para terminar</h2>{paragraphs(page.conclusion)}</section> : null}
+      {relatedAuthors.length > 0 ? <section className="story-section"><h2 id="autoras-relacionadas">Autoras relacionadas</h2><ul className="link-list">{relatedAuthors.map((author) => <li key={author.id}><Link href={`/autoras/${author.slug}`}>{author.name} →</Link></li>)}</ul></section> : null}
+      {relatedSagas.length > 0 ? <section className="story-section"><h2 id="sagas-relacionadas">Sagas relacionadas</h2><ul className="link-list">{relatedSagas.map((saga) => <li key={saga.id}><Link href={`/sagas/${saga.slug}`}>{saga.name} →</Link></li>)}</ul></section> : null}
+      {editorialBlocks.length === 0 && page.faqs ? <section className="story-section faq-section"><h2 id="preguntas-frecuentes">Preguntas frecuentes</h2>{faqParagraphs(page.faqs)}</section> : null}
+      {editorialBlocks.length === 0 && page.conclusion ? <section className="story-section"><h2 id="para-terminar">Para terminar</h2>{paragraphs(page.conclusion)}</section> : null}
       {editorialBlocks.length === 0 && page.cta ? <p className="entity-note">{page.cta}</p> : null}
         </div>
-      </div>
+      </AuthorIndex>
     </main>
   );
 }

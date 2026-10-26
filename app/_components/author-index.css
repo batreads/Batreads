@@ -34,21 +34,21 @@
 .author-page .author-facts .author-profile-links { margin-top: 18px; gap: 4px; }
 .author-page .author-facts .author-profile-links a { display: inline-flex; align-items: center; min-height: 40px; text-decoration-thickness: 1px; }
 .author-page .author-profile-links-title { margin: 0 0 8px; color: var(--page-muted); font-size: 12px; font-weight: 400; line-height: 1.4; }
-.author-page .author-editorial table td,
-.author-page .author-editorial table td:nth-child(2),
-.author-page .author-editorial table td strong,
-.author-page .author-editorial table td a,
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) table td,
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) table td:nth-child(2),
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) table td strong,
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) table td a,
 .author-page .author-reading-book details p { font-weight: 300; }
 .author-page .author-about h2 { grid-column: 1; }
 .author-page .author-about-cta { grid-column: 2; grid-row: 1; justify-content: flex-end; margin: 0; }
 .author-page .author-about-cta + .author-biography { grid-row: 2; }
 .author-page .author-about-cta ~ .author-facts { grid-row: 2; }
-.author-page .author-editorial h3 { font-family: var(--font-body); }
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) h3 { font-family: var(--font-body); }
 
 /* Shared reading rhythm for author introductions, guides and biographies. */
 .author-page .author-intro,
-.author-page .author-editorial > p,
-.author-page .author-editorial li,
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) > p,
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) li,
 .author-page .author-bio,
 .author-page .author-faq-item p {
   max-width: 68ch;
@@ -57,17 +57,17 @@
   line-height: 1.75;
 }
 .author-page .author-intro,
-.author-page .author-editorial > p,
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) > p,
 .author-page .author-bio,
 .author-page .author-faq-item p {
   color: #d5e8e1;
   font-weight: 300;
 }
-.author-page .author-editorial > p,
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) > p,
 .author-page .author-bio {
   margin-bottom: 20px;
 }
-.author-page .author-editorial li + li { margin-top: 8px; }
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) li + li { margin-top: 8px; }
 .author-page .author-faq-item h3 {
   max-width: 68ch;
   font-family: var(--font-body);
@@ -75,14 +75,14 @@
   line-height: 1.4;
   margin-bottom: 12px;
 }
-.author-page .author-editorial table {
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) table {
   font-size: 16px;
   font-weight: 400;
   line-height: 1.65;
 }
-.author-page .author-editorial td:first-child { font-weight: 400; }
-.author-page .author-editorial th,
-.author-page .author-editorial strong,
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) td:first-child { font-weight: 400; }
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) th,
+:is(.author-page .author-editorial, .list-detail-page .editorial-section) strong,
 .author-page .author-faq-item strong { font-weight: 600; }
 @media (max-width: 850px) {
   .author-page .author-about-cta { grid-column: 1; grid-row: auto; justify-content: flex-start; }
@@ -119,11 +119,11 @@
   .author-reading-table > .editorial-table-wrap { display: none; }
 }
 .author-index-desktop { position: sticky; top: 24px; max-height: calc(100dvh - 48px); overflow-y: auto; padding: 20px 12px; border: 1px solid #24494a; border-radius: 12px; background: #0d2427; }
-.author-page .author-index-layout nav .author-index-label { margin: 0 0 4px; padding: 0; color: #c9dcd5; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.author-index-layout nav .author-index-label { margin: 0 0 4px; padding: 0; color: #c9dcd5; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .author-page .author-index-content > .story-section:first-child { border-top: 0; padding-top: 0; }
-.author-editorial .editorial-table-book { display: flex; align-items: flex-start; gap: 12px; }
-.author-editorial .editorial-table-book > a { flex: 0 0 44px; }
-.author-editorial .editorial-table-book img { display: block; width: 44px; height: 66px; object-fit: cover; border: 1px solid #4a6c62; border-radius: 0 4px 4px 0; }
+:is(.author-editorial, .list-detail-page .editorial-section) .editorial-table-book { display: flex; align-items: flex-start; gap: 12px; }
+:is(.author-editorial, .list-detail-page .editorial-section) .editorial-table-book > a { flex: 0 0 44px; }
+:is(.author-editorial, .list-detail-page .editorial-section) .editorial-table-book img { display: block; width: 44px; height: 66px; object-fit: cover; border: 1px solid #4a6c62; border-radius: 0 4px 4px 0; }
 .author-index-layout nav ol { list-style: none; margin: 0; padding: 0; }
 .author-index-desktop nav a, .author-index-dialog nav a { display: block; padding: 12px; border-radius: 6px; color: #a9bcba; font-size: 14px; line-height: 1.5; text-decoration: none; }
 .author-index-desktop nav a:hover, .author-index-desktop nav a[aria-current], .author-index-dialog nav a:hover, .author-index-dialog nav a[aria-current] { background: #183b35; color: #63e6be; }
@@ -139,3 +139,21 @@
   .author-index-trigger { display: flex; align-items: center; gap: 8px; position: fixed; left: 0; bottom: max(24px, env(safe-area-inset-bottom)); z-index: 30; min-height: 48px; padding: 12px 16px 12px 12px; border: 1px solid #63e6be; border-left: 0; border-radius: 0 28px 28px 0; background: #b8ead9; color: #14372f; box-shadow: 0 4px 24px #0006; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
 }
 @media (prefers-reduced-motion: no-preference) { html:has(.author-index-layout) { scroll-behavior: smooth; } }
+
+/* List prose follows the same reading rhythm as author guides. */
+.list-detail-page .editorial-section h3 { margin: 28px 0 16px; font-size: 22px; }
+.list-detail-page .editorial-section .faq-list-item p { max-width: 68ch; color: #d5e8e1; font-size: 16px; font-weight: 300; line-height: 1.75; }
+.list-detail-page .editorial-section .faq-list-item h3 { max-width: 68ch; font-family: var(--font-body); font-weight: 600; line-height: 1.4; margin-bottom: 12px; }
+.list-detail-page .editorial-section > p a,
+.list-detail-page .editorial-section li a { font-weight: inherit; }
+.author-index-layout nav a:focus-visible { outline: 2px solid #63e6be; outline-offset: 2px; }
+
+.list-detail-page .editorial-section table { min-width: 640px; }
+
+.list-detail-page .story-section.seo-intro-section > p {
+  max-width: 68ch;
+  color: #d5e8e1;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.75;
+}

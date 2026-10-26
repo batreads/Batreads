@@ -132,10 +132,15 @@ function visibleEditorialSections(blocks: EditorialBlock[], booksLike: boolean) 
     : blocks);
 }
 
-export function editorialIndex(blocks: EditorialBlock[]) {
-  return visibleEditorialSections(blocks, true)
-    .filter((section): section is EditorialSection & { title: string } => Boolean(section.title))
-    .map((section) => ({ id: `seccion-${section.id}`, title: section.title }));
+export function editorialIndex(blocks: EditorialBlock[], booksLike = true, hasStories = false) {
+  const sections = visibleEditorialSections(blocks, booksLike);
+  const chooserIndex = sections.findIndex((section) => section.title?.startsWith("Encuentra el "));
+  const gridAfter = chooserIndex >= 0 ? chooserIndex : 0;
+  if (!sections.length && !booksLike && hasStories) return [{ id: "editorial-books-title", title: "Libros recomendados" }];
+  return sections.flatMap((section, index) => [
+    ...(section.title || !booksLike ? [{ id: `seccion-${section.id}`, title: section.title ?? "Introducción" }] : []),
+    ...(!booksLike && hasStories && index === gridAfter ? [{ id: "editorial-books-title", title: "Libros recomendados" }] : []),
+  ]);
 }
 
 export function EditorialListContent({ blocks, stories, authorNames, booksLike = false, notionPathsById = {} }: { blocks: EditorialBlock[]; stories: Story[]; authorNames: Record<string, string>; booksLike?: boolean; notionPathsById?: Record<string, string> }) {
@@ -155,8 +160,8 @@ export function EditorialListContent({ blocks, stories, authorNames, booksLike =
         const sectionStory = booksLike ? stories.find((story) => section.title?.startsWith(`${story.title}:`)) : undefined;
         return <div key={section.id}>
           <section className={`story-section editorial-section${section.title ? "" : " seo-intro-section"}${section.title?.startsWith("Preguntas frecuentes") ? " editorial-faq-section" : ""}${index === chooserIndex ? " editorial-choice-section" : ""}${section.title?.startsWith("Libros de mafia romance") ? " editorial-metrics-section" : ""}`}>
-            {section.title || !booksLike ? <h2 id={booksLike && section.title ? `seccion-${section.id}` : undefined}>{section.title ?? "Introducción"}</h2> : null}
-            {booksLike && section.title?.startsWith("Preguntas frecuentes")
+            {section.title || !booksLike ? <h2 id={section.title || !booksLike ? `seccion-${section.id}` : undefined}>{section.title ?? "Introducción"}</h2> : null}
+            {section.title?.startsWith("Preguntas frecuentes")
               ? <FaqList items={faqItemsFromBlocks(section.blocks, notionPathsById)} />
               : renderBlocks(section.blocks, notionPathsById, Object.fromEntries(stories.map((story) => [`/historias/${story.slug}`, story.title])))}
             {sectionStory ? <div className="editorial-inline-story home-story-cards"><StoryGrid stories={[sectionStory]} authorNames={authorNames} headingLevel={3} showActions /></div> : null}
