@@ -45,6 +45,12 @@ Las páginas se generan desde `lib/notion`; añadir un registro publicado no
 requiere crear un archivo de ruta. Las consultas y las páginas se revalidan
 aproximadamente cada hora.
 
+Las imágenes para compartir (Open Graph) solo leen portadas del repositorio,
+con rutas `/images/...` dentro de `public/images/` y un máximo de 5 MB por
+archivo. No descargan portadas externas. Si el archivo falta, supera ese
+límite o queda fuera de esa carpeta (también mediante enlaces simbólicos),
+la imagen para compartir se genera sin esa portada.
+
 - **Historias:** deben tener `Estado ficha = Publicada` y
   `Publicación Batreads = Publicar`.
 - **Autoras:** aparecen si `Estado = Publicada`. Como excepción de continuidad,

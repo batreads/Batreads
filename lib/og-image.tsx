@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ImageResponse } from "next/og";
 import sharp from "sharp";
+import { readLocalCover } from "./local-cover";
 import { OpenGraphTemplate, type OpenGraphTemplateProps } from "@/components/seo/OpenGraphTemplate";
 import { CollectionOpenGraphTemplate, type CollectionOpenGraphTemplateProps } from "@/components/seo/CollectionOpenGraphTemplate";
 import { HomeOpenGraphTemplate } from "@/components/seo/HomeOpenGraphTemplate";
@@ -28,25 +29,9 @@ const homeBackground = readFile(path.join(process.cwd(), "public/images/home-her
   .then((background) => asDataUrl(background, "image/png"));
 
 async function getCoverDataUrl(coverUrl?: string | null): Promise<string | null> {
-  if (!coverUrl) return null;
-
   try {
-    let bytes: Buffer;
-    if (coverUrl.startsWith("/images/") && !coverUrl.includes("..")) {
-      const imagePath = path.resolve(process.cwd(), "public", `.${coverUrl}`);
-      const imagesRoot = path.resolve(process.cwd(), "public/images");
-      if (!imagePath.startsWith(`${imagesRoot}${path.sep}`)) return null;
-      bytes = await readFile(imagePath);
-    } else {
-      const url = new URL(coverUrl);
-      if (url.protocol !== "https:") return null;
-      const response = await fetch(url, { signal: AbortSignal.timeout(5000), next: { revalidate: 3600 } });
-      const mime = response.headers.get("content-type")?.split(";")[0];
-      if (!response.ok || !mime?.startsWith("image/")) return null;
-      bytes = Buffer.from(await response.arrayBuffer());
-    }
-
-    if (bytes.length > 5_000_000) return null;
+    const bytes = await readLocalCover(coverUrl);
+    if (!bytes) return null;
     // ImageResponse does not decode WebP reliably; normalize every cover first.
     return asDataUrl(await sharp(bytes).resize({ width: 700, withoutEnlargement: true }).png().toBuffer(), "image/png");
   } catch {
