@@ -41,6 +41,12 @@ export default function CookiePolicyPage() {
             <p>Las decisiones guardadas antes de activar Analytics no se consideran consentimiento para esta medición. Por eso volvemos a mostrar el aviso tras el cambio.</p>
           </section>
 
+          <section aria-labelledby="vercel-analytics">
+            <h2 id="vercel-analytics">Estadísticas de tráfico con Vercel</h2>
+            <p>En producción utilizamos Vercel Web Analytics para obtener estadísticas de páginas vistas y visitantes, de forma independiente a tu elección sobre Google Analytics. Este servicio no utiliza cookies; según Vercel, distingue visitantes mediante un identificador calculado a partir de la petición que se descarta tras 24 horas. Esto no permite identificar visitantes recurrentes entre días.</p>
+            <p>Quitamos los parámetros de consulta y los fragmentos de las URLs enviadas y no añadimos eventos personalizados. Puedes consultar los detalles del tratamiento en la <a href="https://vercel.com/docs/analytics/privacy-policy" target="_blank" rel="noopener noreferrer">documentación de privacidad de Vercel Web Analytics</a>.</p>
+          </section>
+
           <section aria-labelledby="cookies-control">
             <h2 id="cookies-control">Cómo cambiar tu elección</h2>
             <p>Puedes abrir de nuevo el aviso mediante «Cambiar preferencias de cookies», disponible en el pie de todas las páginas. Si retiras tu consentimiento, dejamos de cargar Analytics en las siguientes visitas y eliminamos sus cookies accesibles desde esta web. También puedes borrar las cookies desde la configuración de tu navegador; en ese caso, volveremos a mostrarte el aviso.</p>

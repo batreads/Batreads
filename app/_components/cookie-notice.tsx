@@ -129,19 +129,21 @@ export function CookieNotice() {
 
   return (
     <section className="cookie-notice" aria-labelledby="cookie-notice-title">
+      <button className="cookie-notice-close" type="button" aria-label="Cerrar aviso sin cambiar tu elección de cookies" onClick={() => setVisible(false)}>×</button>
       <div className="cookie-notice-inner">
         <div className="cookie-notice-copy">
-          <h2 id="cookie-notice-title" ref={headingRef} tabIndex={-1}>El murciélago quiere saber qué buscas 🦇</h2>
+          <h2 id="cookie-notice-title" ref={headingRef} tabIndex={-1}>Ayúdanos a mejorar Batreads 🦇</h2>
           <p>
-            Si aceptas, Google Analytics 4 usará cookies para medir qué páginas visitas y mejorar
-            nuestras recomendaciones. Si rechazas, no cargaremos Analytics. Puedes cambiar tu elección
-            desde el pie de página. Lee nuestra{" "}
+            Con tu permiso, usamos cookies de Google Analytics para saber qué fichas y guías
+            interesan más y mejorar la web. También puedes{" "}
+            <button className="cookie-notice-reject" type="button" onClick={() => save("rejected")}>rechazar cookies</button>.
+            Puedes cambiar tu elección cuando quieras.
+            Más información en la{" "}
             <Link href="/politica-de-cookies">política de cookies</Link>.
           </p>
         </div>
         <div className="cookie-notice-actions">
-          <button className="cookie-notice-reject" type="button" onClick={() => save("rejected")}>Rechazar</button>
-          <button className="cookie-notice-accept" type="button" onClick={() => save("accepted")}>Aceptar</button>
+          <button className="cookie-notice-accept" type="button" onClick={() => save("accepted")}>Aceptar cookies</button>
         </div>
       </div>
     </section>
