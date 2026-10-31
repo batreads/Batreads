@@ -5,6 +5,8 @@ import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { StoryGrid } from "../../_components/story-grid";
 import { SagaCard } from "../../_components/saga-card";
 import { EditorialContent } from "../../_components/editorial-list-content";
+import { AuthorStartingBook } from "../../_components/author-starting-book";
+import { authorStartingBook } from "@/lib/author-starting-book";
 import { AuthorIndex } from "../../_components/author-index";
 import { getAuthorBySlug, getAuthors, getEditorialBlocks, getSagas, getSeoPages, getStories } from "@/lib/notion";
 import type { Author, SeoPage } from "@/lib/notion";
@@ -108,6 +110,12 @@ export default async function AutoraPage({ params }: PageProps) {
   ]);
   const relatedStoryIds = new Set(author.storyIds);
   const authorStories = sortByReadingGuide(stories.filter((story) => relatedStoryIds.has(story.id)), editorialBlocks);
+  const startingBook = authorStartingBook(author, authorStories);
+  const startingSaga = startingBook ? sagas.find(saga => saga.id === startingBook.story.sagaId) : null;
+  // The main sequence can exclude complementary books counted in the saga universe.
+  const startingSagaBookCount = startingSaga?.sagaType === "Trilogía" ? 3
+    : startingSaga?.sagaType === "Duología" || startingSaga?.sagaType === "Bilogía" ? 2
+    : startingSaga?.bookCount;
   const relatedSagaIds = new Set(author.sagaIds);
   const authorSagas = sagas.filter((saga) => relatedSagaIds.has(saga.id));
   const relatedListsForAuthor = relatedLists(author, seoPages);
@@ -127,6 +135,7 @@ export default async function AutoraPage({ params }: PageProps) {
     ["Sagas", authorSagas.map((saga) => saga.name).join(", ")],
   ].filter(([, value]) => Boolean(value));
   const indexItems = [
+    ...(startingBook ? [{ id: "por-donde-empezar", title: "Por dónde empezar" }] : []),
     ...(editorialBlocks.length ? [{ id: "orden-de-lectura", title: "Orden de lectura" }] : []),
     { id: "author-stories-title", title: "Libros" },
     ...(authorSagas.length || relatedListsForAuthor.length ? [{ id: "author-sagas-title", title: authorSagas.length && relatedListsForAuthor.length ? "Sagas y listas" : authorSagas.length ? "Sagas" : "Listas relacionadas" }] : []),
@@ -159,6 +168,7 @@ export default async function AutoraPage({ params }: PageProps) {
       </header>
 
       <AuthorIndex name={author.name} items={indexItems}>
+      {startingBook ? <AuthorStartingBook story={startingBook.story} reason={startingBook.reason} authorName={author.name} bookCount={startingSagaBookCount} /> : null}
       {editorialBlocks.length > 0 ? (
         <section id="orden-de-lectura" className="story-section author-editorial" aria-label={`Guía de lectura de ${author.name}`}>
           <EditorialContent blocks={editorialBlocks} notionPathsById={notionPathsById} stories={authorStories} authorReading />
@@ -185,7 +195,7 @@ export default async function AutoraPage({ params }: PageProps) {
           <div className="author-related-grid">
             {authorSagas.map((saga) => {
               const sagaStoryIds = new Set(saga.storyIds);
-              return <SagaCard key={saga.id} saga={saga} stories={stories.filter((story) => sagaStoryIds.has(story.id))} showAuthor={false} showGenre={false} showDiscovery={false} showLink={false} showRelationshipTags={false} headingLevel={3} />;
+              return <SagaCard key={saga.id} saga={saga} stories={stories.filter((story) => sagaStoryIds.has(story.id))} showAuthor={false} showGenre={false} showDiscovery={false} showLink={true} linkLabel="Ver la saga" showRelationshipTags={false} headingLevel={3} />;
             })}
             {relatedListsForAuthor.map((page) => <ListCard page={page} stories={stories} key={page.id} />)}
           </div>

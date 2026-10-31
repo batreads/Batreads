@@ -1,0 +1,72 @@
+/* Related cards reserve room for cover stacks before the text column. */
+:is(.author-page .author-sagas, .story-discovery) .saga-card {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding: 18px;
+  background: var(--page-surface);
+  box-shadow: none;
+}
+:is(.author-page .author-sagas, .story-discovery) .saga-card-no-art { grid-template-columns: minmax(0, 1fr); }
+:is(.author-page .author-sagas, .story-discovery) .saga-card-art {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 160px;
+  height: auto;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+:is(.author-page .author-sagas, .story-discovery) .saga-card-art::after { display: none; }
+:is(.author-page .author-sagas, .story-discovery) .saga-card-feature-cover {
+  width: 116px;
+  height: 177px;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  border-radius: 5px;
+  box-shadow: none;
+}
+:is(.author-page .author-sagas, .story-discovery) .saga-card-covers { width: 160px; height: 177px; }
+:is(.author-page .author-sagas, .story-discovery) .saga-card-covers img {
+  width: 82px;
+  height: 123px;
+  top: 22px;
+  box-shadow: 0 6px 12px rgb(0 0 0 / 20%);
+}
+:is(.author-page .author-sagas, .story-discovery) .saga-card-count {
+  position: static;
+  order: -1;
+  align-self: center;
+  padding: 4px 7px;
+  border: 1px solid color-mix(in srgb, var(--page-accent) 35%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--page-accent);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+:is(.author-page .author-sagas, .story-discovery) .saga-card-count img { display: none; }
+:is(.author-page .author-sagas, .story-discovery) .saga-card-body { min-height: 0; padding: 0; }
+:is(.author-page .author-sagas, .story-discovery) .saga-card-description { margin: 10px 0 0; }
+:is(.author-page .author-sagas, .story-discovery) .saga-card-actions { margin-top: 14px; padding-top: 0; }
+:is(.author-page .author-sagas, .story-discovery) a.saga-card-link {
+  color: var(--page-accent);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+:is(.author-page .author-sagas, .story-discovery) a.saga-card-link:hover { text-decoration: underline; }
+@media (max-width: 600px) {
+  :is(.author-page .author-sagas, .story-discovery) .saga-card { grid-template-columns: 100px minmax(0, 1fr); gap: 18px; padding: 16px; }
+  :is(.author-page .author-sagas, .story-discovery) .saga-card-no-art { grid-template-columns: minmax(0, 1fr); }
+  :is(.author-page .author-sagas, .story-discovery) .saga-card-art { width: 100px; }
+  :is(.author-page .author-sagas, .story-discovery) .saga-card-covers { width: 100px; height: 132px; }
+  :is(.author-page .author-sagas, .story-discovery) .saga-card-covers img { width: 56px; height: 84px; top: 16px; }
+  :is(.author-page .author-sagas, .story-discovery) .saga-card-feature-cover { width: 86px; height: 132px; }
+}
+

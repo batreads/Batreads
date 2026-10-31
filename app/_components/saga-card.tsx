@@ -7,7 +7,7 @@ function LinkChevron() {
   return <svg className="saga-card-chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false"><path d="m6 3 5 5-5 5" /></svg>;
 }
 
-export function SagaCard({ saga, stories, authorName, authors = [], showAuthor = true, linkAuthors = true, showDiscovery = false, headingLevel = 2, showArt = true, showGenre = true, showRelationshipTags = true, showLink = true }: {
+export function SagaCard({ saga, stories, authorName, authors = [], showAuthor = true, linkAuthors = true, showDiscovery = false, headingLevel = 2, showArt = true, showGenre = true, showRelationshipTags = true, showLink = true, linkLabel = "Ver libros y orden de lectura" }: {
   saga: Saga;
   stories: Story[];
   authorName?: string;
@@ -20,6 +20,7 @@ export function SagaCard({ saga, stories, authorName, authors = [], showAuthor =
   showGenre?: boolean;
   showRelationshipTags?: boolean;
   showLink?: boolean;
+  linkLabel?: string;
 }) {
   const Heading = headingLevel === 2 ? "h2" : "h3";
   const orderedStories = [...stories].sort((a, b) => (a.sagaNumber ?? Infinity) - (b.sagaNumber ?? Infinity) || a.title.localeCompare(b.title, "es"));
@@ -70,7 +71,7 @@ export function SagaCard({ saga, stories, authorName, authors = [], showAuthor =
           </div>
         ) : null}
         {showLink || showDiscovery && orderedStories.length > 0 ? <div className="saga-card-actions">
-          {showLink ? <Link className="saga-card-link" href={sagaPath}>Ver libros y orden de lectura <LinkChevron /></Link> : null}
+          {showLink ? <Link className="saga-card-link" href={sagaPath}>{linkLabel} {linkLabel === "Ver la saga" ? <span aria-hidden="true">→</span> : <LinkChevron />}</Link> : null}
           {showDiscovery && orderedStories.length > 0 ? <div className="saga-card-books">
             {(firstBook ? [firstBook] : orderedStories.slice(0, 2)).map((story) => <Link className="saga-card-book" href={`/historias/${story.slug}`} key={story.id}>
               {story.coverUrl ? <span className="saga-card-book-art" aria-hidden="true"><EditorialImage className="saga-card-book-cover" src={story.coverUrl} alt="" width={36} height={54} sizes="36px" loading="lazy" /></span> : null}

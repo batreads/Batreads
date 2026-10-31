@@ -1,13 +1,17 @@
 import { ListCard, ListCardGrid } from "@/app/_components/list-card";
+import "../../_components/related-cards.css";
+import "./story-typography.css";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { notFound } from "next/navigation";
-import { StoryGrid } from "../../_components/story-grid";
 import { SagaCard } from "../../_components/saga-card";
+import { BookRecommendations } from "../../_components/book-recommendations";
+import { storyRecommendations } from "@/lib/story-recommendations";
 import { getAuthors, getSagas, getSeoPages, getStories, getStoryBySlug, storiesForSeoPage, type Story } from "@/lib/notion";
 import { EditorialImage } from "../../_components/editorial-image";
-import { BookSharing } from "../../_components/book-sharing";
+// import { BookSharing } from "../../_components/book-sharing";
+import { storySeriesContext } from "@/lib/story-series-context";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -75,11 +79,17 @@ export default async function HistoriaPage({
   const [stories, authors, sagas, seoPages] = await Promise.all([getStories(), getAuthors(), getSagas(), getSeoPages()]);
   const author = authors.find((item) => item.id === story.authorId);
   const saga = sagas.find((item) => item.id === story.sagaId);
-  const sagaStories = saga ? stories.filter((item) => item.sagaId === saga.id) : [];
+  const seriesContext = storySeriesContext(story, saga);
+  const sagaStories = saga ? stories.filter((item) => item.sagaId === saga.id)
+    .sort((a, b) => (a.sagaNumber ?? Infinity) - (b.sagaNumber ?? Infinity)) : [];
   const isHiddenGem = story.filterValues["Popularidad"]?.some((value) => value.trim().toLocaleLowerCase("es") === "hidden gem");
-  const relatedStories = stories.filter((item) => item.id !== story.id && story.relatedStoryIds.includes(item.id));
-  const authorNames = Object.fromEntries(authors.map((item) => [item.id, item.name]));
-  const sagaAuthorNames = saga?.authorIds.map((id) => authorNames[id]).filter(Boolean).join(", ") || undefined;
+  const recommendations = storyRecommendations(story, stories);
+  const recommendationGroups = [
+    { label: "En esta saga", stories: sagaStories }, ...recommendations,
+  ].map((group) => ({ label: group.label, stories: group.stories
+    .filter((item) => item.id !== story.id)
+    .map(({ id, slug, title, coverUrl, authorName }) => ({ id, slug, title, coverUrl, authorName }))
+  })).filter((group) => group.stories.length > 0);
   const relatedPages = seoPages.filter((page) =>
     page.mainStoryIds.includes(story.id)
     || storiesForSeoPage(page, stories, authors, sagas).some((item) => item.id === story.id)
@@ -115,12 +125,13 @@ export default async function HistoriaPage({
   return (
     <main className={`story-page${story.coverUrl ? "" : " story-page-no-cover"}`}>
       <Breadcrumbs items={[{ label: "Libros", href: "/historias" }, { label: story.title }]} structuredDataPath={`/historias/${story.slug}`} />
+      <div className="story-detail-layout">
       <aside className="story-sidebar" aria-label="Portada y opciones de lectura">
         {story.coverUrl ? (
           <div className="story-hero-media">
             <div className="story-hero-cover">
               <EditorialImage src={story.coverUrl} alt={`Portada de ${story.title}`} width={290} height={427}
-                sizes="(max-width: 640px) 100vw, 290px" loading="eager" fetchPriority="high" />
+                sizes="(max-width: 640px) 132px, 180px" loading="eager" fetchPriority="high" />
               {heroTopline ? <div className="story-cover-topline">{heroTopline}</div> : null}
             </div>
             {heroActions}
@@ -131,25 +142,28 @@ export default async function HistoriaPage({
       <div className="story-content">
       <header className="story-hero">
         <div className="story-hero-info">
-          {heroTopline}
           <h1>{story.title}</h1>
           <div className="story-hero-details">
-            {author ? <p className="story-hero-author">de <Link href={`/autoras/${author.slug}`}>{author.name}</Link></p>
-              : story.authorName ? <p className="story-hero-author">de {story.authorName}</p> : null}
-            {saga ? <p className="story-hero-saga">Saga <Link href={`/sagas/${saga.slug}`}>{saga.name}</Link></p>
-              : story.sagaName ? <p className="story-hero-saga">Saga {story.sagaName}</p> : null}
+            {(author || story.authorName) ? <p className="story-hero-author">
+              <span className="story-hero-detail-label">Autora</span>
+              {author ? <Link href={`/autoras/${author.slug}`}>{author.name}</Link> : story.authorName}
+            </p> : null}
+            {(saga || story.sagaName) ? <p className="story-hero-saga">
+              <span className="story-hero-detail-label">Saga</span>
+              {seriesContext.label ? <>{seriesContext.label} de </> : null}
+              {saga ? <Link href={`/sagas/${saga.slug}`}>{saga.name}</Link> : story.sagaName}
+            </p> : null}
           </div>
+          {heroTopline}
           {(story.hook || story.synopsis) ? <p className="story-hero-hook">{story.hook || story.synopsis}</p> : null}
-          {story.tropes.length > 0 ? (
-            <div className="story-hero-themes">
-              <p className="story-hero-themes-label">Claves de la historia</p>
-              <ul className="story-hero-tropes">
-                {story.tropes.slice(0, 3).map((trope) => (
-                  <li key={trope}><img src="/icons/hero-ku.svg" alt="" width="14" height="14" />{trope}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
+          {!story.coverUrl ? <>{heroActions}{kuNotice}</> : null}
+        </div>
+      </header>
+
+      {heroActions ? <div className="story-mobile-purchase">{heroActions}{kuNotice}</div> : null}
+
+      <section className="story-section story-intensity" aria-labelledby="story-intensity-title">
+        <h2 id="story-intensity-title">Intensidad de la historia</h2>
           <div className="story-hero-metrics" aria-label="Índices del libro">
             {metricList(story).map(([label, value, icon]) => (
               <div className="story-hero-metric" key={label}>
@@ -159,11 +173,7 @@ export default async function HistoriaPage({
               </div>
             ))}
           </div>
-          {!story.coverUrl ? <>{heroActions}{kuNotice}</> : null}
-        </div>
-      </header>
-
-      {heroActions ? <div className="story-mobile-purchase">{heroActions}{kuNotice}</div> : null}
+      </section>
 
       {story.synopsis ? <section className="story-section"><h2>La historia</h2>{paragraphs(story.synopsis)}</section> : null}
 
@@ -173,6 +183,25 @@ export default async function HistoriaPage({
       </div>
 
       {story.review ? <section className="story-section story-review"><h2>Reseña de Batreads</h2>{paragraphs(story.review)}</section> : null}
+
+      <details className="story-section story-book-details">
+        <summary>
+          <h2>Datos del libro</h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+        </summary>
+        <div className="story-book-details-content">
+        <dl className="book-facts">
+          {story.originalTitle ? <div><dt>Título original</dt><dd>{story.originalTitle}</dd></div> : null}
+          {story.originalYear ? <div><dt>Año original</dt><dd>{story.originalYear}</dd></div> : null}
+          <div><dt>Capítulos</dt><dd>{story.chapterCount ?? "—"}</dd></div>
+          {story.pageCount ? <div><dt>Páginas</dt><dd>{story.pageCount}</dd></div> : null}
+          {story.publisher ? <div><dt>Editorial</dt><dd>{story.publisher}</dd></div> : null}
+          {story.format.length ? <div><dt>Formatos</dt><dd>{story.format.join(", ")}</dd></div> : null}
+        </dl>
+        {wattpadUrl ? <p><a href={wattpadUrl} rel="noopener noreferrer" target="_blank">Leer en Wattpad ↗</a></p> : null}
+        {story.amazonUrl ? <p><a href={story.amazonUrl} rel="sponsored noopener noreferrer" target="_blank">Ver en Amazon ↗</a></p> : null}
+        </div>
+      </details>
 
       {tagSection("Tropes y temas recurrentes", story.tropes)}
       {tagSection("Dinámicas de relación", story.relationshipDynamics)}
@@ -187,39 +216,29 @@ export default async function HistoriaPage({
         </section>
       ) : null}
 
-      {(saga || relatedStories.length > 0) ? (
-        <section className="story-section story-related">
-          <h2>Sigue explorando</h2>
-          {saga ? (
-            <div className="story-related-group story-related-saga">
-              <p className="story-related-label">La saga</p>
-              <SagaCard saga={saga} stories={sagaStories} authorName={sagaAuthorNames} headingLevel={3} showArt={false} showGenre={false} showLink={false} />
-            </div>
-          ) : null}
-          {relatedStories.length > 0 ? (
-            <div className="story-related-group home-story-cards">
-              <p className="story-related-label">Historias relacionadas</p>
-              <StoryGrid stories={relatedStories} authorNames={authorNames} headingLevel={3} />
-            </div>
-          ) : null}
+      {(saga || relatedPages.length > 0) ? (
+        <section className="story-section story-discovery" aria-labelledby="story-discovery-title">
+          <h2 id="story-discovery-title">{saga ? relatedPages.length > 0 ? "Saga y listas relacionadas" : "La saga" : "Listas relacionadas"}</h2>
+          <div className="story-discovery-cards">
+            {saga ? <SagaCard saga={saga} stories={sagaStories} headingLevel={3} showAuthor={false} linkLabel="Ver la saga"
+              showGenre={false} showRelationshipTags={false} /> : null}
+            {relatedPages.length > 0 ? <ListCardGrid>{relatedPages.map((page) => <ListCard page={page} stories={stories} key={page.id} />)}</ListCardGrid> : null}
+          </div>
         </section>
       ) : null}
-      {relatedPages.length > 0 ? <section className="story-section"><h2>Listas relacionadas</h2><ListCardGrid>{relatedPages.map((page) => <ListCard page={page} stories={stories} key={page.id} />)}</ListCardGrid></section> : null}
 
-      <section className="story-section">
-        <h2>Datos del libro</h2>
-        <dl className="book-facts">
-          {story.originalTitle ? <div><dt>Título original</dt><dd>{story.originalTitle}</dd></div> : null}
-          {story.originalYear ? <div><dt>Año original</dt><dd>{story.originalYear}</dd></div> : null}
-          <div><dt>Capítulos</dt><dd>{story.chapterCount ?? "—"}</dd></div>
-          {story.pageCount ? <div><dt>Páginas</dt><dd>{story.pageCount}</dd></div> : null}
-          {story.publisher ? <div><dt>Editorial</dt><dd>{story.publisher}</dd></div> : null}
-          {story.format.length ? <div><dt>Formatos</dt><dd>{story.format.join(", ")}</dd></div> : null}
-        </dl>
-        {wattpadUrl ? <p><a href={wattpadUrl} rel="noopener noreferrer" target="_blank">Leer en Wattpad ↗</a></p> : null}
-        {story.amazonUrl ? <p><a href={story.amazonUrl} rel="sponsored noopener noreferrer" target="_blank">Ver en Amazon ↗</a></p> : null}
-      </section>
-      <BookSharing book={{
+
+      {recommendationGroups.length > 0 ? (
+        <section className="story-section story-explore" aria-labelledby="story-explore-title">
+          <div className="story-explore-results">
+          <header className="story-explore-heading">
+            <h2 id="story-explore-title">Libros relacionados</h2>
+          </header>
+          <BookRecommendations groups={recommendationGroups} />
+          </div>
+        </section>
+      ) : null}
+      {/* <BookSharing book={{
         id: story.id,
         slug: story.slug,
         title: story.title,
@@ -228,8 +247,10 @@ export default async function HistoriaPage({
         tropes: story.tropes,
         subgenres: story.subgenres,
         idealFor: story.idealFor,
-      }} />
+      }} /> */}
       </div>
+      </div>
+
     </main>
   );
 }

@@ -1,6 +1,7 @@
 import { checkbox, number, relationIds, select, tags, text, url, validSlug } from "./properties";
 import type { NotionPage, Story } from "./types";
 import { imageSource } from "./image-source";
+import { recommendationFields } from "../story-recommendations";
 
 const webSlugByNotionSlug: Record<string, string> = {
   "credence-penelope-douglas": "credence",
@@ -77,6 +78,7 @@ export function mapNotionPageToStory(page: NotionPage): Story {
       ...relationIds(page, "Siguiente libro"),
       ...relationIds(page, "Leer antes"),
     ],
+    recommendationIds: Object.fromEntries(recommendationFields.map((name) => [name, relationIds(page, name)])),
     filterValues: filterValues(page),
     coverUrl: coverUrl(page),
     hook: text(page, "Hook"),

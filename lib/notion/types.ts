@@ -48,6 +48,7 @@ export type Story = {
   sagaName: string | null;
   sagaNumber: number | null;
   relatedStoryIds: string[];
+  recommendationIds?: Partial<Record<import("../story-recommendations").RecommendationField, string[]>>;
   filterValues: Record<string, string[]>;
   coverUrl: string | null;
   hook: string;
@@ -108,6 +109,8 @@ export type Author = {
   verifiedAt: string | null;
   updatedAt: string | null;
   featuredCollectionId: string | null;
+  startingStoryIds: string[];
+  startingReason: string;
   storyIds: string[];
   sagaIds: string[];
 };

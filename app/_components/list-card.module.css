@@ -166,3 +166,32 @@
   .referenceCover .cover { top: 0; left: 25px; width: 100px; height: 150px; }
   .cardCopy .cardTitle { font-size: 28px; }
 }
+
+/* Author-related lists use the same geometry as the adjacent books and sagas. */
+:is(:global(.author-page), :global(.story-discovery)) .listCard {
+  grid-template-columns: 160px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding: 18px;
+  background: var(--page-surface);
+}
+:is(:global(.author-page), :global(.story-discovery)) .withoutCovers { grid-template-columns: minmax(0, 1fr); }
+:is(:global(.author-page), :global(.story-discovery)) .cardMedia { gap: 10px; }
+:is(:global(.author-page), :global(.story-discovery)) .cardLabel { white-space: normal; text-align: center; font-size: 11px; padding: 4px 7px; font-weight: 500; letter-spacing: 0; }
+:is(:global(.author-page), :global(.story-discovery)) .coverStack { width: 160px; height: 177px; margin: 0; }
+:is(:global(.author-page), :global(.story-discovery)) .cover { width: 76px; height: 114px; }
+:is(:global(.author-page), :global(.story-discovery)) .referenceCover .cover {
+  top: 0; left: 22px; width: 116px; height: 177px; border-radius: 0 12px 12px 0; transform: none; box-shadow: none;
+}
+:is(:global(.author-page), :global(.story-discovery)) .cardCopy .cardTitle { font-size: 25px; font-weight: 500; line-height: 1.25; }
+:is(:global(.author-page), :global(.story-discovery)) .cardCopy p { margin-top: 10px; font-size: 14px; line-height: 1.65; }
+:is(:global(.author-page), :global(.story-discovery)) .cardLink { margin-top: 14px; font-size: 13px; font-weight: 500; }
+@media (max-width: 600px) {
+  :is(:global(.author-page), :global(.story-discovery)) .listCard { grid-template-columns: 100px minmax(0, 1fr); gap: 18px; padding: 16px; }
+  :is(:global(.author-page), :global(.story-discovery)) .withoutCovers { grid-template-columns: minmax(0, 1fr); }
+  :is(:global(.author-page), :global(.story-discovery)) .coverStack { width: 100px; height: 132px; }
+  :is(:global(.author-page), :global(.story-discovery)) .cover { width: 56px; height: 84px; }
+  :is(:global(.author-page), :global(.story-discovery)) .cover:nth-of-type(2) { left: 26px; }
+  :is(:global(.author-page), :global(.story-discovery)) .cover:nth-of-type(3) { left: 14px; }
+  :is(:global(.author-page), :global(.story-discovery)) .referenceCover .cover { left: 7px; width: 86px; height: 132px; }
+}

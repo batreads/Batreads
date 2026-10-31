@@ -47,6 +47,8 @@ function mapAuthor(page: NotionPage): Author {
     verifiedAt: page.properties["Última verificación"]?.date?.start ?? null,
     updatedAt: page.last_edited_time ?? null,
     featuredCollectionId: relationIds(page, "Colección destacada")[0] ?? null,
+    startingStoryIds: relationIds(page, "Libro para empezar"),
+    startingReason: text(page, "Por qué empezar aquí").trim(),
     storyIds: relationIds(page, "Historias"),
     sagaIds: relationIds(page, "Sagas"),
   };

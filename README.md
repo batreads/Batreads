@@ -57,7 +57,10 @@ la imagen para compartir se genera sin esa portada.
   nueve fichas concretas que ya eran públicas siguen apareciendo mientras su
   estado no sea `Descartada`. Tener una historia publicada no publica por sí
   solo una ficha nueva de autora. La biografía y la introducción se muestran
-  cuando esos campos tienen contenido.
+  cuando esos campos tienen contenido. La tarjeta «Por dónde empezar» se configura
+  manualmente con la relación `Libro para empezar` (un único libro) y el texto
+  `Por qué empezar aquí`. Solo se muestra cuando ambos están completos y el libro
+  tiene una ficha publicada de la autora. No se deduce de la tabla de lectura.
 - **Sagas:** solo aparecen si `Estado ficha = Publicada`; relacionarlas con una
   historia publicada no basta. La publicación se decide manualmente en Notion:
   no hay una regla automática basada en el número de libros. La descripción y

@@ -1,3 +1,4 @@
+@import "./related-cards.css";
 .author-index-layout { min-width: 0; }
 .author-index-layout.author-index-ready { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 36px; align-items: start; }
 .author-index-content { min-width: 0; }
@@ -120,7 +121,7 @@
 }
 .author-index-desktop { position: sticky; top: 24px; max-height: calc(100dvh - 48px); overflow-y: auto; padding: 20px 12px; border: 1px solid #24494a; border-radius: 12px; background: #0d2427; }
 .author-index-layout nav .author-index-label { margin: 0 0 4px; padding: 0; color: #c9dcd5; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-.author-page .author-index-content > .story-section:first-child { border-top: 0; padding-top: 0; }
+.author-page .author-index-content > .story-section:first-child:not(.author-start) { border-top: 0; padding-top: 0; }
 :is(.author-editorial, .list-detail-page .editorial-section) .editorial-table-book { display: flex; align-items: flex-start; gap: 12px; }
 :is(.author-editorial, .list-detail-page .editorial-section) .editorial-table-book > a { flex: 0 0 44px; }
 :is(.author-editorial, .list-detail-page .editorial-section) .editorial-table-book img { display: block; width: 44px; height: 66px; object-fit: cover; border: 1px solid #4a6c62; border-radius: 0 4px 4px 0; }
@@ -156,4 +157,99 @@
   font-size: 16px;
   font-weight: 300;
   line-height: 1.75;
+}
+
+/* Author profiles: serif for author and work titles; sans serif for guidance. */
+.author-page .author-hero h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+.author-page .story-section h2 {
+  font-family: var(--font-body);
+  font-size: clamp(20px, 2.2vw, 24px);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+.author-page .author-editorial h3 {
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -.01em;
+}
+.author-page :is(.author-stories, .author-sagas) h3 {
+  font-family: var(--font-display);
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -.025em;
+}
+.author-page :is(.author-intro, .author-editorial > p, .author-editorial li, .author-bio, .author-faq-item p) {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: #d5e8e1;
+}
+.author-page :is(.story-card-description, .saga-card-description, .author-related-grid > a p) {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+.author-page .author-faq-item h3 {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -.01em;
+}
+.author-page .author-editorial table {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.author-page .author-editorial table th {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: .025em;
+  text-transform: none;
+}
+.author-page .author-editorial table td:nth-child(2) a {
+  font-weight: 500;
+}
+.author-page .author-reading-book-heading h4 {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.author-page :is(.author-index-desktop, .author-index-dialog) nav a {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.author-page :is(.author-index-label, .author-fact span, .author-profile-links-title) {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+}
+.author-page :is(.author-section-actions a, .author-amazon-cta) {
+  font-weight: 600;
+}
+
+/* Use the available content width, including the space taken by the index. */
+.author-page .author-stories .story-grid,
+.author-page .author-related-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+}
+
+
+.author-page .editorial-table-book img,
+.author-page .author-reading-book-heading img {
+  border-color: #315153;
 }
