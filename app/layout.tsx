@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { SiteHeader, SiteHeaderFallback } from "./_components/site-header";
 import { SiteFooter } from "./_components/site-footer";
 import { CookieNotice } from "./_components/cookie-notice";
+import { VercelAnalytics } from "./_components/vercel-analytics";
 import { siteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="es" className={inter.variable}>
-      <body><Suspense fallback={<SiteHeaderFallback />}><SiteHeader /></Suspense>{children}<SiteFooter /><CookieNotice /></body>
+      <body><Suspense fallback={<SiteHeaderFallback />}><SiteHeader /></Suspense>{children}<SiteFooter /><CookieNotice />{process.env.VERCEL_ENV === "production" && <VercelAnalytics />}</body>
     </html>
   );
 }

@@ -88,6 +88,19 @@ forma explícita. No hay un `noindex` global para la web o las vistas previas.
 El sitemap se genera en cada petición, aunque las consultas a Notion conservan
 una caché aproximada de una hora.
 
+## Estadísticas de tráfico
+
+Vercel Web Analytics está integrado con `@vercel/analytics/next` y se carga
+solo cuando `VERCEL_ENV=production`, sin vincularlo al consentimiento de GA4.
+Se eliminan los parámetros y fragmentos de las URLs enviadas y no se añaden
+eventos personalizados. No requiere una base de datos propia.
+
+Para recibir estadísticas, habilita **Web Analytics** en el panel del proyecto
+en Vercel y despliega esta rama. Comprueba el plan y sus límites antes de
+activarlo. Los datos se consultan en ese panel, no en Google Analytics.
+La integración no certifica por sí misma una exención de consentimiento:
+la revisión de las condiciones y configuración del proveedor sigue pendiente.
+
 ## Comprobación de acceso a Notion
 
 Durante la compilación, `scripts/check-notion.mjs` lee una página autorizada si
