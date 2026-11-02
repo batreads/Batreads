@@ -1,3 +1,4 @@
+import { AmazonLink } from "@/app/_components/amazon-link";
 import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -72,7 +73,7 @@ function SagaBook({ story, number, title }: { story: Story | null; number: numbe
         ) : null}
         <div className="saga-actions">
           <Link className="saga-button saga-button-primary" href={`/historias/${story.slug}`}>Ver ficha <span aria-hidden="true">→</span></Link>
-          {story.amazonUrl ? <a className="saga-button" href={story.amazonUrl} target="_blank" rel="noopener noreferrer">Amazon <span aria-hidden="true">↗</span></a> : null}
+          {story.amazonUrl ? <AmazonLink className="saga-button" href={story.amazonUrl} search={[story.title, story.authorName].filter(Boolean).join(" ")} target="_blank" rel="noopener noreferrer">Amazon <span aria-hidden="true">↗</span></AmazonLink> : null}
         </div>
       </div>
     </article>
@@ -139,7 +140,7 @@ export default async function SagaPage({ params }: PageProps) {
             {saga.bookRelationship ? <li><img src="/icons/hero-ku.svg" alt="" width="14" height="14" />{saga.bookRelationship}</li> : null}
           </ul>
           <div className="saga-actions">
-            {firstBook?.amazonUrl ? <a className="saga-button saga-button-primary" href={firstBook.amazonUrl} target="_blank" rel="noopener noreferrer" aria-label={`Ver en Amazon: ${firstBook.title} (abre en una pestaña nueva)`}>Ver en Amazon <span aria-hidden="true">↗</span></a> : null}
+            {firstBook?.amazonUrl ? <AmazonLink className="saga-button saga-button-primary" href={firstBook.amazonUrl} search={[firstBook.title, firstBook.authorName].filter(Boolean).join(" ")} target="_blank" rel="noopener noreferrer" aria-label={`Ver en Amazon: ${firstBook.title} (abre en una pestaña nueva)`}>Ver en Amazon <span aria-hidden="true">↗</span></AmazonLink> : null}
             {bookSlots.length > 0 ? <a className="saga-button" href="#orden">Ver orden de lectura <span aria-hidden="true">↓</span></a> : null}
           </div>
         </div>

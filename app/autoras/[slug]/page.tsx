@@ -1,3 +1,4 @@
+import { AmazonLink } from "@/app/_components/amazon-link";
 import { ListCard } from "@/app/_components/list-card";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -180,7 +181,7 @@ export default async function AutoraPage({ params }: PageProps) {
             <h2 id="author-stories-title">Libros de {author.name}</h2>
           </div>
           <div className="author-section-actions">
-            {amazonUrl ? <a href={amazonUrl} target="_blank" rel="noopener noreferrer">Ver libros en Amazon ↗</a> : null}
+            {amazonUrl ? <AmazonLink href={amazonUrl} search={author.name} target="_blank" rel="noopener noreferrer">Ver libros en Amazon ↗</AmazonLink> : null}
           </div>
         </div>
         <StoryGrid stories={authorStories} authorNames={{ [author.id]: author.name }} headingLevel={3} />
@@ -190,7 +191,7 @@ export default async function AutoraPage({ params }: PageProps) {
         <section className="story-section author-sagas" aria-labelledby="author-sagas-title">
           <div className="author-section-heading">
             <h2 id="author-sagas-title">{authorSagas.length && relatedListsForAuthor.length ? "Sagas y listas relacionadas" : authorSagas.length ? "Sagas" : "Listas relacionadas"}</h2>
-            {amazonUrl ? <div className="author-section-actions"><a href={amazonUrl} target="_blank" rel="noopener noreferrer">Ver libros en Amazon ↗</a></div> : null}
+            {amazonUrl ? <div className="author-section-actions"><AmazonLink href={amazonUrl} search={author.name} target="_blank" rel="noopener noreferrer">Ver libros en Amazon ↗</AmazonLink></div> : null}
           </div>
           <div className="author-related-grid">
             {authorSagas.map((saga) => {
@@ -218,7 +219,7 @@ export default async function AutoraPage({ params }: PageProps) {
       {author.bio || socials.some(([, url]) => externalUrl(url)) ? (
         <section className="story-section author-about" aria-labelledby="author-about-title">
           <h2 id="author-about-title">Sobre {author.name}</h2>
-          {amazonUrl ? <div className="author-about-cta author-socials"><a className="author-amazon-cta" href={amazonUrl} target="_blank" rel="noopener noreferrer">Ver libros en Amazon ↗</a></div> : null}
+          {amazonUrl ? <div className="author-about-cta author-socials"><AmazonLink className="author-amazon-cta" href={amazonUrl} search={author.name} target="_blank" rel="noopener noreferrer">Ver libros en Amazon ↗</AmazonLink></div> : null}
           <div className="author-biography">
             {author.bio ? <p className="author-bio">{author.bio}</p> : null}
 

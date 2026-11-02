@@ -1,3 +1,4 @@
+import { AmazonLink } from "@/app/_components/amazon-link";
 import Link from "next/link";
 import type { Story } from "@/lib/notion";
 import { EditorialImage } from "./editorial-image";
@@ -63,8 +64,8 @@ export function StoryGrid({
               ) : null}
               {showActions ? <nav className="books-like-hero-actions story-card-actions" aria-label={`Explorar ${story.title}`}>
                 <Link href={`/historias/${story.slug}`}>Ver ficha del libro</Link>
-                {story.amazonUrl ? <a className="books-like-amazon" href={story.amazonUrl}
-                  target="_blank" rel="sponsored noopener noreferrer">Ver en Amazon <span aria-hidden="true">↗</span></a> : null}
+                {story.amazonUrl ? <AmazonLink className="books-like-amazon" href={story.amazonUrl} search={[story.title, story.authorName].filter(Boolean).join(" ")}
+                  target="_blank" rel="sponsored noopener noreferrer">Ver en Amazon <span aria-hidden="true">↗</span></AmazonLink> : null}
               </nav> : null}
             </div>
           </>

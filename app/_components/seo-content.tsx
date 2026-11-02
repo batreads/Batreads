@@ -1,3 +1,4 @@
+import { AmazonLink } from "@/app/_components/amazon-link";
 import Link from "next/link";
 import { AuthorIndex } from "./author-index";
 import { Breadcrumbs } from "./breadcrumbs";
@@ -79,8 +80,8 @@ export async function SeoContent({
             : booksLike && page.intro ? <div className="books-like-hero-intro">{paragraphs(page.intro)}</div> : null}
           {mainStory ? <nav className="books-like-hero-actions" aria-label={`Explorar ${mainStory.title}`}>
             <Link href={`/historias/${mainStory.slug}`}>Ver ficha del libro</Link>
-            {mainStory.amazonUrl ? <a className="books-like-amazon" href={mainStory.amazonUrl}
-              target="_blank" rel="sponsored noopener noreferrer">Ver en Amazon <span aria-hidden="true">↗</span></a> : null}
+            {mainStory.amazonUrl ? <AmazonLink className="books-like-amazon" href={mainStory.amazonUrl} search={[mainStory.title, mainStory.authorName].filter(Boolean).join(" ")}
+              target="_blank" rel="sponsored noopener noreferrer">Ver en Amazon <span aria-hidden="true">↗</span></AmazonLink> : null}
           </nav> : null}
         </div>
         {mainStory?.coverUrl ? <Link className="books-like-hero-cover" href={`/historias/${mainStory.slug}`}>

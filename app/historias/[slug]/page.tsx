@@ -1,3 +1,4 @@
+import { AmazonLink } from "@/app/_components/amazon-link";
 import { ListCard, ListCardGrid } from "@/app/_components/list-card";
 import "../../_components/related-cards.css";
 import "./story-typography.css";
@@ -99,9 +100,9 @@ export default async function HistoriaPage({
   const heroActions = (story.amazonUrl || wattpadUrl) ? (
     <div className="story-hero-actions">
       {story.amazonUrl ? (
-        <a className="story-hero-action story-hero-action-primary" href={story.amazonUrl} rel="sponsored noopener noreferrer" target="_blank">
+        <AmazonLink className="story-hero-action story-hero-action-primary" href={story.amazonUrl} search={[story.title, story.authorName].filter(Boolean).join(" ")} rel="sponsored noopener noreferrer" target="_blank">
           Comprar en Amazon
-        </a>
+        </AmazonLink>
       ) : null}
       {wattpadUrl ? (
         <a className={`story-hero-action ${story.amazonUrl ? "story-hero-action-secondary" : "story-hero-action-primary"}`} href={wattpadUrl} rel="noopener noreferrer" target="_blank">
@@ -199,7 +200,7 @@ export default async function HistoriaPage({
           {story.format.length ? <div><dt>Formatos</dt><dd>{story.format.join(", ")}</dd></div> : null}
         </dl>
         {wattpadUrl ? <p><a href={wattpadUrl} rel="noopener noreferrer" target="_blank">Leer en Wattpad ↗</a></p> : null}
-        {story.amazonUrl ? <p><a href={story.amazonUrl} rel="sponsored noopener noreferrer" target="_blank">Ver en Amazon ↗</a></p> : null}
+        {story.amazonUrl ? <p><AmazonLink href={story.amazonUrl} search={[story.title, story.authorName].filter(Boolean).join(" ")} rel="sponsored noopener noreferrer" target="_blank">Ver en Amazon ↗</AmazonLink></p> : null}
         </div>
       </details>
 
