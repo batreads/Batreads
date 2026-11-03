@@ -70,14 +70,6 @@ function SiteHeaderContent({ pathname, menuOpen, onToggleMenu, onCloseMenu }: {
         </button>
       </div>
 
-      <div className="site-header-rail">
-        <Link className="site-header-rail-latest" href="/listas/ultima">
-          <span className="site-header-status-dot" aria-hidden="true" />
-          <span>Explora nuestras listas de lectura</span>
-          <span className="site-header-arrow" aria-hidden="true">→</span>
-        </Link>
-      </div>
-
       {menuOpen ? (
         <div className="site-header-mobile-menu" id="site-header-mobile-menu">
           <nav className="site-header-mobile-nav" aria-label="Secciones principales para móvil">
@@ -101,11 +93,6 @@ function SiteHeaderContent({ pathname, menuOpen, onToggleMenu, onCloseMenu }: {
               Apoya Batreads
             </Link>
           </div>
-          <Link className="site-header-mobile-latest" href="/listas/ultima" onClick={onCloseMenu}>
-            <span className="site-header-status-dot" aria-hidden="true" />
-            <span>Explora nuestras listas de lectura</span>
-            <span className="site-header-arrow" aria-hidden="true">→</span>
-          </Link>
         </div>
       ) : null}
     </header>

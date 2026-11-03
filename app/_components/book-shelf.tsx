@@ -1,46 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, type ReactNode } from "react";
 import type { Story } from "@/lib/notion";
+import { CarouselControls } from "./carousel-controls";
 import { EditorialImage } from "./editorial-image";
 
-export type ShelfBook = Pick<Story, "id" | "slug" | "title" | "coverUrl" | "authorName"> & { reasons?: string[] };
+export type ShelfBook = Pick<Story, "id" | "slug" | "title" | "coverUrl" | "authorName"> & { reasons?: string[]; tropes?: string[] };
 
-export function BookShelf({ stories, label }: {
+export function BookShelf({ stories, label, heading, bookTitleAsHeading = false, nativeLazy = false }: {
   stories: ShelfBook[];
   label: string;
+  heading?: ReactNode;
+  bookTitleAsHeading?: boolean;
+  nativeLazy?: boolean;
 }) {
   const shelfRef = useRef<HTMLUListElement>(null);
   const id = useId();
-  const [position, setPosition] = useState({ previous: false, next: false });
-  useEffect(() => {
-    const shelf = shelfRef.current;
-    if (!shelf) return;
-    const update = () => setPosition({
-      previous: shelf.scrollLeft > 3,
-      next: shelf.scrollLeft + shelf.clientWidth < shelf.scrollWidth - 3,
-    });
-    const observer = new ResizeObserver(update);
-    observer.observe(shelf);
-    shelf.addEventListener("scroll", update, { passive: true });
-    update();
-    return () => { observer.disconnect(); shelf.removeEventListener("scroll", update); };
-  }, [stories]);
-  function scroll(direction: number) {
-    const shelf = shelfRef.current;
-    shelf?.scrollBy({ left: direction * shelf.clientWidth * .8,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
-  }
+  const Title = bookTitleAsHeading ? "h3" : "span";
   return (
     <div className="book-carousel" role="region" aria-roledescription="carrusel" aria-label={label}>
     <div className="book-carousel-toolbar">
+      {heading}
       <div className="book-carousel-controls">
-        <span className="book-carousel-count">{stories.length} {stories.length === 1 ? "libro" : "libros"}</span>
-        <button type="button" aria-label={`Libros anteriores: ${label}`} aria-controls={id}
-          disabled={!position.previous} onClick={() => scroll(-1)}>←</button>
-        <button type="button" aria-label={`Más libros: ${label}`} aria-controls={id}
-          disabled={!position.next} onClick={() => scroll(1)}>→</button>
+        {!heading && <span className="book-carousel-count">{stories.length} {stories.length === 1 ? "libro" : "libros"}</span>}
+        <CarouselControls track={shelfRef} trackId={id} itemCount={stories.length}
+          previousLabel={`Libros anteriores: ${label}`} nextLabel={`Más libros: ${label}`} />
       </div>
     </div>
     <ul className="book-shelf" id={id} ref={shelfRef} aria-label={label} tabIndex={0}>
@@ -49,16 +34,19 @@ export function BookShelf({ stories, label }: {
           <Link className="book-shelf-book" href={`/historias/${story.slug}`}>
             <span className="book-shelf-cover">
               {story.coverUrl ? <EditorialImage src={story.coverUrl} alt={`Portada de ${story.title}`}
-                width={180} height={270} sizes="(max-width: 640px) 132px, 180px" loading="lazy" />
+                width={180} height={270} sizes="(max-width: 640px) 132px, 180px" loading="lazy" nativeLazy={nativeLazy} />
                 : <span className="book-shelf-placeholder">{story.title}</span>}
             </span>
-            <span className="book-shelf-copy">
-            <span className="book-shelf-title">{story.title}</span>
+            <div className="book-shelf-copy">
+            <Title className="book-shelf-title">{story.title}</Title>
             {story.authorName ? <span className="book-shelf-author">{story.authorName}</span> : null}
+            {story.tropes?.length ? (
+              <span className="book-shelf-trope">{story.tropes.join(" · ")}</span>
+            ) : null}
             {story.reasons?.length ? <span className="book-shelf-reasons">
               {story.reasons.map((reason) => <span key={reason}>{reason}</span>)}
             </span> : null}
-            </span>
+            </div>
           </Link>
         </li>
       ))}

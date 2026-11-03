@@ -9,13 +9,14 @@ export type EditorialImageProps = {
   sizes: string;
   className?: string;
   loading?: "eager" | "lazy";
+  nativeLazy?: boolean;
   fetchPriority?: "high" | "low" | "auto";
 };
 
 export function EditorialImage({
-  src, alt, width, height, sizes, className, loading = "lazy", fetchPriority,
+  src, alt, width, height, sizes, className, loading = "lazy", nativeLazy = false, fetchPriority,
 }: EditorialImageProps) {
-  if (loading === "lazy") {
+  if (loading === "lazy" && !nativeLazy) {
     return <ViewportImage src={src} alt={alt} width={width} height={height}
       sizes={sizes} className={className} fetchPriority={fetchPriority} />;
   }
