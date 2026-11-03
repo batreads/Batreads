@@ -145,6 +145,33 @@
   font-weight: 700;
 }
 
+:global(.home-page) .listCard {
+  border-color: var(--home-border);
+  border-radius: var(--home-card-radius);
+}
+
+:global(.home-page) .listCard:hover {
+  border-color: var(--page-accent);
+}
+
+:global(.home-page) .cover {
+  border: var(--home-cover-border);
+  border-radius: var(--home-cover-radius);
+}
+
+:global(.home-page) .cardCopy .cardTitle {
+  font-size: clamp(22px, 2.2vw, 27px);
+}
+
+:global(.home-page) .cardCopy p {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+:global(.home-page) .cardLink {
+  font-size: var(--home-link-size);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .listCard {
     transition: none;
