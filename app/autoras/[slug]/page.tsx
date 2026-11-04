@@ -8,6 +8,7 @@ import { EditorialContent } from "../../_components/editorial-list-content";
 import { AuthorStartingBook } from "../../_components/author-starting-book";
 import { authorStartingBook } from "@/lib/author-starting-book";
 import { AuthorIndex } from "../../_components/author-index";
+import { FaqAnswer } from "../../_components/faq-answer";
 import { getAuthorBySlug, getAuthors, getEditorialBlocks, getSagas, getSeoPages, getStories } from "@/lib/notion";
 import type { Author, SeoPage } from "@/lib/notion";
 import { authorDescription } from "@/lib/seo-metadata";
@@ -124,20 +125,23 @@ export default async function AutoraPage({ params }: PageProps) {
     ["Instagram", author.instagram], ["TikTok", author.tiktok], ["Wattpad", author.wattpad],
     ["Goodreads", author.goodreads], ["Web", author.website],
   ] as const;
+  const specialtyLabels = author.specialties.map(value =>
+    value === "Mafia Romance" ? "Romance mafioso · Mafia Romance" : value,
+  );
   const heroTags = [...new Map(
-    [...author.specialties, ...authorStories.flatMap((story) => story.subgenres)]
+    [...specialtyLabels, ...authorStories.flatMap((story) => story.subgenres)]
       .map((value) => [value.trim().toLocaleLowerCase("es"), value.trim()]),
   ).values()].filter(Boolean);
   const facts = [
     ["País", author.country.join(", ")],
-    ["Especialidades", author.specialties.join(", ")],
-    ["Publicación", author.publicationTypes.join(", ")],
+    ["Especialidades", specialtyLabels.join(", ")],
+    ["Publicación", author.publicationTypes.map(value => value === "Mixto" ? "Editorial y autopublicación" : value).join(", ")],
     ["Sagas", authorSagas.map((saga) => saga.name).join(", ")],
   ].filter(([, value]) => Boolean(value));
   const indexItems = [
     ...(startingBook ? [{ id: "por-donde-empezar", title: "Por dónde empezar" }] : []),
     ...(editorialBlocks.length ? [{ id: "orden-de-lectura", title: "Orden de lectura" }] : []),
-    { id: "author-stories-title", title: "Libros" },
+    ...(authorStories.length ? [{ id: "author-stories-title", title: "Libros" }] : []),
     ...(authorSagas.length || relatedListsForAuthor.length ? [{ id: "author-sagas-title", title: authorSagas.length && relatedListsForAuthor.length ? "Sagas y listas" : authorSagas.length ? "Sagas" : "Listas relacionadas" }] : []),
     ...(author.faqs.length ? [{ id: "author-faqs-title", title: "Preguntas frecuentes" }] : []),
     ...(author.bio || socials.some(([, url]) => externalUrl(url)) ? [{ id: "author-about-title", title: "Biografía" }] : []),
@@ -174,7 +178,7 @@ export default async function AutoraPage({ params }: PageProps) {
           <EditorialContent blocks={editorialBlocks} notionPathsById={notionPathsById} stories={authorStories} authorReading />
         </section>
       ) : null}
-      <section className="story-section home-story-cards author-stories" id="historias" aria-labelledby="author-stories-title">
+      {authorStories.length > 0 ? <section className="story-section home-story-cards author-stories" id="historias" aria-labelledby="author-stories-title">
         <div className="author-section-heading">
           <div>
             <h2 id="author-stories-title">Libros de {author.name}</h2>
@@ -184,7 +188,7 @@ export default async function AutoraPage({ params }: PageProps) {
           </div>
         </div>
         <StoryGrid stories={authorStories} authorNames={{ [author.id]: author.name }} headingLevel={3} />
-      </section>
+      </section> : null}
 
       {authorSagas.length > 0 || relatedListsForAuthor.length > 0 ? (
         <section className="story-section author-sagas" aria-labelledby="author-sagas-title">
@@ -209,7 +213,7 @@ export default async function AutoraPage({ params }: PageProps) {
             {author.faqs.map(({ question, answer }, index) => (
               <div className="author-faq-item" key={`${index}-${question}`}>
                 <h3>{question}</h3>
-                <p>{answer}</p>
+                <FaqAnswer answer={answer} />
               </div>
             ))}
           </div>
