@@ -10,15 +10,22 @@ export function AuthorReadingTable({ block, stories }: { block: Extract<Editoria
       const titleIndex = Math.max(0, headers.findIndex(header => /título|libro/i.test(header)));
       const titleCell = row[titleIndex] ?? [];
       const story = storyForReadingCell(cells[titleIndex] ?? "", titleCell.map(part => part.href), stories);
-      return <article className="author-reading-book" key={`${block.id}-${index}`}>
-        <div className="author-reading-book-heading">
+      const heading = <>
           {titleIndex > 0 ? <span className="author-reading-number" aria-label={`Orden ${cells[0]}`}>{cells[0]}</span> : null}
           {story?.coverUrl ? <img src={story.coverUrl} alt="" width={44} height={66} loading="lazy" /> : null}
-          <h4>{story ? <a href={`/historias/${story.slug}`}>{cells[titleIndex]}</a> : cells[titleIndex]}</h4>
-        </div>
-        {cells.length > titleIndex + 1 ? <details open><summary>Notas de lectura <span aria-hidden="true">＋</span></summary>
+          <h4>{cells[titleIndex]}</h4>
+      </>;
+      return <article className="author-reading-book" key={`${block.id}-${index}`}>
+        {cells.length > titleIndex + 1 ? <details>
+          <summary className="author-reading-book-heading">
+            {heading}
+            <svg className="author-reading-chevron" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
+          </summary>
+          <div className="author-reading-notes">
           {cells.slice(titleIndex + 1).map((cell, offset) => <p key={offset}><strong>{headers[titleIndex + offset + 1] || "Notas"}: </strong>{cell}</p>)}
-        </details> : null}
+          {story ? <div className="author-reading-actions"><a href={`/historias/${story.slug}`}>Ver ficha de {story.title} →</a></div> : null}
+          </div>
+        </details> : <div className="author-reading-book-heading">{heading}</div>}
       </article>;
     })}
   </div>;
