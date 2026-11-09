@@ -98,6 +98,7 @@ export default async function SagaPage({ params }: PageProps) {
   const listRecommendations = sagaListRecommendations(seoPages, signals, saga, authors);
   const relatedLists = listRecommendations.pages.slice(0, Math.max(0, 3 - relatedSagas.length));
   const bookSlots = sagaReadingOrder(saga, sagaStories);
+  const isEdgeOfDarkness = saga.slug === "al-filo-de-la-oscuridad-leigh-rivers";
   const firstBook = bookSlots[0]?.story;
   const total = bookSlots.length;
   const hasProgress = total > 0 && sagaStories.length > 0 && sagaStories.length <= total;
@@ -154,7 +155,7 @@ export default async function SagaPage({ params }: PageProps) {
 
       <dl className="saga-facts">
         {saga.status ? <div><dt>Estado</dt><dd>{saga.status}</dd></div> : null}
-        {total > 0 ? <div><dt>Libros</dt><dd>{total} {total === 1 ? "libro" : "libros"}</dd></div> : null}
+        {total > 0 ? <div><dt>Libros</dt><dd>{total} {total === 1 ? "libro" : "libros"}{isEdgeOfDarkness ? " + 1 precuela independiente" : ""}</dd></div> : null}
         {saga.standalone ? <div><dt>¿Autoconclusivos?</dt><dd>{saga.standalone}</dd></div> : null}
       </dl>
 
@@ -190,10 +191,30 @@ export default async function SagaPage({ params }: PageProps) {
           <section className="saga-section" id="orden">
             <div className="saga-section-heading"><div><p className="saga-kicker">Tu ruta por la saga</p><h2>Libros de {saga.name} en orden</h2></div></div>
             {saga.whyReadInOrder ? <div className="saga-order-explainer">{paragraphs(saga.whyReadInOrder).map((part) => <p key={part}>{part}</p>)}</div> : null}
+            {isEdgeOfDarkness ? <div style={{ overflowX: "auto", marginBottom: "2rem" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+                <caption style={{ textAlign: "left", fontWeight: 600, paddingBottom: "1rem" }}>¿Qué libros forman la trilogía Al filo de la oscuridad?</caption>
+                <thead><tr>{["Orden", "Libro", "Título original", "Papel en la trilogía"].map((heading) => <th scope="col" key={heading} style={{ padding: "0.75rem", borderBottom: "1px solid currentColor" }}>{heading}</th>)}</tr></thead>
+                <tbody>{bookSlots.map(({ story, title, position }) => <tr key={position}>
+                  <td style={{ padding: "0.75rem" }}>{position}</td>
+                  <th scope="row" style={{ padding: "0.75rem" }}>{story ? <Link href={`/historias/${story.slug}`}>{title}</Link> : title}</th>
+                  <td style={{ padding: "0.75rem" }}>{["Insatiable", "Voracious", "Restitution"][position - 1]}</td>
+                  <td style={{ padding: "0.75rem" }}>{["Inicio de la historia de Stacey y Kade", "Continuación de la historia", "Cierre de la trilogía"][position - 1]}</td>
+                </tr>)}</tbody>
+              </table>
+            </div> : null}
             {hasProgress ? <div className="saga-progress" aria-label={`${sagaStories.length} de ${total} fichas disponibles en Batreads`}><strong>{sagaStories.length}<span> / {total}</span></strong><span>fichas disponibles en Batreads</span><div className="saga-progress-track"><span style={{ width: `${Math.min(100, sagaStories.length / total * 100)}%` }} /></div></div> : null}
             <div className="saga-books" id="libros">{bookSlots.map(({ story, title, position }) => <SagaBook key={position} story={story} number={position} title={title ?? undefined} />)}</div>
           </section>
       ) : null}
+
+      {isEdgeOfDarkness ? <section className="saga-section" aria-labelledby="precuela-title">
+        <p className="saga-kicker">Lectura complementaria</p>
+        <h2 id="precuela-title">Obsesión psicópata: precuela independiente</h2>
+        <p>Obsesión psicópata (Psychotic Obsession) pertenece al mismo universo y transcurre antes de la trilogía. Sus protagonistas son Aria Miller y Tobias Mitchell; no es el cuarto volumen de la historia de Stacey y Kade.</p>
+        <p>En Batreads recomendamos leerla después de Insaciable, Voracidad y Restitución como lectura adicional. Esta recomendación distingue el orden de lectura de la cronología de los acontecimientos.</p>
+        <p>Disponible en español. Sin reseña en Batreads.</p>
+      </section> : null}
 
       {saga.faqs.length > 0 ? <section className="saga-section"><p className="saga-kicker">Resolvemos tus dudas</p><h2>Preguntas frecuentes</h2><div className="saga-faq">{saga.faqs.map(({ question, answer }) => <SagaFaqItem key={question} question={question} answer={answer} />)}</div></section> : null}
 
